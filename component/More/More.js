@@ -1,13 +1,7 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
+import createReactClass from 'create-react-class'
+
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -19,11 +13,11 @@ const instructions = Platform.select({
 type Props = {};
 
 
-var More = React.createClass({
+var More = createReactClass({
   render() {
       return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to more!</Text>
+        <Text style={styles.welcome}>Welcome to More!</Text>
         <Text style={styles.instructions}>More</Text>
         <Text style={styles.instructions}>{instructions}</Text>
       </View>
