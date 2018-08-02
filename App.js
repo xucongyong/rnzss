@@ -18,7 +18,6 @@ class HomeScreen extends React.Component {
     );
   }
 }
-
 class MainScreen extends React.Component {
   render() {
     return (
@@ -62,7 +61,7 @@ export default TabNavigator(
         const { routeName } = navigation.state;
         let iconName;
         if (routeName === 'Home') {
-          iconName = `ios-information-circle${focused ? '' : '-outline'}`;
+          iconName = `ios-home${focused ? '' : '-outline'}`;
         } 
         else if (routeName === 'Main') {
           iconName = `ios-options${focused ? '' : '-outline'}`;
@@ -71,10 +70,10 @@ export default TabNavigator(
           iconName = `ios-options${focused ? '' : '-outline'}`;
         }
         else if (routeName === 'More') {
-          iconName = `ios-options${focused ? '' : '-outline'}`;
+          iconName = `ios-more${focused ? '' : '-outline'}`;
         }
         else if (routeName === 'Shop') {
-          iconName = `ios-options${focused ? '' : '-outline'}`;
+          iconName = `ios-more${focused ? '' : '-outline'}`;
         }
         // You can return any component that you like here! We usually use an
         // icon component from react-native-vector-icons
