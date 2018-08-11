@@ -10,7 +10,7 @@ import {
     Platform
 } from 'react-native';
 import createReactClass from 'create-react-class';
-import MaterialIcons from 'react-native-vector-icons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 var CommonCell = createReactClass({
 
@@ -23,8 +23,8 @@ var CommonCell = createReactClass({
         return(
             <View style={styles.container}>
                 <Text>{this.props.title}</Text>
+                <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/>
             </View>
-            //<Text><MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/></Text>
 
             // <Image source={{url: <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/> }} style={{width:8, height:13}} />
 
@@ -36,10 +36,12 @@ var CommonCell = createReactClass({
 const styles = StyleSheet.create({
     container:{
         height:44,
+        flexDirection:'row',
         backgroundColor:'white',
         borderBottomColor:'#dddddd',
         borderBottomWidth:0.5,
         justifyContent:'center',
+
     }
 
 });
