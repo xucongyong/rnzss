@@ -1,4 +1,4 @@
-import { StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation'; // Version can be specified in package.json
+ import { StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation'; // Version can be specified in package.json
 import React, { Component } from 'react';
 import { AppRegistry, StyleSheet, Button, Text, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -52,7 +52,7 @@ export default TabNavigator(
     Home: { screen: HomeScreen },
     Main: { screen: MainScreen },
     Mine: { screen: MineScreen },
-    More: { screen: MoreScreen },
+    //More: { screen: MoreScreen },
     Shop: { screen: ShopScreen },
   },
   {
