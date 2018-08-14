@@ -7,7 +7,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 var Home = require('./component/Home/Home');
 var Main = require('./component/Main/Main');
 var Mine = require('./component/Mine/Mine');
-var More = require('./component/More/More');
 var Shop = require('./component/Shop/Shop');
 
 
@@ -32,13 +31,7 @@ class MineScreen extends React.Component {
     );
   }
 }
-class MoreScreen extends React.Component {
-  render() {
-    return (
-      <More/>      
-    );
-  }
-}
+
 class ShopScreen extends React.Component {
   render() {
     return (
@@ -83,7 +76,7 @@ export default TabNavigator(
     tabBarComponent: TabBarBottom,
     tabBarPosition: 'bottom',
     tabBarOptions: {
-      activeTintColor: 'tomato',
+      activeTintColor: '#DC3C78',
       inactiveTintColor: 'gray',
     },
     animationEnabled: false,
