@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Platform, StyleSheet, Text, View, Button, TextInput, TouchableOpacity, Image} from 'react-native';
+import {Platform, StyleSheet, Text, View, Button, TextInput, TouchableOpacity, Image, ScrollView} from 'react-native';
 import createReactClass from 'create-react-class';
 import { createStackNavigator } from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
