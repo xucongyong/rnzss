@@ -6,13 +6,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 var HomeDetails = require('./HomeDetails');
 
+
 class Hometitle extends React.Component{
     render(){
         return(
             <View style={styles.HeaderTitle}>
-                <TextInput
-                    placeholder="  商家、产品名称、商圈"
-                ></TextInput>
+                <Text style={{color:'white',fontSize:21}}>
+                text</Text>
             </View>
         )}}
 class HomeHeaderLeft extends React.Component{
@@ -38,7 +38,7 @@ class HomeScreen extends React.Component{
         headerLeft: <HomeHeaderLeft />,
         headerRight: <HomeHeaderRight />,
         headerStyle: {
-            backgroundColor: '#f4511e',}})
+            backgroundColor: '#DC3C78'}})
   render(){
     return(
         <View style={{flex:1}}>
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#DC3C78',
   },
   welcome: {
     fontSize: 20,
@@ -92,16 +92,16 @@ const styles = StyleSheet.create({
   },
   instructions: {
     textAlign: 'center',
-    color: '#333333',
+    color: '#DC3C78',
     marginBottom: 5,
   },
     HeaderTitle: {
         width: 250,
         height: 30,
-        backgroundColor:'white',
+        //backgroundColor:'white',
         justifyContent:'center',
         borderRadius: 18,
-        //alignItems: 'center'
+        alignItems: 'center',
         paddingLeft: 8,
       },
     HeaderLeft: {
