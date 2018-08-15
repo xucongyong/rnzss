@@ -30,28 +30,13 @@ class SignScreen extends React.Component {
         );
     }
 }
-class ReturnScreen extends React.Component {
-    render() {
-        return (
-            <Text>ReturnScreen</Text>
-        );
-    }
-}
-class GiftScreen extends React.Component {
-    render() {
-        return (
-            <Text>GiftScreen</Text>
-        );
-    }
-}
+
 
 const TopTabNav = TabNavigator(
     {
-        全部: { screen: AllScreen },
-        红包: { screen: MoneyScreen },
-        报名: { screen: SignScreen },
-        返现: { screen: ReturnScreen },
-        有礼: { screen: GiftScreen }
+        进行: { screen: AllScreen },
+        完成: { screen: MoneyScreen },
+        全部: { screen: SignScreen },
     },
 
     {
@@ -64,9 +49,6 @@ const TopTabNav = TabNavigator(
             inactiveTintColor: 'gray',
             showIcon: 'false',
             showLabel: 'false',
-            tabStyle: {
-                width: 40,
-            },
             labelStyle: {
                 fontSize: 15,
             },

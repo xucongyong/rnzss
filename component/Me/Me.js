@@ -2,33 +2,20 @@ import React, { Component } from 'react';
 import {Platform, StyleSheet, Text, View, Button, TextInput, TouchableOpacity, Image, ScrollView} from 'react-native';
 import createReactClass from 'create-react-class';
 import { createStackNavigator } from 'react-navigation';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
 var CommonCell = require('./CommonCell');
+
+
 
 class Hometitle extends React.Component{
     render(){
         return(
-            <View>
-                <Text>更多</Text>
+            <View style={styles.HeaderTitle}>
+                <Text style={{color:'white',fontSize:17}}>
+                    个人中心</Text>
             </View>
         )}}
-class HomeHeaderLeft extends React.Component{
-    render(){
-        return(
-            <Button style={{width:2, height:40,}} title='城市'/>
-            // <TouchableOpacity onPress={this._onPressButton}>
-            //     <Image
-            //         source={<Ionicons name="ios-qr-scanner" size={25} color={tintColor}/>}/>
-            // </TouchableOpacity>
-        )}}
-class HomeHeaderRight extends React.Component{
-    render(){
-        return(
-            <Button
-                title='搜索'
-            ></Button>
-        )}}
+
 
 class HomeScreen extends React.Component{
     static navigationOptions =({
@@ -36,17 +23,17 @@ class HomeScreen extends React.Component{
         // headerLeft: <HomeHeaderLeft />,
         // headerRight: <HomeHeaderRight />,
         headerStyle: {
-            backgroundColor: '#f4511e',}})
+            backgroundColor: '#DC3C78',}})
     render(){
         return(
             <View style={{flex:1}}>
-              <ScrollView>
-                  <View>
-                      <CommonCell
-                          title={'扫一扫'}
-                      />
-                  </View>
-              </ScrollView>
+                <ScrollView>
+                    <View>
+                        <CommonCell
+                            title={'扫一扫'}
+                        />
+                    </View>
+                </ScrollView>
             </View>
         )
     }
@@ -74,7 +61,7 @@ const Screen = createStackNavigator(
     },
 )
 
-var Mine = createReactClass({
+var Share = createReactClass({
     render() {
         return (
             <Screen />
@@ -87,7 +74,7 @@ const styles = StyleSheet.create({
     container: {
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F5FCFF',
+        backgroundColor: '#DC3C78',
     },
     welcome: {
         fontSize: 20,
@@ -96,16 +83,16 @@ const styles = StyleSheet.create({
     },
     instructions: {
         textAlign: 'center',
-        color: '#333333',
+        color: '#DC3C78',
         marginBottom: 5,
     },
     HeaderTitle: {
         width: 250,
         height: 30,
-        backgroundColor:'white',
+        //backgroundColor:'white',
         justifyContent:'center',
         borderRadius: 18,
-        //alignItems: 'center'
+        alignItems: 'center',
         paddingLeft: 8,
     },
     HeaderLeft: {
@@ -117,4 +104,4 @@ const styles = StyleSheet.create({
 });
 
 // output class
-module.exports = Mine;
+module.exports = Share;

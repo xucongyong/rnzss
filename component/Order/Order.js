@@ -3,7 +3,6 @@ import {Platform, StyleSheet, Text, View, Button, TextInput, TouchableOpacity, I
 import createReactClass from 'create-react-class';
 import { createStackNavigator } from 'react-navigation';
 
-var HomeDetails = require('./HomeDetails');
 var HomeNavigator = require('./HomeNavigator');
 
 
@@ -12,7 +11,7 @@ class Hometitle extends React.Component{
         return(
             <View style={styles.HeaderTitle}>
                 <Text style={{color:'white',fontSize:17}}>
-                试用中心</Text>
+                    试用中心</Text>
             </View>
         )}}
 
@@ -22,13 +21,13 @@ class HomeScreen extends React.Component{
         headerTitle: <Hometitle/>, //<TextInput></TextInput>,
         headerStyle: {
             backgroundColor: '#DC3C78'}})
-  render(){
-    return(
-        <HomeNavigator />
+    render(){
+        return(
+            <HomeNavigator />
 
 
-    )
-  }
+        )
+    }
 }
 
 class DeatilScreen extends React.Component{
@@ -42,42 +41,42 @@ class DeatilScreen extends React.Component{
 const Screen = createStackNavigator(
     {
         Home: {
-          screen: HomeScreen
+            screen: HomeScreen
         },
         Details: {
-          screen: DeatilScreen
+            screen: DeatilScreen
         }
     },
-{
-  initialRouteName: 'Home'
-},
+    {
+        initialRouteName: 'Home'
+    },
 )
 
 var Home = createReactClass({
-	render() {
-      return (
-      <Screen />
-    );
-  }
+    render() {
+        return (
+            <Screen />
+        );
+    }
 })
 
 
 const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#DC3C78',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#DC3C78',
-    marginBottom: 5,
-  },
+    container: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#DC3C78',
+    },
+    welcome: {
+        fontSize: 20,
+        textAlign: 'center',
+        margin: 10,
+    },
+    instructions: {
+        textAlign: 'center',
+        color: '#DC3C78',
+        marginBottom: 5,
+    },
     HeaderTitle: {
         width: 250,
         height: 30,
@@ -86,7 +85,7 @@ const styles = StyleSheet.create({
         borderRadius: 18,
         alignItems: 'center',
         paddingLeft: 8,
-      },
+    },
     HeaderLeft: {
 
     },

@@ -3,8 +3,8 @@ import {Platform, StyleSheet, Text, View, Button, TextInput, TouchableOpacity, I
 import createReactClass from 'create-react-class';
 import { createStackNavigator } from 'react-navigation';
 
-var HomeDetails = require('./HomeDetails');
-var HomeNavigator = require('./HomeNavigator');
+var CommonCell = require('./CommonCell');
+
 
 
 class Hometitle extends React.Component{
@@ -12,7 +12,7 @@ class Hometitle extends React.Component{
         return(
             <View style={styles.HeaderTitle}>
                 <Text style={{color:'white',fontSize:17}}>
-                试用中心</Text>
+                    优品分享</Text>
             </View>
         )}}
 
@@ -20,15 +20,23 @@ class Hometitle extends React.Component{
 class HomeScreen extends React.Component{
     static navigationOptions =({
         headerTitle: <Hometitle/>, //<TextInput></TextInput>,
+        // headerLeft: <HomeHeaderLeft />,
+        // headerRight: <HomeHeaderRight />,
         headerStyle: {
-            backgroundColor: '#DC3C78'}})
-  render(){
-    return(
-        <HomeNavigator />
-
-
-    )
-  }
+            backgroundColor: '#DC3C78',}})
+    render(){
+        return(
+            <View style={{flex:1}}>
+                <ScrollView>
+                    <View>
+                        <CommonCell
+                            title={'扫一扫'}
+                        />
+                    </View>
+                </ScrollView>
+            </View>
+        )
+    }
 }
 
 class DeatilScreen extends React.Component{
@@ -42,42 +50,42 @@ class DeatilScreen extends React.Component{
 const Screen = createStackNavigator(
     {
         Home: {
-          screen: HomeScreen
+            screen: HomeScreen
         },
         Details: {
-          screen: DeatilScreen
+            screen: DeatilScreen
         }
     },
-{
-  initialRouteName: 'Home'
-},
+    {
+        initialRouteName: 'Home'
+    },
 )
 
-var Home = createReactClass({
-	render() {
-      return (
-      <Screen />
-    );
-  }
+var Share = createReactClass({
+    render() {
+        return (
+            <Screen />
+        );
+    }
 })
 
 
 const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#DC3C78',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#DC3C78',
-    marginBottom: 5,
-  },
+    container: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#DC3C78',
+    },
+    welcome: {
+        fontSize: 20,
+        textAlign: 'center',
+        margin: 10,
+    },
+    instructions: {
+        textAlign: 'center',
+        color: '#DC3C78',
+        marginBottom: 5,
+    },
     HeaderTitle: {
         width: 250,
         height: 30,
@@ -86,7 +94,7 @@ const styles = StyleSheet.create({
         borderRadius: 18,
         alignItems: 'center',
         paddingLeft: 8,
-      },
+    },
     HeaderLeft: {
 
     },
@@ -96,4 +104,4 @@ const styles = StyleSheet.create({
 });
 
 // output class
-module.exports = Home;
+module.exports = Share;

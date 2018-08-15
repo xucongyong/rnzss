@@ -5,9 +5,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 //** --- input class --- **//
 var Home = require('./component/Home/Home');
-var Main = require('./component/Main/Main');
-var Mine = require('./component/Mine/Mine');
-var Shop = require('./component/Shop/Shop');
+var Share = require('./component/Share/Share');
+var Order = require('./component/Order/Order');
+var Me = require('./component/Me/Me');
 
 
 class HomeScreen extends React.Component {
@@ -17,25 +17,25 @@ class HomeScreen extends React.Component {
     );
   }
 }
-class MainScreen extends React.Component {
+class ShareScreen extends React.Component {
   render() {
     return (
-      <Main/>
+      <Share />
     );
   }
 }
-class MineScreen extends React.Component {
+class OrderScreen extends React.Component {
   render() {
     return (
-      <Mine/>      
+      <Order />
     );
   }
 }
 
-class ShopScreen extends React.Component {
+class MeScreen extends React.Component {
   render() {
     return (
-      <Shop/>      
+      <Me />
     );
   }
 }
@@ -43,10 +43,9 @@ class ShopScreen extends React.Component {
 export default TabNavigator(
   {
     试用: { screen: HomeScreen },
-    分享: { screen: MainScreen },
-    订单: { screen: MineScreen },
-    //More: { screen: MoreScreen },
-    我的: { screen: ShopScreen },
+    分享: { screen: ShareScreen },
+    订单: { screen: OrderScreen },
+    我的: { screen: MeScreen }
   },
   {
     navigationOptions: ({ navigation }) => ({
@@ -68,8 +67,7 @@ export default TabNavigator(
         else if (routeName === 'Shop') {
           iconName = `ios-more${focused ? '' : '-outline'}`;
         }
-        // You can return any component that you like here! We usually use an
-        // icon component from react-native-vector-icons
+
         return <Ionicons name={iconName} size={25} color={tintColor} />;
       },
     }),
