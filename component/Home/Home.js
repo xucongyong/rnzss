@@ -2,23 +2,23 @@ import React, { Component } from 'react';
 import {Platform, StyleSheet, Text, View, Button, TextInput, TouchableOpacity, Image, ScrollView} from 'react-native';
 import createReactClass from 'create-react-class';
 import { createStackNavigator } from 'react-navigation';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
 var HomeDetails = require('./HomeDetails');
+var HomeNavigator = require('./HomeNavigator');
 
 
 class Hometitle extends React.Component{
     render(){
         return(
             <View style={styles.HeaderTitle}>
-                <Text style={{color:'white',fontSize:21}}>
-                text</Text>
+                <Text style={{color:'white',fontSize:17}}>
+                试用中心</Text>
             </View>
         )}}
 class HomeHeaderLeft extends React.Component{
     render(){
         return(
-                <Button style={{width:2, height:40,}} title='城市'/>
+                <Button style={{color:'white',fontSize:11,}} title='城市'/>
                 // <TouchableOpacity onPress={this._onPressButton}>
                 //     <Image
                 //         source={<Ionicons name="ios-qr-scanner" size={25} color={tintColor}/>}/>
@@ -28,6 +28,7 @@ class HomeHeaderRight extends React.Component{
     render(){
         return(
                 <Button
+                    style={{color:'white',fontSize:11}}
                     title='搜索'
                 ></Button>
         )}}
@@ -41,9 +42,9 @@ class HomeScreen extends React.Component{
             backgroundColor: '#DC3C78'}})
   render(){
     return(
-        <View style={{flex:1}}>
-           <HomeDetails />
-        </View>
+        <HomeNavigator />
+
+
     )
   }
 }

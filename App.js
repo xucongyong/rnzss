@@ -1,4 +1,4 @@
-import { StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation'; // Version can be specified in package.json
+import { TabNavigator, TabBarBottom } from 'react-navigation'; // Version can be specified in package.json
 import React, { Component } from 'react';
 import { AppRegistry, StyleSheet, Button, Text, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
