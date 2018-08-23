@@ -16,7 +16,6 @@ class Hometitle extends React.Component{
             </View>
         )}}
 
-
 class HomeScreen extends React.Component{
     static navigationOptions =({
         headerTitle: <Hometitle/>, //<TextInput></TextInput>,
@@ -24,6 +23,8 @@ class HomeScreen extends React.Component{
             backgroundColor: '#DC3C78'}})
   render(){
     return(
+
+      
         <HomeNavigator />
 
 

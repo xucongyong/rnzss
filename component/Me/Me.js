@@ -6,13 +6,13 @@ import { createStackNavigator } from 'react-navigation';
 var CommonCell = require('./CommonCell');
 
 
-
 class Hometitle extends React.Component{
     render(){
         return(
             <View style={styles.HeaderTitle}>
                 <Text style={{color:'white',fontSize:17}}>
                     个人中心</Text>
+
             </View>
         )}}
 
@@ -32,6 +32,7 @@ class HomeScreen extends React.Component{
                         <CommonCell
                             title={'扫一扫'}
                         />
+                        
                     </View>
                 </ScrollView>
             </View>
@@ -54,14 +55,15 @@ const Screen = createStackNavigator(
         },
         Details: {
             screen: DeatilScreen
-        }
+        },
+
     },
     {
         initialRouteName: 'Home'
     },
 )
 
-var Share = createReactClass({
+var Me = createReactClass({
     render() {
         return (
             <Screen />
@@ -104,4 +106,4 @@ const styles = StyleSheet.create({
 });
 
 // output class
-module.exports = Share;
+module.exports = Me;

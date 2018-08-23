@@ -1,4 +1,4 @@
-import { TabNavigator, TabBarBottom } from 'react-navigation'; // Version can be specified in package.json
+import { TabNavigator, TabBarBottom, StackNavigator } from 'react-navigation'; // Version can be specified in package.json
 import React, { Component } from 'react';
 import { AppRegistry, StyleSheet, Button, Text, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -40,7 +40,7 @@ class MeScreen extends React.Component {
   }
 }
 
-export default TabNavigator(
+const TabView = TabNavigator(
   {
     试用: { screen: HomeScreen },
     分享: { screen: ShareScreen },
@@ -80,4 +80,86 @@ export default TabNavigator(
     animationEnabled: false,
     swipeEnabled: false,
   }
-);
+)
+
+class TabViewScreen extends React.Component{
+  static navigationOptions = {
+    header: null,
+    };
+  render(){ 
+     return(
+        <TabView />
+      )
+}
+}
+
+class LoginTitle extends React.Component{
+    render(){
+        return(
+            <View>
+                <Text style={{color:'white',fontSize:17}}>
+                    试用中心</Text>
+            </View>
+        )}}
+
+
+class LoginScreen extends React.Component{
+    static navigationOptions =({
+        headerTitle: <LoginTitle/>, //<TextInput></TextInput>,
+        headerStyle: {
+            backgroundColor: '#DC3C78'}})
+    render(){
+        return(
+            <View>
+                <Button
+                  title="Go to Reg"
+                  onPress={() => this.props.navigation.navigate('Reg')}
+                  />
+                <Button
+                  title="Go to Login"
+                  onPress={() => this.props.navigation.navigate('Login')}
+                  />
+                <Button
+                  title="Go to TabView"
+                  onPress={() => this.props.navigation.navigate('TabViews')}
+                  />
+            </View>
+        )
+    }
+}
+
+class RegScreen extends React.Component{
+    render(){
+        return(
+            <View style={{flex:1}}>
+                <Button
+                  title="Go to Reg"
+                  onPress={() => this.props.navigation.navigate('Reg')}
+                  />
+                <Button
+                  title="Go to Login"
+                  onPress={() => this.props.navigation.navigate('Login')}
+                  />
+                <Button
+                  title="Go to TabView"
+                  onPress={() => this.props.navigation.navigate('TabViews')}
+                  />
+            </View>
+        )}}
+
+export default StackNavigator(
+    {
+        TabViews: {
+            screen: TabViewScreen
+        },
+        Login: {
+            screen: LoginScreen
+        },
+        Reg: {
+            screen: RegScreen
+        }
+    },
+    {
+        initialRouteName: 'Login'
+    },
+)
