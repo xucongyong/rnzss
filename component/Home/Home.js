@@ -23,11 +23,7 @@ class HomeScreen extends React.Component{
             backgroundColor: '#DC3C78'}})
   render(){
     return(
-
-      
         <HomeNavigator />
-
-
     )
   }
 }
