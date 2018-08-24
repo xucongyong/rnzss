@@ -1,4 +1,4 @@
-import { TabNavigator, TabBarBottom, StackNavigator } from 'react-navigation'; // Version can be specified in package.json
+import { createTabNavigator, TabBarBottom, createStackNavigator } from 'react-navigation'; // Version can be specified in package.json
 import React, { Component } from 'react';
 import { AppRegistry, StyleSheet, Button, Text, View ,TextInput} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -40,7 +40,7 @@ class MeScreen extends React.Component {
   }
 }
 
-const TabView = TabNavigator(
+const TabView = createTabNavigator(
   {
     试用: { screen: HomeScreen },
     分享: { screen: ShareScreen },
@@ -181,7 +181,7 @@ class RegScreen extends React.Component{
 
         )}}
 
-export default StackNavigator(
+export default createStackNavigator(
     {
         TabViews: {
             screen: TabViewScreen
