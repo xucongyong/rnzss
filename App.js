@@ -142,6 +142,9 @@ class LoginScreen extends React.Component{
                   title="注册"
                   onPress={() => this.props.navigation.navigate('Reg')}
                   />
+                <Button 
+                title="首页"
+                onPress={() => this.props.navigation.navigate('TabViews')}/>
             </View>
             </View>
         )
@@ -191,7 +194,7 @@ export default StackNavigator(
         }
     },
     {
-        initialRouteName: 'Login'
+        initialRouteName: 'TabViews'
     },
 )
 

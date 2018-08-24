@@ -31,6 +31,7 @@ class HomeScreen extends React.Component{
 class DeatilScreen extends React.Component{
     render(){
         return(
+          
             <View style={{flex:1}}>
                 <Text>Deatil</Text>
             </View>

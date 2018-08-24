@@ -21,9 +21,13 @@ var CommonCell = createReactClass({
     },
     render(){
         return(
+
             <View style={styles.container}>
-                <Text>{this.props.title}</Text>
-                <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/>
+                <View style={styles.text}>
+                <Text>{this.props.title}</Text></View>
+                <View style={styles.icon}>
+                <MaterialIcons name="keyboard-arrow-right" size={23} color="#4F8EF7"/>
+                </View>
             </View>
     )
     }
@@ -32,13 +36,22 @@ var CommonCell = createReactClass({
 
 const styles = StyleSheet.create({
     container:{
-        height:44,
-        flexDirection:'row',
+        height:55,
+        flexDirection:'row',//column
         backgroundColor:'white',
         borderBottomColor:'#dddddd',
         borderBottomWidth:0.5,
-        justifyContent:'center',
-
+        justifyContent: 'space-between',//flex-end
+        alignItems: 'center',//flex-start
+    },
+    text:{
+        padding: 10,
+        alignItems:'center',
+        fontSize: 15,
+    },
+    icon:{
+        //padding:-100,
+        alignItems: 'flex-end',
     }
 
 });

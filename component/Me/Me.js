@@ -30,10 +30,26 @@ class HomeScreen extends React.Component{
                 <ScrollView>
                     <View>
                         <CommonCell
-                            title={'扫一扫'}
+                            title={'余额提现'}
                         />
-                        
-                    </View>
+                        <CommonCell
+                            title={'我的淘宝账号'}
+                        />
+                        <CommonCell
+                            title={'我的京东账号'}
+                        />
+                        <CommonCell
+                            title={'手机号'}
+                        />
+                        <CommonCell
+                            title={'身份验证'}
+                        />
+
+                    <Button
+                  title="注册"
+                  onPress={() => this.props.navigation.navigate('Reg')}
+                  />
+                  </View>
                 </ScrollView>
             </View>
         )

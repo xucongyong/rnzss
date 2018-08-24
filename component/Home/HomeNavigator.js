@@ -146,10 +146,34 @@ class MyComponent extends React.Component {
         )
 
     }
-
-
-
 }
+const styles = StyleSheet.create({
+    container: {
+        flex: 1
+    },
+    cellBoxStyle:{
+        flex: 1,
+        flexDirection:'row',
+        backgroundColor: 'white',
+        padding: 10,
+        marginLeft: 5,
+        marginRight: 5,
+        marginVertical: 3,
+        borderColor: '#dddddd',
+        borderStyle: null,
+        borderWidth: 0.5,
+        borderRadius: 2,
+        shadowColor: 'gray',    // 设置阴影
+        shadowOffset: {width:0.5, height: 0.5},
+        shadowOpacity: 0.4,   // 透明度
+        shadowRadius: 1,
+        elevation:2   //   高度，设置Z轴，可以产生立体效果
+    },
+    cellTxt:{
+        fontSize:16,
+        color:'red'
+    }
+})
 
 
 
@@ -163,29 +187,28 @@ class AllScreen extends React.Component {
 
 class MoneyScreen extends React.Component {
     render() {
-        return (
-            <Text>MoneyScreen</Text>
+        return (<MyComponent/>
         );
     }
 }
 class SignScreen extends React.Component {
     render() {
         return (
-            <Text>SignScreen</Text>
+            <MyComponent/>
         );
     }
 }
 class ReturnScreen extends React.Component {
     render() {
         return (
-            <Text>ReturnScreen</Text>
+            <MyComponent/>
         );
     }
 }
 class GiftScreen extends React.Component {
     render() {
         return (
-            <Text>GiftScreen</Text>
+            <MyComponent/>
         );
     }
 }
@@ -228,36 +251,6 @@ const HomeNavigator = createReactClass({
         )
     }
 })
-
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1
-    },
-    cellBoxStyle:{
-        flex: 1,
-        flexDirection:'row',
-        backgroundColor: 'white',
-        padding: 10,
-        marginLeft: 5,
-        marginRight: 5,
-        marginVertical: 3,
-        borderColor: '#dddddd',
-        borderStyle: null,
-        borderWidth: 0.5,
-        borderRadius: 2,
-        shadowColor: 'gray',    // 设置阴影
-        shadowOffset: {width:0.5, height: 0.5},
-        shadowOpacity: 0.4,   // 透明度
-        shadowRadius: 1,
-        elevation:2   //   高度，设置Z轴，可以产生立体效果
-    },
-    cellTxt:{
-        fontSize:16,
-        color:'red'
-    }
-})
-
 
 
 module.exports= HomeNavigator;
