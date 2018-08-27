@@ -10,43 +10,12 @@ var Order = require('./component/Order/Order');
 var Me = require('./component/Me/Me');
 var LoginScreen = require('./component/Login/LoginAndRegViews');
 
-class HomeScreen extends React.Component {
-  render() {
-    return (
-      <Home/> 
-    );
-  }
-}
-class ShareScreen extends React.Component {
-  render() {
-    return (
-      <Share />
-    );
-  }
-}
-class OrderScreen extends React.Component {
-  render() {
-    return (
-      <Order />
-    );
-  }
-}
-
-class MeScreen extends React.Component {
-  render() {
-    return (
-      
-      <Me />
-    );
-  }
-}
-
 const TabView = createTabNavigator(
   {
-    试用: { screen: HomeScreen },
-    分享: { screen: ShareScreen },
-    订单: { screen: OrderScreen },
-    我的: { screen: MeScreen },
+    试用: { screen: Home },
+    分享: { screen: Share },
+    订单: { screen: Order },
+    我的: { screen: Me },
     登陆: { screen: LoginScreen},
   },
   {
