@@ -22,7 +22,7 @@ var CommonCell = createReactClass({
     render(){
         return(
             <View style={styles.container}>
-                <Text>{this.props.title}</Text>
+                <Text onPress={()=>{this.props.navigator.navigate('Login')}} >{this.props.title}</Text>
                 <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/>
             </View>
     )

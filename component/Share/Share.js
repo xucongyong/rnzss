@@ -27,6 +27,10 @@ class HomeScreen extends React.Component{
     render(){
         return(
             <View style={{flex:1}}>
+            <View style={{flexDirection:'row'}}><Text>2121</Text>
+            <Text>x2121</Text>
+            <TextInput></TextInput><Text>x2121</Text></View>
+            <View>
                 <ScrollView>
                     <View>
                         <CommonCell
@@ -34,7 +38,7 @@ class HomeScreen extends React.Component{
                         />
                     </View>
                 </ScrollView>
-            </View>
+            </View></View>
         )
     }
 }

@@ -18,7 +18,7 @@ class Hometitle extends React.Component{
 
 class HomeScreen extends React.Component{
     static navigationOptions =({
-        headerTitle: <Hometitle/>, //<TextInput></TextInput>,
+        headerTitle: <Hometitle/>,
         headerStyle: {
             backgroundColor: '#DC3C78'}})
   render(){
@@ -31,7 +31,6 @@ class HomeScreen extends React.Component{
 class DeatilScreen extends React.Component{
     render(){
         return(
-          
             <View style={{flex:1}}>
                 <Text>Deatil</Text>
             </View>

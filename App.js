@@ -1,4 +1,4 @@
-import { createTabNavigator, TabBarBottom, createStackNavigator } from 'react-navigation'; // Version can be specified in package.json
+import { createTabNavigator, TabBarBottom, StackNavigator } from 'react-navigation'; // Version can be specified in package.json
 import React, { Component } from 'react';
 import { AppRegistry, StyleSheet, Button, Text, View ,TextInput} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -8,12 +8,12 @@ var Home = require('./component/Home/Home');
 var Share = require('./component/Share/Share');
 var Order = require('./component/Order/Order');
 var Me = require('./component/Me/Me');
-
+var LoginScreen = require('./component/Login/LoginAndRegViews');
 
 class HomeScreen extends React.Component {
   render() {
     return (
-      <Home/>      
+      <Home/> 
     );
   }
 }
@@ -35,6 +35,7 @@ class OrderScreen extends React.Component {
 class MeScreen extends React.Component {
   render() {
     return (
+      
       <Me />
     );
   }
@@ -45,7 +46,8 @@ const TabView = createTabNavigator(
     试用: { screen: HomeScreen },
     分享: { screen: ShareScreen },
     订单: { screen: OrderScreen },
-    我的: { screen: MeScreen }
+    我的: { screen: MeScreen },
+    登陆: { screen: LoginScreen},
   },
   {
     navigationOptions: ({ navigation }) => ({
@@ -64,7 +66,7 @@ const TabView = createTabNavigator(
         else if (routeName === '我的') {
           iconName = `ios-person${focused ? '' : '-outline'}`;
         }
-        else if (routeName === 'Shop') {
+        else if (routeName === '登陆') {
           iconName = `ios-more${focused ? '' : '-outline'}`;
         }
 
@@ -82,10 +84,8 @@ const TabView = createTabNavigator(
   }
 )
 
-class TabViewScreen extends React.Component{
-  static navigationOptions = {
-    header: null,
-    };
+export default class shop extends React.Component{
+
   render(){ 
      return(
         <TabView />
@@ -93,110 +93,9 @@ class TabViewScreen extends React.Component{
 }
 }
 
-class LoginTitle extends React.Component{
-    render(){
-        return(
-            <View>
-                <Text style={{color:'white',fontSize:17}}>
-                    登陆</Text>
-            </View>
-        )}}
-class RegTitle extends React.Component{
-    render(){
-        return(
-            <View>
-                <Text style={{color:'white',fontSize:17}}>
-                    注册</Text>
-            </View>
-        )}}
-
-class IndexTitle extends React.Component{
-    render(){
-        return(
-            <Button 
-                title="首页"
-                onPress={() => this.props.navigation.navigate('TabViews')}/>
-        )}}
-
-class LoginScreen extends React.Component{
-    static navigationOptions =({
-        headerTitle: <LoginTitle/>, //<TextInput></TextInput>,
-        headerLeft:  <IndexTitle/>,
-        headerStyle: {
-            backgroundColor: '#DC3C78'}})
-    render(){
-        return(
-            <View style={styles.login}>
-              <TextInput style={styles.textinput}
-                placeholder="请输入账号、手机号" />
-            <TextInput
-              password="flase"
-              placeholder="请输入密码"
-                 />
-            <View style={styles.button}>
-                <Button
-                  title="登陆"
-                  onPress={() => this.props.navigation.navigate('Login')}
-                  />
-                <Button
-                  title="注册"
-                  onPress={() => this.props.navigation.navigate('Reg')}
-                  />
-                <Button 
-                title="首页"
-                onPress={() => this.props.navigation.navigate('TabViews')}/>
-            </View>
-            </View>
-        )
-    }
-}
-
-class RegScreen extends React.Component{
-      static navigationOptions =({
-        headerTitle: <RegTitle/>, //<TextInput></TextInput>,
-        headerLeft:  <IndexTitle/>,
-        headerStyle: {
-            backgroundColor: '#DC3C78'}})
-    render(){
-        return(
-            <View style={styles.login}>
-              <TextInput style={styles.textinput}
-                placeholder="请输入账号、手机号" />
-            <TextInput
-              password="flase"
-              placeholder="请输入密码"
-                 />
-            <View style={styles.button}>
-                <Button
-                  title="登陆"
-                  onPress={() => this.props.navigation.navigate('Login')}
-                  />
-                <Button
-                  title="注册"
-                  onPress={() => this.props.navigation.navigate('Reg')}
-                  />
-            </View>
-            </View>
 
 
-        )}}
 
-export default createStackNavigator(
-    {
-        TabViews: {
-            screen: TabViewScreen
-        },
-        Login: {
-            screen: LoginScreen
-        },
-        Reg: {
-            screen: RegScreen
-        }
-    },
-    {
-        initialRouteName: 'TabViews'
-    },
-)
 
 const styles = StyleSheet.create({
   login: {
@@ -213,3 +112,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 })
+

@@ -4,7 +4,7 @@ import createReactClass from 'create-react-class';
 import { createStackNavigator } from 'react-navigation';
 
 var CommonCell = require('./CommonCell');
-
+var LoginScreen = require('../Login/Login');
 
 class Hometitle extends React.Component{
     render(){
@@ -16,8 +16,8 @@ class Hometitle extends React.Component{
             </View>
         )}}
 
-
 class HomeScreen extends React.Component{
+
     static navigationOptions =({
         headerTitle: <Hometitle/>, //<TextInput></TextInput>,
         // headerLeft: <HomeHeaderLeft />,
@@ -25,6 +25,10 @@ class HomeScreen extends React.Component{
         headerStyle: {
             backgroundColor: '#DC3C78',}})
     render(){
+        console.log('this.props')
+        console.log(this.openList)
+        console.log(this.props)
+        console.log('this.props')
         return(
             <View style={{flex:1}}>
                 <ScrollView>
@@ -33,23 +37,23 @@ class HomeScreen extends React.Component{
                             title={'余额提现'}
                         />
                         <CommonCell
-                            title={'我的淘宝账号'}
-                        />
-                        <CommonCell
-                            title={'我的京东账号'}
-                        />
-                        <CommonCell
                             title={'手机号'}
                         />
                         <CommonCell
                             title={'身份验证'}
                         />
-
-                    <Button
-                  title="注册"
-                  onPress={() => this.props.navigation.navigate('Reg')}
+                <Button
+                  title="登陆"
+                  onPress={() => this.props.navigation.navigate('Details')}
                   />
-                  </View>
+                <Button
+                  title="注册"
+                  onPress={() => this.props.navigation.dispatch('Reg')}
+                  />
+                <Button 
+                title="首页"
+                onPress={() => this.props.navigation.navigate('Login')}/>
+</View>
                 </ScrollView>
             </View>
         )
