@@ -11,12 +11,4 @@ class Home extends React.Component{
 }
 
 
-var HomeDetails = createReactClass({
-    render() {
-        return (
-            <Home />
-        );
-    }
-})
-
-module.exports = HomeDetails;
+module.exports = Home;

@@ -13,7 +13,7 @@ class Hometitle extends React.Component{
             </View>
         )}}
 
-export default class MeScreen extends React.Component{
+class MeScreen extends React.Component{
 
     static navigationOptions =({
         headerTitle: <Hometitle/>, //<TextInput></TextInput>,

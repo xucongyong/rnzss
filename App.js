@@ -1,6 +1,5 @@
-import { createTabNavigator, TabBarBottom, StackNavigator } from 'react-navigation'; // Version can be specified in package.json
+import { createTabNavigator, TabBarBottom} from 'react-navigation'; // Version can be specified in package.json
 import React, { Component } from 'react';
-import { AppRegistry, StyleSheet, Button, Text, View ,TextInput} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 //** --- input class --- **//
@@ -8,7 +7,6 @@ var Home = require('./component/Home/Home');
 var Share = require('./component/Share/Share');
 var Order = require('./component/Order/Order');
 var Me = require('./component/Me/Me');
-var LoginScreen = require('./component/Login/LoginAndRegViews');
 
 const TabView = createTabNavigator(
   {
@@ -16,7 +14,6 @@ const TabView = createTabNavigator(
     分享: { screen: Share },
     订单: { screen: Order },
     我的: { screen: Me },
-    登陆: { screen: LoginScreen},
   },
   {
     navigationOptions: ({ navigation }) => ({
@@ -63,22 +60,4 @@ export default class shop extends React.Component{
 }
 
 
-
-
-
-const styles = StyleSheet.create({
-  login: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  textinput:{
-    height:60,
-    fontSize: 18
-  },
-    button: {
-    flexDirection:'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-})
 

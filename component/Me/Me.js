@@ -30,7 +30,5 @@ const HomeScreenExport = createStackNavigator(
     },
 )
 
-
-
 // output class
 module.exports = HomeScreenExport;
