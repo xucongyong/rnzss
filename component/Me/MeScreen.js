@@ -44,25 +44,23 @@ class MeScreen extends React.Component{
                             title={'身份验证'}
                         />
                         <Button
-                            title="登陆"
-                            onPress={() => this.props.navigation.navigate('Details')}
-                        />
-                        <Button
-                            title="注册"
-                            onPress={() => this.props.navigation.navigate('Reg')}
-                        />
-                        <Button
-                            title="登陆"
-                            onPress={() => this.props.navigation.navigate('Login')}
-                        />
-                        <Button
                             title="订单"
                             onPress={() => this.props.navigation.navigate('订单')}
                         />
                         <Button
                             title="ModalScreen"
                             onPress={() => this.props.navigation.navigate('MyModal')}/>
+                        <Button
+                            title="ProductScreen"
+                            onPress={() => this.props.navigation.navigate('Product')}/>
+                        <Button
+                            title="Order"
+                            onPress={() => this.props.navigation.navigate('Order')}/>
+                        <Button
+                            title="LoginAndReg"
+                            onPress={() => this.props.navigation.navigate('LoginAndReg')}/>
                     </View>
+
                 </ScrollView>
             </View>
         )

@@ -6,10 +6,11 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 //** --- input class --- **//
 var Home = require('./component/Home/Home');
 var Share = require('./component/Share/Share');
-var Order = require('./component/Order/Order');
+var TaskView = require('./component/TaskView/TaskView');
 var Me = require('./component/Me/Me');
-
-
+var ProductScreen = require('./component/Product/Product')
+var OrderScreen = require('./component/Order/Order')
+var LoginRegScreen = require('./component/Login/LoginAndRegViews')
 class ModalScreen extends React.Component {
     static navigationOptions = ({
         headerTitle: <Button
@@ -33,10 +34,10 @@ class ModalScreen extends React.Component {
 
 const TabView = TabNavigator(
     {
+        我的: { screen: Me },
         试用: { screen: Home },
         分享: { screen: Share },
-        订单: { screen: Order },
-        我的: { screen: Me },
+        订单: { screen: TaskView },
     },
     {
         navigationOptions: ({ navigation }) => ({
@@ -77,9 +78,19 @@ const RootStack = StackNavigator(
         Main: {
             screen: TabView,
         },
+        Product:{
+            screen: ProductScreen,
+        },
         MyModal: {
             screen: ModalScreen,
         },
+        Order: {
+            screen: OrderScreen,
+        },
+        LoginAndReg: {
+            screen: LoginRegScreen,
+        }
+
     },
     {
         mode: 'modal',

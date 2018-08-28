@@ -2,7 +2,6 @@ import React from 'react';
 import {Text, View} from 'react-native';
 import { StackNavigator } from 'react-navigation';
 
-var LoginScreen = require('../Login/Login');
 var MeScreen = require('./MeScreen');
 
 class DeatilScreen extends React.Component{
@@ -21,9 +20,7 @@ const HomeScreenExport = StackNavigator(
         Details: {
             screen: DeatilScreen
         },
-        Login: {
-            screen: LoginScreen
-        },
+
     },
 )
 
