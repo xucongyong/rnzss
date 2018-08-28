@@ -21,8 +21,6 @@ class ModalScreen extends React.Component {
             <View>
                 <Text>MODAL</Text>
                 <Text>MODAL</Text>
-                <Text>MODAL</Text>
-
                 <Button
                     title="goBack"
                     onPress={() => this.props.navigation.goBack()}/>

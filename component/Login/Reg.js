@@ -1,7 +1,5 @@
 import React from 'react';
 import {StyleSheet, View, Button, TextInput} from 'react-native';
-import createReactClass from 'create-react-class';
-import { createStackNavigator } from 'react-navigation';
 
 
 
@@ -9,15 +7,15 @@ class IndexTitle extends React.Component{
     render(){
         return(
             <Button
-                title="首页"
-                onPress={() => this.props.navigation.navigate('TabViews')}/>
+                title="MyModal"
+                onPress={() => this.props.navigation.navigate('MyModal')}/>
         )}}
 class RegTitle extends React.Component{
     render(){
         return(
             <Button 
-                title="首页"
-                onPress={() => this.props.navigation.navigate('TabViews')}/>
+                title="MyModal"
+                onPress={() => this.props.navigation.navigate('MyModal')}/>
         )}}
 
 export default class RegScreen extends React.Component{
@@ -40,13 +38,24 @@ export default class RegScreen extends React.Component{
                  />
             <View style={styles.button}>
                 <Button
-                  title="登陆"
-                  onPress={() => this.props.navigation.navigate('Login')}
-                  />
+                    title="登陆"
+                    onPress={() => this.props.navigation.navigate('Details')}
+                />
                 <Button
-                  title="注册"
-                  onPress={() => this.props.navigation.navigate('Reg')}
-                  />
+                    title="注册"
+                    onPress={() => this.props.navigation.navigate('Reg')}
+                />
+                <Button
+                    title="登陆"
+                    onPress={() => this.props.navigation.navigate('Login')}
+                />
+                <Button
+                    title="订单"
+                    onPress={() => this.props.navigation.navigate('订单')}
+                />
+                <Button
+                    title="ModalScreen"
+                    onPress={() => this.props.navigation.navigate('MyModal')}/>
             </View>
             </View>
         )}}

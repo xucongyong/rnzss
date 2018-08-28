@@ -49,7 +49,15 @@ class MeScreen extends React.Component{
                         />
                         <Button
                             title="注册"
+                            onPress={() => this.props.navigation.navigate('Reg')}
+                        />
+                        <Button
+                            title="登陆"
                             onPress={() => this.props.navigation.navigate('Login')}
+                        />
+                        <Button
+                            title="订单"
+                            onPress={() => this.props.navigation.navigate('订单')}
                         />
                         <Button
                             title="ModalScreen"

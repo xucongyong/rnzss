@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { createStackNavigator } from 'react-navigation';
+import { StackNavigator } from 'react-navigation';
 
 var LoginScreen = require('./Login')
 var RegScreen = require('./Reg')
 
-const LoginScreenNav =  createStackNavigator(
+const LoginScreenNav =  StackNavigator(
     {
         Login: {screen: LoginScreen},
         Reg: {screen: RegScreen}

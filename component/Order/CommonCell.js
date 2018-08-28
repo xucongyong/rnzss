@@ -1,18 +1,13 @@
 
 import React, { Component } from 'react';
 import {
-    AppRegistry,
     StyleSheet,
     Text,
     View,
-    TouchableOpacity,
-    Image,
-    Platform
 } from 'react-native';
-import createReactClass from 'create-react-class';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-export default class CommonCell extends React.Component {{
+class CommonCell extends React.Component {{
 
     getDefaultProps(){
       return{

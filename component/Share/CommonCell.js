@@ -1,33 +1,32 @@
 
 import React, { Component } from 'react';
 import {
-    AppRegistry,
     StyleSheet,
     Text,
     View,
-    TouchableOpacity,
-    Image,
-    Platform
+
 } from 'react-native';
-import createReactClass from 'create-react-class';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-var CommonCell = createReactClass({
+class CommonCell extends React.Component {
 
     getDefaultProps(){
-      return{
-          title: '',
-      }
-    },
+        return{
+            title: '',
+        }
+    }
     render(){
         return(
             <View style={styles.container}>
-                <Text onPress={()=>{this.props.navigator.navigate('Login')}} >{this.props.title}</Text>
+                <Text>{this.props.title}</Text>
                 <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/>
             </View>
-    )
+
+            // <Image source={{url: <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/> }} style={{width:8, height:13}} />
+
+        )
     }
-});
+}
 
 
 const styles = StyleSheet.create({

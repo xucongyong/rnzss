@@ -1,11 +1,11 @@
 import React from 'react';
-import {TabBarBottom, TabNavigator, createStackNavigator} from 'react-navigation';
+import {TabBarBottom, StackNavigator} from 'react-navigation';
 
 
 var doubanComponent = require('./doubanComponent')
 
 
-var ProductNav = createStackNavigator(
+var ProductNav = StackNavigator(
     {
         project: { screen: doubanComponent },
         details: { screen: doubanComponent },

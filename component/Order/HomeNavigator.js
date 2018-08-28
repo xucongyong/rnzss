@@ -1,7 +1,6 @@
 import React from 'react';
 import {TabBarBottom, TabNavigator} from 'react-navigation';
 import {Text,ScrollView} from 'react-native';
-import createReactClass from 'create-react-class';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 class AllScreen extends React.Component {

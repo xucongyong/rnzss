@@ -1,57 +1,43 @@
 
 import React, { Component } from 'react';
 import {
-    AppRegistry,
     StyleSheet,
     Text,
     View,
-    TouchableOpacity,
-    Image,
-    Platform
+
 } from 'react-native';
-import createReactClass from 'create-react-class';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-var CommonCell = createReactClass({
+class CommonCell extends React.Component {
 
     getDefaultProps(){
-      return{
-          title: '',
-      }
-    },
+        return{
+            title: '',
+        }
+    }
     render(){
         return(
-
             <View style={styles.container}>
-                <View style={styles.text}>
-                <Text>{this.props.title}</Text></View>
-                <View style={styles.icon}>
-                <MaterialIcons name="keyboard-arrow-right" size={23} color="#4F8EF7"/>
-                </View>
+                <Text>{this.props.title}</Text>
+                <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/>
             </View>
-    )
+
+            // <Image source={{url: <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/> }} style={{width:8, height:13}} />
+
+        )
     }
-});
+}
 
 
 const styles = StyleSheet.create({
     container:{
-        height:55,
-        flexDirection:'row',//column
+        height:44,
+        flexDirection:'row',
         backgroundColor:'white',
         borderBottomColor:'#dddddd',
         borderBottomWidth:0.5,
-        justifyContent: 'space-between',//flex-end
-        alignItems: 'center',//flex-start
-    },
-    text:{
-        padding: 10,
-        alignItems:'center',
-        fontSize: 15,
-    },
-    icon:{
-        //padding:-100,
-        alignItems: 'flex-end',
+        justifyContent:'center',
+
     }
 
 });

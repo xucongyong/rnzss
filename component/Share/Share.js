@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import {Platform, StyleSheet, Text, View, Button, TextInput, TouchableOpacity, Image, ScrollView} from 'react-native';
-import createReactClass from 'create-react-class';
-import { createStackNavigator } from 'react-navigation';
+import {StyleSheet, Text, View, Button, TextInput, ScrollView} from 'react-native';
+import { StackNavigator } from 'react-navigation';
 
 var CommonCell = require('./CommonCell');
 
@@ -57,7 +56,7 @@ class DeatilScreen extends React.Component{
             </View>
         )}}
 
-const Screen = createStackNavigator(
+const Screen = StackNavigator(
     {
         Home: {
             screen: HomeScreen

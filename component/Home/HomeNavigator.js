@@ -10,7 +10,6 @@ import {
     ActivityIndicator,
     Image,
 } from 'react-native';
-import createReactClass from 'create-react-class';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Dimensions from 'Dimensions';
 
