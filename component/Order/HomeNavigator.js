@@ -58,13 +58,4 @@ const TopTabNav = TabNavigator(
     }
 );
 
-const HomeNavigator = createReactClass({
-    render(){
-        return(
-            <TopTabNav />
-        )
-    }
-})
-
-
-module.exports= HomeNavigator;
+module.exports= TopTabNav;

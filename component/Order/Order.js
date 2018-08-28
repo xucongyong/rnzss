@@ -50,13 +50,6 @@ const Screen = createStackNavigator(
     },
 )
 
-var Home = createReactClass({
-    render() {
-        return (
-            <Screen />
-        );
-    }
-})
 
 
 const styles = StyleSheet.create({
@@ -93,4 +86,4 @@ const styles = StyleSheet.create({
 });
 
 // output class
-module.exports = Home;
+module.exports = Screen;

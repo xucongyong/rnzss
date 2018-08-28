@@ -1,5 +1,4 @@
 import React from 'react';
-import {TabBarBottom, TabNavigator} from 'react-navigation';
 import {
     Text,
     ScrollView,
@@ -10,24 +9,14 @@ import {
     ActivityIndicator,
     Image,
 } from 'react-native';
-import createReactClass from 'create-react-class';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+
 import Dimensions from 'Dimensions';
-
-var doubanComponent = require('./doubanComponent');
-
 
 const {width, height} = Dimensions.get('window');
 
 const dataUrl = 'https://api.douban.com/v2/movie/top250?count=350';
 
-class MyComponent extends React.Component {
-    static navigationOptions = ({
-
-        mode: 'modal',
-        headerMode: 'none',
-
-    })
+export default class doubanComponent extends React.Component {
     constructor(props){
         super(props);
         const ds = new ListView.DataSource({rowHasChanged : (row1, row2) =>  row1 !== row2});
@@ -149,6 +138,8 @@ class MyComponent extends React.Component {
 
         return (
             <View style={styles.container}>
+                /*button send values*/
+
                 {/*练习下拉刷新，上拉加载组件，此处渲染视图*/}
                 {viewList}
             </View>
@@ -184,39 +175,4 @@ const styles = StyleSheet.create({
     }
 })
 
-
-const TopTabNav = TabNavigator(
-    {
-        全部: { screen: MyComponent },
-        红包: { screen: MyComponent },
-        报名: { screen: MyComponent },
-        返现: { screen: MyComponent },
-        有礼: { screen: MyComponent }
-    },
-
-    {
-        navigationOptions: ({ navigation }) => ({
-        }),
-        tabBarComponent: TabBarBottom,
-        tabBarPosition: 'top',
-        tabBarOptions: {
-            activeTintColor: '#DC3C78',
-            inactiveTintColor: 'gray',
-            showIcon: 'false',
-            showLabel: 'false',
-            tabStyle: {
-                width: 40,
-            },
-            labelStyle: {
-                fontSize: 15,
-            },
-        },
-        animationEnabled: false,
-        swipeEnabled: false,
-    }
-);
-
-
-
-
-module.exports= TopTabNav;
+module.exports= doubanComponent;

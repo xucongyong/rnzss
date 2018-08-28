@@ -33,6 +33,12 @@ class HomeScreen extends React.Component{
             <View>
                 <ScrollView>
                     <View>
+                        <Button
+                            title="goBack"
+                            onPress={() => this.props.navigation.goBack()}/>
+                        <Button
+                            title="ModalScreen"
+                            onPress={() => this.props.navigation.navigate('MyModal')}/>
                         <CommonCell
                             title={'扫一扫'}
                         />
@@ -60,18 +66,7 @@ const Screen = createStackNavigator(
             screen: DeatilScreen
         }
     },
-    {
-        initialRouteName: 'Home'
-    },
 )
-
-var Share = createReactClass({
-    render() {
-        return (
-            <Screen />
-        );
-    }
-})
 
 
 const styles = StyleSheet.create({
@@ -108,4 +103,4 @@ const styles = StyleSheet.create({
 });
 
 // output class
-module.exports = Share;
+module.exports = Screen;

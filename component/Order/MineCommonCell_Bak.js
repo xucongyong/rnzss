@@ -11,12 +11,6 @@ class Mine extends React.Component{
 }
 
 
-var MineCommonCell = createReactClass({
-    render() {
-        return (
-            <Mine />
-        );
-    }
-})
 
-module.exports = MineCommonCell;
+
+module.exports = Mine;

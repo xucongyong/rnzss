@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, View} from 'react-native';
-import { createStackNavigator } from 'react-navigation';
+import { StackNavigator } from 'react-navigation';
 
 var LoginScreen = require('../Login/Login');
 var MeScreen = require('./MeScreen');
@@ -13,7 +13,7 @@ class DeatilScreen extends React.Component{
             </View>
         )}}
 
-const HomeScreenExport = createStackNavigator(
+const HomeScreenExport = StackNavigator(
     {
         Home: {
             screen: MeScreen
@@ -24,9 +24,6 @@ const HomeScreenExport = createStackNavigator(
         Login: {
             screen: LoginScreen
         },
-    },
-    {
-        initialRouteName: 'Home'
     },
 )
 

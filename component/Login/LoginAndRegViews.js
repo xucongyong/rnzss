@@ -10,7 +10,6 @@ const LoginScreenNav =  createStackNavigator(
         Login: {screen: LoginScreen},
         Reg: {screen: RegScreen}
     },
-
 )
 
 

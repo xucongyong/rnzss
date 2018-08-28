@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {Platform, StyleSheet, Text, View, Button, TextInput, TouchableOpacity, Image, ScrollView} from 'react-native';
-import createReactClass from 'create-react-class';
-import { createStackNavigator } from 'react-navigation';
+import { StackNavigator } from 'react-navigation';
 
 var HomeDetails = require('./HomeDetails');
 var HomeNavigator = require('./HomeNavigator');
@@ -19,6 +18,9 @@ class Hometitle extends React.Component{
 class HomeScreen extends React.Component{
     static navigationOptions =({
         headerTitle: <Hometitle/>,
+        headerLeft:  <Button
+            title="ModalScreen"
+            onPress={() => this.props.navigation.navigate('MyModal')}/>,
         headerStyle: {
             backgroundColor: '#DC3C78'}})
   render(){
@@ -28,35 +30,21 @@ class HomeScreen extends React.Component{
   }
 }
 
-class DeatilScreen extends React.Component{
-    render(){
-        return(
-            <View style={{flex:1}}>
-                <Text>Deatil</Text>
-            </View>
-        )}}
 
-const Screen = createStackNavigator(
+
+const Screen = StackNavigator(
     {
         Home: {
           screen: HomeScreen
         },
         Details: {
-          screen: DeatilScreen
+          screen: HomeDetails
         }
     },
 {
-  initialRouteName: 'Home'
+    initialRouteName: 'Home',
 },
 )
-
-var Home = createReactClass({
-	render() {
-      return (
-      <Screen />
-    );
-  }
-})
 
 
 const styles = StyleSheet.create({
@@ -93,4 +81,4 @@ const styles = StyleSheet.create({
 });
 
 // output class
-module.exports = Home;
+module.exports = Screen;

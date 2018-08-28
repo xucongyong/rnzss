@@ -12,7 +12,7 @@ import {
 import createReactClass from 'create-react-class';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-var CommonCell = createReactClass({
+export default class CommonCell extends React.Component {{
 
     getDefaultProps(){
       return{
@@ -30,7 +30,7 @@ var CommonCell = createReactClass({
 
     )
     }
-});
+}
 
 
 const styles = StyleSheet.create({

@@ -15,7 +15,7 @@ import {
     Platform
 } from 'react-native';
 
-var MyCell = React.createClass({
+export default class MyCell extends React.Component {{
 
     getDefaultProps(){
         return{
@@ -67,7 +67,7 @@ var MyCell = React.createClass({
             )
         }
     }
-});
+};
 
 
 const styles = StyleSheet.create({

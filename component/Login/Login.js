@@ -20,6 +20,8 @@ class IndexTitle extends React.Component{
 export default class LoginScreen extends Component{
 
     static navigationOptions =({
+        mode: 'modal',
+        headerMode: 'none',
         headerTitle: <LoginTitle/>,
         headerLeft:  <IndexTitle/>,
         headerStyle: {

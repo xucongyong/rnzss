@@ -1,6 +1,8 @@
 import React from "react";
-
 import {StyleSheet,Text, View, ScrollView, Button} from "react-native";
+
+
+
 var CommonCell = require('./CommonCell');
 
 class Hometitle extends React.Component{
@@ -17,14 +19,17 @@ class MeScreen extends React.Component{
 
     static navigationOptions =({
         headerTitle: <Hometitle/>, //<TextInput></TextInput>,
-        // headerLeft: <HomeHeaderLeft />,
+        headerLeft:  <Button
+            title="ModalScreen"
+            onPress={() => this.props.navigation.navigate('MyModal')}/>,
         // headerRight: <HomeHeaderRight />,
         headerStyle: {
             backgroundColor: '#DC3C78',}})
     render(){
-        //console.log(this.openList)
-        //console.log(this.props)
-        //console.log('this.props')
+        console.log('this.openList')
+        console.log(this.props.navigation)
+        console.log(this.props)
+        console.log('this.props')
         return(
             <View style={{flex:1}}>
                 <ScrollView>
@@ -44,11 +49,11 @@ class MeScreen extends React.Component{
                         />
                         <Button
                             title="注册"
-                            onPress={() => this.props.navigation.navigate('Reg')}
+                            onPress={() => this.props.navigation.navigate('Login')}
                         />
                         <Button
-                            title="首页"
-                            onPress={() => this.props.navigation.navigate('Login')}/>
+                            title="ModalScreen"
+                            onPress={() => this.props.navigation.navigate('MyModal')}/>
                     </View>
                 </ScrollView>
             </View>
