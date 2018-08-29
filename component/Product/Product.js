@@ -1,7 +1,9 @@
 import React from "react";
-import {StyleSheet,Text, View, ScrollView, Button} from "react-native";
+import {StyleSheet,Dimensions,Text, View, ScrollView, Button,Image} from "react-native";
 
-
+const window = Dimensions.get('window');
+const imageWidth = (window.width/3)+30;
+const imageHeight = window.width/3;
 
 var CommonCell = require('./CommonCell');
 
@@ -14,23 +16,6 @@ class Hometitle extends React.Component{
 
             </View>
         )}}
-
-class goBackButton extends React.Component{
-    render(){
-        return(
-            <Button
-                title="Back"
-                onPress={() => this.props.navigation.goBack()}/>
-        )}}
-
-class shareButton extends React.Component{
-    render(){
-        return(
-            <Button
-                title="Back"
-                onPress={() => this.props.navigation.goBack()}/>
-        )}}
-
 
 class ProductScreen extends React.Component{
 
@@ -45,7 +30,24 @@ class ProductScreen extends React.Component{
         headerTransparent:true})
     render(){
         return(
-            <View style={{flex:1}}>
+            <View>
+                <ScrollView style={styles.container}>
+                    <View style={styles.child}>
+                    <Image
+                        source={{uri: 'https://mcdn.pinduoduo.com/assets/img/mpdd_brand_sale.jpg'}}
+                            />
+                </View>
+                    <View style={styles.child}>
+                    <Image
+                    source={{uri: 'https://mcdn.pinduoduo.com/assets/img/mpdd_sale.png'}}
+                        />
+                        </View>
+                    <View style={styles.child}>
+                    <Image
+                    source={{uri: 'https://mcdn.pinduoduo.com/assets/img/mpdd_you.png'}}
+                        />
+                        </View>
+                </ScrollView>
                 <ScrollView>
                     <View>
                         <CommonCell
@@ -99,6 +101,22 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingLeft: 8,
 
-    }});
+    },
+    HeaderScrollView:{
+        flex:1,
+        flexDirection:'row',
+        flexWrap: 'wrap'
+    },
+    image:{
+        width: imageWidth,
+        height: imageHeight
+    },
+    child:{
+        width: window.width/2,
+        alignItems: 'center',
+        height: imageHeight+5,
+        marginTop: 10,
+    },
+});
 
 module.exports = ProductScreen;
