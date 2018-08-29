@@ -36,10 +36,13 @@ class ProductScreen extends React.Component{
 
     static navigationOptions =({
         headerTitle: <Hometitle/>, //<TextInput></TextInput>,
-        headerLeft:  <goBackButton />,
-        headerRight: <shareButton />,
-        headerStyle: {
-            backgroundColor: 'transparent',}})
+        headerLeft:  <Button
+            title="Back"
+            onPress={() => this.props.navigation.goBack()}/>,
+        headerRight: <Button
+            title="Back"
+            onPress={() => this.props.navigation.goBack()}/>,
+        headerTransparent:trueq})
     render(){
         return(
             <View style={{flex:1}}>

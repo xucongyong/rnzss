@@ -72,6 +72,14 @@ const TabView = TabNavigator(
     }
 )
 
+const productViews = StackNavigator(
+    {
+        products:{
+            screen: ProductScreen
+        }
+    }
+)
+
 
 const RootStack = StackNavigator(
     {
@@ -79,7 +87,7 @@ const RootStack = StackNavigator(
             screen: TabView,
         },
         Product:{
-            screen: ProductScreen,
+            screen: productViews,
         },
         MyModal: {
             screen: ModalScreen,
