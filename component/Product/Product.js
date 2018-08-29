@@ -42,7 +42,7 @@ class ProductScreen extends React.Component{
         headerRight: <Button
             title="Back"
             onPress={() => this.props.navigation.goBack()}/>,
-        headerTransparent:trueq})
+        headerTransparent:true})
     render(){
         return(
             <View style={{flex:1}}>
