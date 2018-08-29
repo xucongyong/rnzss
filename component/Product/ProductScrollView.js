@@ -54,7 +54,7 @@ class BagView extends Component{
             var offsetX = currentPage * ScreenWidth;
             this.refs.scrollView.scrollTo({x:offsetX,y:0,animated:true});
             console.log(currentPage);
-        },4000);
+        },3000);
     }
     //开始滑动
     handleScrollBegin = ()=>{
@@ -64,9 +64,10 @@ class BagView extends Component{
 
     handleScrollEnd = ()=>{
         console.log("handleScrollEnd");
+        console.log(JsonData);
+        console.log(JsonData);
         this.startTimer();
     }
-
     render() {
         return <View style={styles.container}>
             {/*注释不能卸载<>括号里面，
