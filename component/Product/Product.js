@@ -13,7 +13,6 @@ class Hometitle extends React.Component{
             <View style={styles.HeaderTitle}>
                 <Text style={{color:'white',fontSize:17}}>
                     产品详情</Text>
-
             </View>
         )}}
 
@@ -22,10 +21,10 @@ class ProductScreen extends React.Component{
     static navigationOptions =({
         headerTitle: <Hometitle/>, //<TextInput></TextInput>,
         headerLeft:  <Button
-            title="Back"
+            title="返回"
             onPress={() => this.props.navigation.goBack()}/>,
         headerRight: <Button
-            title="Back"
+            title="分享"
             onPress={() => this.props.navigation.goBack()}/>,
         headerTransparent:true})
     render(){
@@ -66,7 +65,6 @@ class ProductScreen extends React.Component{
                             title="X1x"
                             onPress={() => this.props.navigation.navigate('X1x')}/>
                     </View>
-
                 </ScrollView>
             </View>
         )

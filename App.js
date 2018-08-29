@@ -34,10 +34,10 @@ class ModalScreen extends React.Component {
 
 const TabView = TabNavigator(
     {
-        我的: { screen: Me },
         试用: { screen: Home },
         分享: { screen: Share },
         订单: { screen: TaskView },
+        我的: { screen: Me },
     },
     {
         navigationOptions: ({ navigation }) => ({
@@ -101,7 +101,7 @@ const RootStack = StackNavigator(
 
     },
     {
-        mode: 'modal',
+        //mode: 'modal',
         headerMode: 'none',
     }
 )
