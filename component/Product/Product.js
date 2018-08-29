@@ -10,26 +10,37 @@ class Hometitle extends React.Component{
         return(
             <View style={styles.HeaderTitle}>
                 <Text style={{color:'white',fontSize:17}}>
-                    个人中心</Text>
+                    产品详情</Text>
 
             </View>
         )}}
+
+class goBackButton extends React.Component{
+    render(){
+        return(
+            <Button
+                title="Back"
+                onPress={() => this.props.navigation.goBack()}/>
+        )}}
+
+class shareButton extends React.Component{
+    render(){
+        return(
+            <Button
+                title="Back"
+                onPress={() => this.props.navigation.goBack()}/>
+        )}}
+
 
 class ProductScreen extends React.Component{
 
     static navigationOptions =({
         headerTitle: <Hometitle/>, //<TextInput></TextInput>,
-        headerLeft:  <Button
-            title="ModalScreen"
-            onPress={() => this.props.navigation.navigate('MyModal')}/>,
-        // headerRight: <HomeHeaderRight />,
+        headerLeft:  <goBackButton />,
+        headerRight: <shareButton />,
         headerStyle: {
-            backgroundColor: '#DC3C78',}})
+            backgroundColor: 'transparent',}})
     render(){
-        console.log('this.openList')
-        console.log(this.props.navigation)
-        console.log(this.props)
-        console.log('this.props')
         return(
             <View style={{flex:1}}>
                 <ScrollView>
@@ -65,9 +76,6 @@ class ProductScreen extends React.Component{
                         <Button
                             title="X1x"
                             onPress={() => this.props.navigation.navigate('X1x')}/>
-
-
-
                     </View>
 
                 </ScrollView>
