@@ -38,8 +38,11 @@ class MeScreen extends React.Component{
                             title="Order"
                             onPress={() => this.props.navigation.navigate('Order')}/>
                         <Button
-                            title="LoginAndReg"
-                            onPress={() => this.props.navigation.navigate('LoginAndReg')}/>
+                            title="Login"
+                            onPress={() => this.props.navigation.navigate('Login')}/>
+                        <Button
+                            title="Reg"
+                            onPress={() => this.props.navigation.navigate('Reg')}/>
                     </View>
 
                 </ScrollView>

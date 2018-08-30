@@ -48,28 +48,6 @@ const TabView = TabNavigator(
     }
 )
 
-
-
-const RootStack1 = StackNavigator(
-    {
-        ProductScreen:{
-            screen: ProductScreen,
-        },
-        LoginAndReg: {
-            screen: LoginScreen,
-        },
-        Order: {
-            screen: OrderScreen,
-        },
-    },
-    {
-        //initialRouteName: 'ProductScreen',
-        headerMode: 'none',
-        //headerTransparent:true,
-    }
-)
-
-
 const RootStack = StackNavigator(
     {
         TestMain:{
@@ -78,30 +56,36 @@ const RootStack = StackNavigator(
                 headerTransparent:true,
             }
         },
-        RootStack1:{
-            screen: RootStack1,
+        ProductScreen:{
+            screen: ProductScreen,
+            navigationOptions:{
+                headerTransparent:true,
+            }
+        },
+        Login: {
+            screen: LoginScreen,
+            navigationOptions:{
+                headerTransparent:true,
+            }
+        },
+        Reg: {
+            screen: LoginRegScreen,
+            navigationOptions:{
+                headerTransparent:true,
+            }
+        },
+        Order: {
+            screen: OrderScreen,
             navigationOptions:{
                 headerTransparent:true,
             }
         },
     },
     {
-        //initialRouteName: 'ProductScreen',
-        //headerMode: 'none',
-        //headerTransparent:true,
+        initialRouteName: 'TestMain',
     }
 )
 
-// const testRootStackx = StackNavigator(
-//     {
-//         TabView: {
-//             screen: TabView,
-//         },
-//         Hellowork:{
-//             screen: RootStack,
-//         }
-//     }
-// )
 
 
 

@@ -2,26 +2,8 @@ import React from 'react';
 import {StyleSheet, View, Button, TextInput} from 'react-native';
 
 
+class RegScreen extends React.Component{
 
-class IndexTitle extends React.Component{
-    render(){
-        return(
-            <Button
-                title="MyModal"
-                onPress={() => this.props.navigation.navigate('MyModal')}/>
-        )}}
-class RegTitle extends React.Component{
-    render(){
-        return(
-            <Button 
-                title="MyModal"
-                onPress={() => this.props.navigation.navigate('MyModal')}/>
-        )}}
-
-export default class RegScreen extends React.Component{
-      static navigationOptions =({
-        headerMode: 'none',
-        headerTransparent:true})
 
     render(){
         return(
@@ -33,10 +15,7 @@ export default class RegScreen extends React.Component{
               placeholder="请输入密码"
                  />
             <View style={styles.button}>
-                <Button
-                    title="登陆"
-                    onPress={() => this.props.navigation.navigate('Details')}
-                />
+
                 <Button
                     title="注册"
                     onPress={() => this.props.navigation.navigate('Reg')}
@@ -49,9 +28,7 @@ export default class RegScreen extends React.Component{
                     title="订单"
                     onPress={() => this.props.navigation.navigate('订单')}
                 />
-                <Button
-                    title="ModalScreen"
-                    onPress={() => this.props.navigation.navigate('MyModal')}/>
+
             </View>
             </View>
         )}}
