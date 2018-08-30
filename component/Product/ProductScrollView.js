@@ -9,7 +9,7 @@ import {
 var JsonData=require('./test2.json');
 var Dimensions = require('Dimensions');
 var ScreenWidth = Dimensions.get('window').width;
-var boxWidth = Dimensions.get('window').width / 3;
+var boxWidth = Dimensions.get('window').width;
 
 class BagView extends Component{
     constructor(props){
@@ -106,7 +106,7 @@ var styles = StyleSheet.create({
     },
     imageStyle: {
         width: ScreenWidth,
-        height: 120
+        height: boxWidth
     },
     circleWrapperStyle:{
         flexDirection:'row',

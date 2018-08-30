@@ -31,6 +31,18 @@ class MeScreen extends React.Component{
                         <CommonCell
                             title={'余额提现'}
                         />
+                        <CommonCell
+                            title={'账号'}
+                        />
+                        <CommonCell
+                            title={'微信'}
+                        />
+                        <CommonCell
+                            title={'手机'}
+                        />
+                        <CommonCell
+                            title={'实名验证'}
+                        />
                         <Button
                             title="ProductScreen"
                             onPress={() => this.props.navigation.navigate('ProductScreen')}/>

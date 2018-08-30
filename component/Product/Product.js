@@ -3,10 +3,9 @@ import {StyleSheet,Dimensions,Text, View, ScrollView, Button,Image} from "react-
 const ProductScrollView = require('./ProductScrollView')
 const window = Dimensions.get('window');
 const imageWidth = (window.width/3)+30;
-const imageHeight = window.width/3;
+const imageHeight = window.height;
 
 var CommonCell = require('./CommonCell');
-
 
 
 
@@ -18,8 +17,15 @@ class ProductScreen extends React.Component{
         return(
             <View>
                 <ProductScrollView />
+
+                <View style={styles.comments}>
+               <View><Text>活动类型：</Text></View>
+               <View><Text>剩余活动：</Text></View>
+                <View><Text>剩余活动：</Text></View>
+                </View>
                 <ScrollView>
                     <View>
+                        <Text>PPRODUCTDETAILS</Text>
                         <CommonCell
                             title={'余额提现'}
                         />
@@ -83,7 +89,7 @@ const styles = StyleSheet.create({
     },
     image:{
         width: imageWidth,
-        height: imageHeight
+        height: imageHeight * 0.5
     },
     child:{
         width: window.width/2,
@@ -91,6 +97,9 @@ const styles = StyleSheet.create({
         height: imageHeight+5,
         marginTop: 10,
     },
+    comments:{
+        height: imageHeight * 0.1,
+    }
 });
 
 module.exports = ProductScreen;

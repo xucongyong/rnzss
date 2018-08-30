@@ -44,7 +44,7 @@ const TabView = TabNavigator(
                 return <Ionicons name={iconName} size={25} color={tintColor} />;
             },
         }),
-        initialRouteName: '试用',
+        initialRouteName: '我的',
     }
 )
 
@@ -82,7 +82,7 @@ const RootStack = StackNavigator(
         },
     },
     {
-        initialRouteName: 'TestMain',
+        initialRouteName: 'ProductScreen',
     }
 )
 
