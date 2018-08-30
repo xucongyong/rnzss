@@ -10,6 +10,11 @@ const LoginScreenNav =  StackNavigator(
         Login: {screen: LoginScreen},
         Reg: {screen: RegScreen}
     },
+     {
+        //headerMode: 'none',
+        //headerTransparent:true
+
+}
 )
 
 

@@ -17,12 +17,6 @@ class Hometitle extends React.Component{
 
 
 class HomeScreen extends React.Component{
-    static navigationOptions =({
-        headerTitle: <Hometitle/>, //<TextInput></TextInput>,
-        // headerLeft: <HomeHeaderLeft />,
-        // headerRight: <HomeHeaderRight />,
-        headerStyle: {
-            backgroundColor: '#DC3C78',}})
     render(){
         return(
             <View style={{flex:1}}>

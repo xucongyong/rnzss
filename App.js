@@ -1,6 +1,6 @@
 import {TabNavigator, StackNavigator, TabBarBottom} from 'react-navigation'; // Version can be specified in package.json
 import React from 'react';
-import {Text, Button, View} from 'react-native'
+import {Text, Button, View, AppRegistry } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 //** --- input class --- **//
@@ -11,26 +11,7 @@ var Me = require('./component/Me/Me');
 var ProductScreen = require('./component/Product/Product')
 var OrderScreen = require('./component/Order/Order')
 var LoginRegScreen = require('./component/Login/LoginAndRegViews')
-class ModalScreen extends React.Component {
-    static navigationOptions = ({
-        headerTitle: <Button
-            title="首页"
-            onPress={() => this.props.navigation.goBack()}/>,
-    })
-    render() {
-        return(
-            <View>
-                <Text>MODAL</Text>
-                <Text>MODAL</Text>
-                <Button
-                    title="goBack"
-                    onPress={() => this.props.navigation.goBack()}/>
-                <Button
-                    title="ModalScreen"
-                    onPress={() => this.props.navigation.navigate('MyModal')}/>
-            </View>
-        )}
-};
+var LoginScreen = require('./component/Login/Login')
 
 const TabView = TabNavigator(
     {
@@ -63,48 +44,66 @@ const TabView = TabNavigator(
                 return <Ionicons name={iconName} size={25} color={tintColor} />;
             },
         }),
-        tabBarComponent: TabBarBottom,
-        tabBarPosition: 'bottom',
-        tabBarOptions: {
-            activeTintColor: '#DC3C78',
-            inactiveTintColor: 'gray',
-        },
+        initialRouteName: '试用',
     }
 )
 
-const productViews = StackNavigator(
+
+
+const RootStack1 = StackNavigator(
     {
-        products:{
-            screen: ProductScreen
-        }
+        ProductScreen:{
+            screen: ProductScreen,
+        },
+        LoginAndReg: {
+            screen: LoginScreen,
+        },
+        Order: {
+            screen: OrderScreen,
+        },
+    },
+    {
+        //initialRouteName: 'ProductScreen',
+        headerMode: 'none',
+        //headerTransparent:true,
     }
 )
 
 
 const RootStack = StackNavigator(
     {
-        Main: {
+        TestMain:{
             screen: TabView,
+            navigationOptions:{
+                headerTransparent:true,
+            }
         },
-        Product:{
-            screen: productViews,
+        RootStack1:{
+            screen: RootStack1,
+            navigationOptions:{
+                headerTransparent:true,
+            }
         },
-        MyModal: {
-            screen: ModalScreen,
-        },
-        Order: {
-            screen: OrderScreen,
-        },
-        LoginAndReg: {
-            screen: LoginRegScreen,
-        }
-
     },
     {
-        //mode: 'modal',
-        headerMode: 'none',
+        //initialRouteName: 'ProductScreen',
+        //headerMode: 'none',
+        //headerTransparent:true,
     }
 )
+
+// const testRootStackx = StackNavigator(
+//     {
+//         TabView: {
+//             screen: TabView,
+//         },
+//         Hellowork:{
+//             screen: RootStack,
+//         }
+//     }
+// )
+
+
 
 export default class shop extends React.Component{
     render(){

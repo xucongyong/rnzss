@@ -18,13 +18,7 @@ class Hometitle extends React.Component{
 class ProductScreen extends React.Component{
 
     static navigationOptions =({
-        headerTitle: <Hometitle/>, //<TextInput></TextInput>,
-        headerLeft:  <Button
-            title="ModalScreen"
-            onPress={() => this.props.navigation.navigate('MyModal')}/>,
-        // headerRight: <HomeHeaderRight />,
-        headerStyle: {
-            backgroundColor: '#DC3C78',}})
+        headerTransparent:true,})
     render(){
         console.log('this.openList')
         console.log(this.props.navigation)

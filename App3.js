@@ -3,6 +3,9 @@ import { Platform, StyleSheet, Text, View, Button } from 'react-native';
 //import HttpUtils from './HttpUtils'
 import { StackNavigator, TabNavigator } from 'react-navigation';
 
+
+
+
 class HomeScreen extends React.Component {
     // static navigationOptions = ({
     //     headerTitle: <Text>'121212' </Text>,
@@ -11,57 +14,204 @@ class HomeScreen extends React.Component {
     render() {
         return(
             <View>
-                <Text>HomeScreen</Text>
+                <Text>empter</Text>
+                {console.log(this.props)}
+                {console.log(this.props)}
 
-                    <Button
-                        title="goBack"
-                        onPress={() => this.props.navigation.goBack()}/>
-                    <Button
-                        title="ModalScreen"
-                        onPress={() => this.props.navigation.navigate('MyModal')}/>
-            </View>
-        )}
-    };
-
-class DetailsScreen extends React.Component {
-    // static navigationOptions = ({
-    //     headerTitle: <Text>'121212' </Text>,
-    // })
-    render() {
-        return(
-            <View>
-                <Text>DetailsScreen</Text>
-                    <Button
-                        title="goBack"
-                        onPress={() => this.props.navigation.goBack()}/>
-                    <Button
-                        title="ModalScreen"
-                        onPress={() => this.props.navigation.navigate('MyModal')}/>
-            </View>
-        )}
-};
-
-class ModalScreen extends React.Component {
-    static navigationOptions = ({
-        headerTitle: <Button
-                        title="首页"
-                        onPress={() => this.props.navigation.goBack()}/>,
-    })
-    render() {
-        return(
-            <View>
                 <Button
                     title="goBack"
                     onPress={() => this.props.navigation.goBack()}/>
                 <Button
                     title="ModalScreen"
-                    onPress={() => this.props.navigation.navigate('MyModal')}/>
-                <Text>MODAL</Text>
+                    onPress={() => this.props.navigation.navigate('ModalScreen')}/>
+                <Text>ModalScreen1</Text>
+                <Button
+                    title="ModalScreen1"
+                    onPress={() => this.props.navigation.navigate('ModalScreen1')}/>
+                <Button
+                    title="ModalScreen2"
+                    onPress={() => this.props.navigation.navigate('ModalScreen2')}/>
+                <Button
+                    title="Details"
+                    onPress={() => this.props.navigation.navigate('Details')}/>
+
+                <Button
+                    title="SubHome"
+                    onPress={() => this.props.navigation.navigate('SubHome')}/>
+                <Button
+                    title="SubDetails1"
+                    onPress={() => this.props.navigation.navigate('SubDetails1')}/>
             </View>
-        )}
-};
+        )}}
+
+class DetailsScreen extends React.Component {
+    static navigationOptions = ({
+        headerTransparent:'true'
+    })
+    render() {
+        return(
+            <View>
+            <Text>empter</Text>
+        {console.log(this.props)}
+        {console.log(this.props)}
+
+        <Button
+            title="goBack"
+            onPress={() => this.props.navigation.goBack()}/>
+        <Button
+        title="ModalScreen"
+        onPress={() => this.props.navigation.navigate('ModalScreen')}/>
+        <Text>ModalScreen1</Text>
+        <Button
+        title="ModalScreen1"
+        onPress={() => this.props.navigation.navigate('ModalScreen1')}/>
+        <Button
+            title="ModalScreen2"
+            onPress={() => this.props.navigation.navigate('ModalScreen2')}/>
+        <Button
+        title="Details"
+        onPress={() => this.props.navigation.navigate('Details')}/>
+
+        <Button
+            title="SubHome"
+            onPress={() => this.props.navigation.navigate('SubHome')}/>
+        <Button
+        title="SubDetails1"
+        onPress={() => this.props.navigation.navigate('SubDetails1')}/>
+            </View>
+    )}}
+
+
+class ModalScreen extends React.Component {
+    static navigationOptions = ({
+        headerRight: <Button
+                        title="首页"
+                        onPress={() => this.props.navigation.goBack()}/>,
+        headerTransparent:'true'
+    })
+    render() {
+        return(
+            <View>
+                <Text>empter</Text>
+                {console.log(this.props)}
+                {console.log(this.props)}
+
+                <Button
+                    title="goBack"
+                    onPress={() => this.props.navigation.goBack()}/>
+                <Button
+                    title="ModalScreen"
+                    onPress={() => this.props.navigation.navigate('ModalScreen')}/>
+                <Text>ModalScreen1</Text>
+                <Button
+                    title="ModalScreen1"
+                    onPress={() => this.props.navigation.navigate('ModalScreen1')}/>
+                <Button
+                    title="ModalScreen2"
+                    onPress={() => this.props.navigation.navigate('ModalScreen2')}/>
+                <Button
+                    title="Details"
+                    onPress={() => this.props.navigation.navigate('Details')}/>
+
+                <Button
+                    title="SubHome"
+                    onPress={() => this.props.navigation.navigate('SubHome')}/>
+                <Button
+                    title="SubDetails1"
+                    onPress={() => this.props.navigation.navigate('SubDetails1')}/>
+            </View>
+        )}}
+
+class ModalScreen1 extends React.Component {
+    static navigationOptions = ({
+        headerRight: <Button
+            title="首页"
+            onPress={() => this.props.navigation.goBack()}/>,
+        headerTransparent:'true'
+    })
+    render() {
+        return(
+            <View>
+                <Text>empter</Text>
+                {console.log(this.props)}
+                {console.log(this.props)}
+
+                <Button
+                    title="goBack"
+                    onPress={() => this.props.navigation.goBack()}/>
+                <Button
+                    title="ModalScreen"
+                    onPress={() => this.props.navigation.navigate('ModalScreen')}/>
+                <Text>ModalScreen1</Text>
+                <Button
+                    title="ModalScreen1"
+                    onPress={() => this.props.navigation.navigate('ModalScreen1')}/>
+                <Button
+                    title="ModalScreen2"
+                    onPress={() => this.props.navigation.navigate('ModalScreen2')}/>
+                <Button
+                    title="Details"
+                    onPress={() => this.props.navigation.navigate('Details')}/>
+
+                <Button
+                    title="SubHome"
+                    onPress={() => this.props.navigation.navigate('SubHome')}/>
+                <Button
+                    title="SubDetails1"
+                    onPress={() => this.props.navigation.navigate('SubDetails1')}/>
+            </View>
+        )}}
+
+class ModalScreen2 extends React.Component {
+    static navigationOptions = ({
+        headerRight: <Button
+            title="首页"
+            onPress={() => this.props.navigation.goBack()}/>,
+        headerTransparent:'true'
+    })
+    render() {
+        return(
+            <View>
+                <Text>empter</Text>
+                {console.log(this.props)}
+                {console.log(this.props)}
+
+                <Button
+                    title="goBack"
+                    onPress={() => this.props.navigation.goBack()}/>
+                <Button
+                    title="ModalScreen"
+                    onPress={() => this.props.navigation.navigate('ModalScreen')}/>
+                <Text>ModalScreen1</Text>
+                <Button
+                    title="ModalScreen1"
+                    onPress={() => this.props.navigation.navigate('ModalScreen1')}/>
+                <Button
+                    title="ModalScreen2"
+                    onPress={() => this.props.navigation.navigate('ModalScreen2')}/>
+                <Button
+                    title="Details"
+                    onPress={() => this.props.navigation.navigate('Details')}/>
+
+                <Button
+                    title="SubHome"
+                    onPress={() => this.props.navigation.navigate('SubHome')}/>
+                <Button
+                    title="SubDetails1"
+                    onPress={() => this.props.navigation.navigate('SubDetails1')}/>
+            </View>
+        )}}
 
 const TabNavigator1 = TabNavigator({
+    SubHome: {
+        screen: HomeScreen,
+    },
+    SubDetails1: {
+        screen: DetailsScreen,
+    }},
+);
+
+const StackNavigator1 = StackNavigator({
     Home: {
         screen: HomeScreen,
     },
@@ -69,7 +219,6 @@ const TabNavigator1 = TabNavigator({
         screen: DetailsScreen,
     }},
 );
-
 
 const MainStack = TabNavigator({
     Home: {
@@ -83,17 +232,22 @@ const MainStack = TabNavigator({
 
 
 const RootStack = StackNavigator({
-    Main: {
+     MainStack: {
         screen: MainStack,
     },
-    MyModal: {
+    ModalScreen: {
         screen: ModalScreen,
     },
-
+    ModalScreen1: {
+        screen: ModalScreen1,
+    },
+    ModalScreen2: {
+        screen: ModalScreen2,
+    },
 },
 {
-    mode: 'modal',
-    headerMode: 'none',
+    initialRouteName: 'ModalScreen',
+    //headerMode: 'none',
 }
 );
 

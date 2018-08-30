@@ -7,26 +7,13 @@ const imageHeight = window.width/3;
 
 var CommonCell = require('./CommonCell');
 
-class Hometitle extends React.Component{
-    render(){
-        return(
-            <View style={styles.HeaderTitle}>
-                <Text style={{color:'white',fontSize:17}}>
-                    产品详情</Text>
-            </View>
-        )}}
+
+
 
 class ProductScreen extends React.Component{
-
-    static navigationOptions =({
-        headerTitle: <Hometitle/>, //<TextInput></TextInput>,
-        headerLeft:  <Button
-            title="返回"
-            onPress={() => this.props.navigation.goBack()}/>,
-        headerRight: <Button
-            title="分享"
-            onPress={() => this.props.navigation.goBack()}/>,
-        headerTransparent:true})
+    // static navigationOptions =({
+    //     headerTransparent:true
+    // })
     render(){
         return(
             <View>
@@ -42,6 +29,9 @@ class ProductScreen extends React.Component{
                         <CommonCell
                             title={'身份验证'}
                         />
+                        {console.log('class ProductScreen extends React.Componentthis.props')}
+                        {console.log(this.props)}
+
                         <Button
                             title="登陆"
                             onPress={() => this.props.navigation.navigate('Details')}
@@ -62,8 +52,8 @@ class ProductScreen extends React.Component{
                             title="ModalScreen"
                             onPress={() => this.props.navigation.navigate('MyModal')}/>
                         <Button
-                            title="X1x"
-                            onPress={() => this.props.navigation.navigate('X1x')}/>
+                            title="goBack"
+                            onPress={() => this.props.navigation.goBack()}/>
                     </View>
                 </ScrollView>
             </View>

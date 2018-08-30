@@ -21,12 +21,6 @@ const {width, height} = Dimensions.get('window');
 const dataUrl = 'https://api.douban.com/v2/movie/top250?count=350';
 
 class MyComponent extends React.Component {
-    static navigationOptions = ({
-
-        mode: 'modal',
-        headerMode: 'none',
-
-    })
     constructor(props){
         super(props);
         const ds = new ListView.DataSource({rowHasChanged : (row1, row2) =>  row1 !== row2});
@@ -196,7 +190,7 @@ const TopTabNav = TabNavigator(
     {
         navigationOptions: ({ navigation }) => ({
         }),
-        tabBarComponent: TabBarBottom,
+        // tabBarComponent: TabBarBottom,
         tabBarPosition: 'top',
         tabBarOptions: {
             activeTintColor: '#DC3C78',
@@ -204,7 +198,7 @@ const TopTabNav = TabNavigator(
             showIcon: 'false',
             showLabel: 'false',
             tabStyle: {
-                width: 40,
+                width: 10,
             },
             labelStyle: {
                 fontSize: 15,

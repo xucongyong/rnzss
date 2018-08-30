@@ -18,16 +18,10 @@ class Hometitle extends React.Component{
 class MeScreen extends React.Component{
 
     static navigationOptions =({
-        headerTitle: <Hometitle/>, //<TextInput></TextInput>,
-        headerLeft:  <Button
-            title="ModalScreen"
-            onPress={() => this.props.navigation.navigate('MyModal')}/>,
-        // headerRight: <HomeHeaderRight />,
+        headerTitle: <Hometitle/>,
         headerStyle: {
             backgroundColor: '#DC3C78',}})
     render(){
-        console.log('this.openList')
-        console.log(this.props.navigation)
         console.log(this.props)
         console.log('this.props')
         return(
@@ -37,22 +31,9 @@ class MeScreen extends React.Component{
                         <CommonCell
                             title={'余额提现'}
                         />
-                        <CommonCell
-                            title={'手机号'}
-                        />
-                        <CommonCell
-                            title={'身份验证'}
-                        />
-                        <Button
-                            title="订单"
-                            onPress={() => this.props.navigation.navigate('订单')}
-                        />
-                        <Button
-                            title="ModalScreen"
-                            onPress={() => this.props.navigation.navigate('MyModal')}/>
                         <Button
                             title="ProductScreen"
-                            onPress={() => this.props.navigation.navigate('Product')}/>
+                            onPress={() => this.props.navigation.navigate('ProductScreen')}/>
                         <Button
                             title="Order"
                             onPress={() => this.props.navigation.navigate('Order')}/>

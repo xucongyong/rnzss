@@ -20,12 +20,8 @@ class RegTitle extends React.Component{
 
 export default class RegScreen extends React.Component{
       static navigationOptions =({
-        mode: 'modal',
         headerMode: 'none',
-        headerTitle: <RegTitle/>, //<TextInput></TextInput>,
-        headerLeft:  <IndexTitle/>,
-        headerStyle: {
-            backgroundColor: '#DC3C78'}})
+        headerTransparent:true})
 
     render(){
         return(

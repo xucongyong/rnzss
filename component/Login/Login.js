@@ -5,28 +5,29 @@ class LoginTitle extends React.Component{
     render(){
         return(
             <Button 
-                title="MyModal"
-                onPress={() => this.props.navigation.navigate('MyModal')}/>
+                title="goBac1k"
+                onPress={() => navigation.goBack()}/>
         )}}
 
 class IndexTitle extends React.Component{
     render(){
         return(
             <Button 
-                title="MyModal"
-                onPress={() => this.props.navigation.navigate('MyModal')}/>
+                title="goBack"
+                onPress={() => this.props.navigation.goBack()}/>
         )}}
 
-export default class LoginScreen extends React.Component{
-
-    static navigationOptions =({
-        mode: 'modal',
-        headerMode: 'none',
-        headerTitle: <LoginTitle/>,
-        headerLeft:  <IndexTitle/>,
-        headerStyle: {
-            backgroundColor: '#DC3C78'}})
+class LoginScreen extends React.Component{
+    static navigationOptions={
+        HeaderTitle:'2121',
+    //     headerLeft:<Button
+    //         title="订单"
+    //         onPress={() => this.props.navigation.navigate('Main')} />
+    //
+        }
     render(){
+        console.log(this.props)
+        console.log('this.props')
         return(
             <View style={styles.login}>
               <TextInput style={styles.textinput}
