@@ -9,13 +9,13 @@ export default class App extends Component {
     super();
     this.state = {
       jwt: '',
-      loading: true
+      loading: true,
     }
 
-    this.newJWT = this.newJWT.bind(this);
-    this.deleteJWT = deviceStorage.deleteJWT.bind(this);
-    this.loadJWT = deviceStorage.loadJWT.bind(this);
-    this.loadJWT();
+    this.newJWT = this.newJWT.bind(this); //set new jwt of static
+    this.deleteJWT = deviceStorage.deleteJWT.bind(this); //删除JWT
+    this.loadJWT = deviceStorage.loadJWT.bind(this); //加载jwt
+    this.loadJWT();//启动时，会先加载jwt
   }
 
   newJWT(jwt){
@@ -23,18 +23,18 @@ export default class App extends Component {
       jwt: jwt
     });
   }
-
   render() {
     if (this.state.loading) {
       return (
         <Loading size={'large'} />
        );
-    } else if (!this.state.jwt) {
+    }
+      else if (!this.state.jwt) {
       return (
-        <Auth newJWT={this.newJWT} />
+          <Auth newJWT={this.newJWT} />
       );
     } else if (this.state.jwt) {
-      return (
+        return (
         <LoggedIn jwt={this.state.jwt} deleteJWT={this.deleteJWT} />
       );
     }

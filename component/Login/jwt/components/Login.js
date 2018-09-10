@@ -8,7 +8,7 @@ class Login extends Component {
   constructor(props){
     super(props);
     this.state = {
-      email: '',
+      username: '',
       password: '',
       error: '',
       loading: false
@@ -20,7 +20,6 @@ class Login extends Component {
 
   loginUser() {
     const { email, password, password_confirmation } = this.state;
-
     this.setState({ error: '', loading: true });
 
     // NOTE Post to HTTPS only in production

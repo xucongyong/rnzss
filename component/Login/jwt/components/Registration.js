@@ -27,13 +27,13 @@ class Registration extends Component {
     // NOTE Post to HTTPS only in production
     axios.post("http://127.0.0.1:8000/sign_up",{
       user: {
-        email: email,
+        username: email,
         password: password,
         password_confirmation: password_confirmation
       }
     },)
     .then((response) => {
-      deviceStorage.saveKey("id_token", response.data.jwt);
+      deviceStorage.saveKey("token", response.data.jwt);
       this.props.newJWT(response.data.jwt);
     })
     .catch((error) => {

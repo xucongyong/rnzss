@@ -14,13 +14,18 @@ class ProductScreen extends React.Component{
     //     headerTransparent:true
     // })
     render(){
+        const productID = this.props.navigation.getParam('productID','NO-ID')
+        const imageUrl = this.props.navigation.getParam('imageUrl','NO-ImageUrl')
+        //const imageUrl = JSON.stringify(this.props.navigation.getParam('imageUrl','NO-ImageUrl'))
+        console.log(imageUrl)
         return(
             <View>
                 <ProductScrollView />
+                <View style={styles.comments}><Image source={imageUrl}/></View>
 
                 <View style={styles.comments}>
-               <View><Text>活动类型：</Text></View>
-               <View><Text>剩余活动：</Text></View>
+                <View><Text>{productID}</Text></View>
+                    <View><Text>活动类型：</Text></View>
                 <View><Text>剩余活动：</Text></View>
                 </View>
                 <ScrollView>
