@@ -2,6 +2,7 @@ import { TabNavigator, StackNavigator, TabBarBottom } from 'react-navigation'; /
 import React from 'react';
 import { Text, Button, View, AppRegistry } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import deviceStorage from "./component/Login/jwt/services/deviceStorage";
 
 //** --- input class --- **//
 var Home = require('./component/Home/Home');
@@ -12,9 +13,17 @@ var ProductScreen = require('./component/Product/Product')
 var OrderScreen = require('./component/Order/Order')
 var LoginRegScreen = require('./component/Login/LoginAndRegViews')
 var LoginScreen = require('./component/Login/Login')
-var deviceStorage = require('./component/deviceStorage')
+let logined = ''
+deviceStorage.save('token', 'tokenvalue')
+    .then((token)=>{
+        console.log(token)
+    });
+deviceStorage.get('token').then((token) => {
+            logined = token
+            console.log(token)
+        });
 
-var logined = false;
+console.log(logined)
 
 const TabView = TabNavigator({
     试用: { screen: Home },
@@ -24,9 +33,9 @@ const TabView = TabNavigator({
         screen: Me,
         navigationOptions: ({ navigation }) => (
             {
-                iconName: '我的',
+                iconName: 'ios-person',
                 tabBarOnPress: (obj) => {
-                    if (logined) {
+                    if (logined == '') {
 
                         obj.jumpToIndex(obj.scene.index)
                     }
@@ -34,8 +43,6 @@ const TabView = TabNavigator({
                         navigation.navigate('Login')
 
                     }
-
-
                 },
             }
         )

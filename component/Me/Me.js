@@ -1,6 +1,7 @@
 import React from "react";
 import {StyleSheet,Text, View, ScrollView, Button, AsyncStorage} from "react-native";
-import deviceStorage from '../deviceStorage'
+import deviceStorage from "../Login/jwt/services/deviceStorage";
+
 var CommonCell = require('./CommonCell');
 class Hometitle extends React.Component{
     render(){

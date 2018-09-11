@@ -46,7 +46,7 @@ class LoginScreen extends React.Component{
     password: password
     })
     .then((response)=> {
-        deviceStorage.saveKey('token', response.data.token);
+        deviceStorage.save('token', response.data.token);
         console.log(response.data.token);
         this.props.newJWT(response.data.token);
     })
@@ -61,9 +61,9 @@ class LoginScreen extends React.Component{
 
         })
             .then((response)=> {
-                deviceStorage.saveKey('token', response.data.token);
+                deviceStorage.save('token', response.data.token);
                 console.log(response.data.token);
-                this.props.newJWT(response.data.token);
+                this.props.get(response.data.token);
             })
             .catch((error) => {
                 console.log(error);
