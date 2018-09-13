@@ -29,6 +29,7 @@ class LoginScreen extends React.Component{
             loading: false
         }
         this.loginUser = this.loginUser.bind(this);
+        this.loginUserNode = this.loginUserNode.bind(this);
 
     };
 
@@ -41,38 +42,48 @@ class LoginScreen extends React.Component{
         this.setState({error:'', loading:true});
 
 
-    axios.post("http://127.0.0.1:8000/api-token-auth/",{
+    axios.post("http://127.0.0.1:7002/login",{
     username: username,
     password: password
     })
     .then((response)=> {
+        if (response.data.token) {
         deviceStorage.save('token', response.data.token);
         console.log(response.data.token);
         this.props.newJWT(response.data.token);
+        } else {
+           console.log(response.data);
+           console.log('response.data');
+
+        }
     })
     .catch((error) => {
         console.log(error);
 })
     }
     loginUserNode() {
+        console.log('loginUserNode')
         //const{ username, password, error} = this.state;
         //this.setState({error:'', loading:true});
-        axios.get("http://127.0.0.1:7002/",{
-
+        console.log(this.state)
+        axios.post("http://127.0.0.1:7002/login",{
+        username: this.state.username,
+        password: this.state.password
         })
-            .then((response)=> {
-                deviceStorage.save('token', response.data.token);
-                console.log(response.data.token);
-                this.props.get(response.data.token);
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-    }
+        .then((response) => {
+          deviceStorage.saveKey("token", response.data.token);
+          this.props.newJWT(response.data.token);
+        })
+        .catch((error) => {
+          console.log(error);
+          this.onLoginFail();
+        });
+        }
     render(){
         return(
             <View style={styles.login}>
               <TextInput
+                label='username'
                 placeholder="请输入手机号或账户"
                 value={this.state.username}
                 onChangeText={username => this.setState({ username })}
@@ -94,17 +105,8 @@ class LoginScreen extends React.Component{
                     title="注册"
                     onPress={() => this.props.navigation.navigate('Reg')}
                 />
-                <Button
-                    title="登陆"
-                    onPress={() => this.props.navigation.navigate('Login')}
-                />
-                <Button
-                    title="订单"
-                    onPress={() => this.props.navigation.navigate('订单')}
-                />
-                <Button
-                    title="ModalScreen"
-                    onPress={() => this.props.navigation.navigate('MyModal')}/>
+
+
             </View>
             </View>
         )

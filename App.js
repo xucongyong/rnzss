@@ -3,6 +3,7 @@ import React from 'react';
 import { Text, Button, View, AppRegistry } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import deviceStorage from "./component/Login/jwt/services/deviceStorage";
+import axios from 'axios';
 
 //** --- input class --- **//
 var Home = require('./component/Home/Home');
@@ -13,17 +14,22 @@ var ProductScreen = require('./component/Product/Product')
 var OrderScreen = require('./component/Order/Order')
 var LoginRegScreen = require('./component/Login/LoginAndRegViews')
 var LoginScreen = require('./component/Login/Login')
-let logined = ''
+let token = ''
+let logined = false
 deviceStorage.save('token', 'tokenvalue')
-    .then((token)=>{
-        console.log(token)
+    .then((SaveToken)=>{
+        console.log(SaveToken)
     });
-deviceStorage.get('token').then((token) => {
-            logined = token
-            console.log(token)
+deviceStorage.get('token').then((GetToken) => {
+            token = GetToken
+            console.log(GetToken)
         });
-
 console.log(logined)
+if (token !==null) {
+    logined = false
+} else {
+    
+}
 
 const TabView = TabNavigator({
     试用: { screen: Home },
@@ -35,7 +41,7 @@ const TabView = TabNavigator({
             {
                 iconName: 'ios-person',
                 tabBarOnPress: (obj) => {
-                    if (logined == '') {
+                    if (logined == true) {
 
                         obj.jumpToIndex(obj.scene.index)
                     }
