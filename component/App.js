@@ -2,18 +2,18 @@ import { TabNavigator, StackNavigator, TabBarBottom } from 'react-navigation'; /
 import React from 'react';
 import { Text, Button, View, AppRegistry } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import deviceStorage from "./component/Login/jwt/services/deviceStorage";
+import deviceStorage from "./Login/jwt/services/deviceStorage";
 import axios from 'axios';
 
 //** --- input class --- **//
-var Home = require('./component/Home/Home');
-var Share = require('./component/Share/Share');
-var TaskView = require('./component/TaskView/TaskView');
-var Me = require('./component/Me/Me');
-var ProductScreen = require('./component/Product/Product')
-var OrderScreen = require('./component/Order/Order')
-var LoginRegScreen = require('./component/Login/LoginAndRegViews')
-var LoginScreen = require('./component/Login/Login')
+var Home = require('./Home/Home');
+var Share = require('./Share/Share');
+var TaskView = require('./TaskView/TaskView');
+var Me = require('./Me/Me');
+var ProductScreen = require('./Product/Product')
+var OrderScreen = require('./Order/Order')
+var RegScreen = require('./Login/Reg')
+var LoginScreen = require('./Login/Login')
 let token = ''
 let logined = false
 deviceStorage.save('token', 'tokenvalue')
@@ -24,7 +24,6 @@ deviceStorage.get('token').then((GetToken) => {
             token = GetToken
             console.log(GetToken)
         });
-console.log(logined)
 if (token !==null) {
     logined = false
 } else {
@@ -40,18 +39,16 @@ const TabView = TabNavigator({
         navigationOptions: ({ navigation }) => (
             {
                 iconName: 'ios-person',
-                tabBarOnPress: (obj) => {
+                tabBarOnPress: () => {
                     if (logined == true) {
-
-                        obj.jumpToIndex(obj.scene.index)
+                        defaultHandler
                     }
                     else {
                         navigation.navigate('Login')
-
                     }
                 },
             }
-        )
+        ),
     }
 },
     {
@@ -107,7 +104,7 @@ const RootStack = StackNavigator(
             }
         },
         Reg: {
-            screen: LoginRegScreen,
+            screen: RegScreen,
             navigationOptions: {
                 headerTransparent: true,
             }
@@ -120,14 +117,15 @@ const RootStack = StackNavigator(
         },
     },
     {
-        initialRouteName: 'TestMain',
+        initialRouteName: 'Login',
     }
 )
 
 
-
-AppRegistry.registerComponent('RootStack', () => RootStack);
-
+console.log(RootStack)
+console.log('RootStack')
+console.log('TabView')
+console.log(TabView)
 
 export default class shop extends React.Component {
     render() {
