@@ -2,6 +2,12 @@ import React from "react";
 import {StyleSheet, View, Button, TextInput,Text} from 'react-native';
 import axios from 'axios';
 import deviceStorage from "./jwt/services/deviceStorage";
+import {NavigationActions,StackActions} from 'react-navigation';
+
+const resetAction = StackActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'TestMain' })],
+    });
 
 class LoginTitle extends React.Component{
     render(){
@@ -26,6 +32,7 @@ class LoginScreen extends React.Component{
             username: '',
             password: '',
             message: '',
+            token: ''
         }
         // this.loginUser = this.loginUser.bind(this);
         this.loginUserNode = this.loginUserNode.bind(this);
@@ -46,8 +53,12 @@ class LoginScreen extends React.Component{
         })
         .then((response)=> {
             if (response.data.token) {
+            console.log('response');
+            console.log(response);
+            console.log(response.data);
+            console.log(response.data.token); 
+            console.log('response');
             deviceStorage.save('token', response.data.token);
-            console.log(response.data.token);
             this.props.newJWT(response.data.token);
             } else {
                console.log(response.data);
@@ -65,10 +76,14 @@ class LoginScreen extends React.Component{
         password: this.state.password
         })
         .then((response) => {
-          deviceStorage.saveKey("token", response.data.token);
-          this.props.newJWT(response.data.token);
+          console.log(response.data)
+          //deviceStorage.saveKey("token", response.data.token);
+          //this.props.newJWT(response.data.token);
+          //this.setState(token:response.data)
+          this.props.navigation.dispatch(resetAction);
         })
         .catch((error) => {
+          this.setState({message: error});
           console.log(error);
           this.onLoginFail();
         });
@@ -76,14 +91,15 @@ class LoginScreen extends React.Component{
 
     loginVerify() {
         console.log(this.state.username.length)
-        if(this.state.username.length !== 11) {
-            this.setState({message:'请输入正确的手机号'});
-            return;
-        }
+        // if(this.state.username.length !== 11) {
+        //     this.setState({message:'请输入正确的手机号'});
+        //     return;
+        //}
         if(this.state.password.length < 6) {
                 this.setState({message:'密码大于5位'});
                 return;
             }
+        this.loginUserNode()
     }
     render(){
         return(
