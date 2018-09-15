@@ -28,7 +28,7 @@ class LoginScreen extends React.Component{
             message: '',
         }
         // this.loginUser = this.loginUser.bind(this);
-        // this.loginUserNode = this.loginUserNode.bind(this);
+        this.loginUserNode = this.loginUserNode.bind(this);
         this.loginVerify=this.loginVerify.bind(this)
     };
     static navigationOptions={

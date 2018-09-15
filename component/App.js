@@ -4,25 +4,13 @@ import { Text, Button, View, AppRegistry } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import deviceStorage from "./Login/jwt/services/deviceStorage";
 import axios from 'axios';
-// import DeviceInfo from 'react-native-device-info';
-
-// async function xxx (){
-//     let x = new Promise((resolve, reject) => {
-//         resolve(DeviceInfo.DeviceInfo.getIPAddress())
-//     })
-//     return await x
-// }
-// console.log('xxx')
-// let xx = xxx()
-// console.log(xx)
-
 import DeviceInfo from 'react-native-device-info';
 
 
-console.log(DeviceInfo.getUniqueID())
-const device = {};
+// console.log(DeviceInfo.getUniqueID())
+// const device = {};
 
-device.DeviceID = DeviceInfo.getUniqueID();
+// device.DeviceID = DeviceInfo.getUniqueID();
 
 //** --- input class --- **//
 var Home = require('./Home/Home');
