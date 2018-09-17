@@ -14,7 +14,7 @@ class RegScreen extends React.Component{
         return(
             <View style={styles.LoginPage}>
             <View style={styles.loginSection}>
-                <Text style={styles.loginTitle}> 注册 </Text>
+                <Text style={styles.loginTitle}> 登录 </Text>
 
               <TextInput style={styles.textinput}
                 label='username'
@@ -31,19 +31,15 @@ class RegScreen extends React.Component{
               value={this.state.password}
               onChangeText={password => this.setState({ password })}
             />
-            <Button onPress={this.loginUserNode}
-                    title='注册'
-                    />
+
             <View style={styles.subButton}>
+              <Button onPress={this.loginUserNode}
+                    title='登录'
+                    />
                 <Button
-                    title="登录"
-                    color='#000000'
+                    title="密码登录"
+                    color='#56688a'
                     onPress={() => this.props.navigation.navigate('Login')}
-                />
-                <Button
-                    title="找回密码"
-                    color='#000000'
-                    onPress={() => this.props.navigation.navigate('Reg')}
                 />
 
             </View>

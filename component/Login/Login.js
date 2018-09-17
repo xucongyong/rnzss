@@ -3,11 +3,18 @@ import {StyleSheet, View, Button, TextInput,Text} from 'react-native';
 import axios from 'axios';
 import deviceStorage from "./jwt/services/deviceStorage";
 import {NavigationActions,StackActions} from 'react-navigation';
-
-const resetAction = StackActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({ routeName: 'TestMain' })],
-    });
+import DeviceInfo from 'react-native-device-info';
+// const xxxIP = DeviceInfo.getIPAddress()
+// console.log(xxxIP)
+// const getDeviceId = DeviceInfo.getDeviceId()
+// const getUniqueID = DeviceInfo.getUniqueID()
+// const isEmulator = DeviceInfo.isEmulator()
+// console.log(getUniqueID)
+// console.log(isEmulator)
+// const resetAction = StackActions.reset({
+//         index: 0,
+//         actions: [NavigationActions.navigate({ routeName: 'TestMain' })],
+//     });
 
 class LoginTitle extends React.Component{
     render(){
@@ -41,27 +48,22 @@ class LoginScreen extends React.Component{
     static navigationOptions={
         HeaderTitle:'注册页面',
         };
-
+    //django restframework API
     loginUser() {
         const{ username, password, error} = this.state;
         this.setState({error:'', loading:true});
 
 
-        axios.post("http://127.0.0.1:7002/login",{
+        axios.post("http://127.0.0.1:7001/login",{
         username: username,
         password: password
         })
         .then((response)=> {
             if (response.data.token) {
-            console.log('response');
-            console.log(response);
-            console.log(response.data);
-            console.log(response.data.token); 
-            console.log('response');
             deviceStorage.save('token', response.data.token);
             this.props.newJWT(response.data.token);
             } else {
-               console.log(response.data);
+               co
                console.log('response.data');
 
             }
@@ -70,12 +72,14 @@ class LoginScreen extends React.Component{
             console.log(error);
         })
             }
+    //NodeJS API
     loginUserNode() {
-        axios.post("http://127.0.0.1:7002/login",{
-        username: this.state.username,
-        password: this.state.password
+        axios.post("http://127.0.0.1:7001/login",{
+            username: this.state.username,
+            password: this.state.password
         })
         .then((response) => {
+          console.log(response.data.error)
           console.log(response.data)
           //deviceStorage.saveKey("token", response.data.token);
           //this.props.newJWT(response.data.token);
@@ -83,18 +87,15 @@ class LoginScreen extends React.Component{
           this.props.navigation.dispatch(resetAction);
         })
         .catch((error) => {
-          this.setState({message: error});
-          console.log(error);
+          this.setState({message: '网络问题，重新提交'});
           this.onLoginFail();
-        });
-        }
+        });        }
 
     loginVerify() {
-        console.log(this.state.username.length)
         // if(this.state.username.length !== 11) {
         //     this.setState({message:'请输入正确的手机号'});
         //     return;
-        //}
+        // }
         if(this.state.password.length < 6) {
                 this.setState({message:'密码大于5位'});
                 return;
@@ -122,18 +123,15 @@ class LoginScreen extends React.Component{
               value={this.state.password}
               onChangeText={password => this.setState({ password })}
             />
-            <Button 
+
+            <View style={styles.subButton}>
+                <Button 
                     title='登陆'
                     onPress= {() => this.loginVerify()}
                     />
-
-            <View style={styles.subButton}>
                 <Button
-                    title="注册"
-                    onPress={() => this.props.navigation.navigate('Reg')}
-                />
-                <Button
-                    title="找回密码"
+                    color='#56688a'
+                    title="手机登录"
                     onPress={() => this.props.navigation.navigate('Reg')}
                 />
             </View>

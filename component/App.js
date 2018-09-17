@@ -1,13 +1,10 @@
 import { TabNavigator, StackNavigator, TabBarBottom } from 'react-navigation'; // Version can be specified in package.json
 import React from 'react';
-import { Text, Button, View, AppRegistry } from 'react-native'
+import { Text, Button, View, AppRegistry} from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import deviceStorage from "./Login/jwt/services/deviceStorage";
 import axios from 'axios';
-import DeviceInfo from 'react-native-device-info';
 
-
-// console.log(DeviceInfo.getUniqueID())
 // const device = {};
 
 // device.DeviceID = DeviceInfo.getUniqueID();
