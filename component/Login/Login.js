@@ -11,10 +11,10 @@ import DeviceInfo from 'react-native-device-info';
 // const isEmulator = DeviceInfo.isEmulator()
 // console.log(getUniqueID)
 // console.log(isEmulator)
-// const resetAction = StackActions.reset({
-//         index: 0,
-//         actions: [NavigationActions.navigate({ routeName: 'TestMain' })],
-//     });
+const resetAction = StackActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'TestMain' })],
+    });
 
 class LoginTitle extends React.Component{
     render(){
@@ -79,12 +79,17 @@ class LoginScreen extends React.Component{
             password: this.state.password
         })
         .then((response) => {
-          console.log(response.data.error)
-          console.log(response.data)
+          if (response.data.message==='no') {
+            this.setState({message: '账号或密码错误,多次考虑「手机登录」'});
+          }  else if (response.data.message==='yes') {
+              deviceStorage.save('token', response.data.token);
+              console.log('SaveToken:'+response.data.token);
+              this.props.navigation.dispatch(resetAction);
+            }
+
           //deviceStorage.saveKey("token", response.data.token);
           //this.props.newJWT(response.data.token);
           //this.setState(token:response.data)
-          this.props.navigation.dispatch(resetAction);
         })
         .catch((error) => {
           this.setState({message: '网络问题，重新提交'});
@@ -92,10 +97,10 @@ class LoginScreen extends React.Component{
         });        }
 
     loginVerify() {
-        // if(this.state.username.length !== 11) {
-        //     this.setState({message:'请输入正确的手机号'});
-        //     return;
-        // }
+        if(this.state.username.length !== 11) {
+            this.setState({message:'请输入正确的手机号'});
+            return;
+        }
         if(this.state.password.length < 6) {
                 this.setState({message:'密码大于5位'});
                 return;
