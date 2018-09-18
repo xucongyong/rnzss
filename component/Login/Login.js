@@ -80,7 +80,7 @@ class LoginScreen extends React.Component{
         })
         .then((response) => {
           if (response.data.message==='no') {
-            this.setState({message: '账号或密码错误,多次考虑「手机登录」'});
+            this.setState({message: '账号或密码错误,多次错误请考虑手机登录'});
           }  else if (response.data.message==='yes') {
               deviceStorage.save('token', response.data.token);
               console.log('SaveToken:'+response.data.token);
@@ -105,6 +105,11 @@ class LoginScreen extends React.Component{
                 this.setState({message:'密码大于5位'});
                 return;
             }
+        var PATTERN_CHINATELECOM = /^1(3[0-9])|(8[019])\d{8}$/; //电信号
+        if (PATTERN_CHINATELECOM.test(this.state.username) === false) {
+                this.setState({message:'请输入正确的手机号'});
+                return;
+          }
         this.loginUserNode()
     }
     render(){
