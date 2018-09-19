@@ -10,14 +10,14 @@ import axios from 'axios';
 // device.DeviceID = DeviceInfo.getUniqueID();
 
 //** --- input class --- **//
-var Home = require('./Home/Home');
-var Share = require('./Share/Share');
-var TaskView = require('./TaskView/TaskView');
-var Me = require('./Me/Me');
-var ProductScreen = require('./Product/Product')
-var OrderScreen = require('./Order/Order')
-var RegScreen = require('./Login/Reg')
-var LoginScreen = require('./Login/Login')
+let Home = require('./Home/Home');
+let Share = require('./Share/Share');
+let TaskView = require('./TaskView/TaskView');
+let Me = require('./Me/Me');
+let ProductScreen = require('./Product/Product')
+let OrderScreen = require('./Order/Order')
+let MobileLoginScreen = require('./Login/MobileLogin')
+let LoginScreen = require('./Login/Login')
 let token = ''
 let logined = false
 deviceStorage.save('token', 'tokenvalue')
@@ -107,8 +107,8 @@ const RootStack = StackNavigator(
                 headerTransparent: true,
             }
         },
-        Reg: {
-            screen: RegScreen,
+        MobileLogin: {
+            screen: MobileLoginScreen,
             navigationOptions: {
                 headerTransparent: true,
             }
@@ -121,7 +121,7 @@ const RootStack = StackNavigator(
         },
     },
     {
-        initialRouteName: 'Login',
+        initialRouteName: 'MobileLogin',
     }
 )
 

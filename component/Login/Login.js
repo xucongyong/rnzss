@@ -50,10 +50,7 @@ class LoginScreen extends React.Component{
         };
     //django restframework API
     loginUser() {
-        const{ username, password, error} = this.state;
         this.setState({error:'', loading:true});
-
-
         axios.post("http://127.0.0.1:7001/login",{
         username: username,
         password: password
@@ -74,9 +71,10 @@ class LoginScreen extends React.Component{
             }
     //NodeJS API
     loginUserNode() {
+        const{ username, password, error} = this.state;
         axios.post("http://127.0.0.1:7001/login",{
-            username: this.state.username,
-            password: this.state.password
+            username: username,
+            password: password
         })
         .then((response) => {
           if (response.data.message==='no') {
@@ -105,7 +103,7 @@ class LoginScreen extends React.Component{
                 this.setState({message:'密码大于5位'});
                 return;
             }
-        var PATTERN_CHINATELECOM = /^1(3[0-9])|(8[019])\d{8}$/; //电信号
+        var PATTERN_CHINATELECOM = /^1\d{10}$/; //电信号
         if (PATTERN_CHINATELECOM.test(this.state.username) === false) {
                 this.setState({message:'请输入正确的手机号'});
                 return;
@@ -142,7 +140,7 @@ class LoginScreen extends React.Component{
                 <Button
                     color='#56688a'
                     title="手机登录"
-                    onPress={() => this.props.navigation.navigate('Reg')}
+                    onPress={() => this.props.navigation.navigate('MobileLogin')}
                 />
             </View>
                 <Text style ={styles.message}>{this.state.message}</Text>
