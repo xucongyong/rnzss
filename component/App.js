@@ -1,4 +1,4 @@
-import { TabNavigator, StackNavigator, TabBarBottom } from 'react-navigation'; // Version can be specified in package.json
+import { createBottomTabNavigator, createStackNavigator} from 'react-navigation'; // Version can be specified in package.json
 import React from 'react';
 import { Text, Button, View, AppRegistry} from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -19,22 +19,13 @@ let OrderScreen = require('./Order/Order')
 let MobileLoginScreen = require('./Login/MobileLogin')
 let LoginScreen = require('./Login/Login')
 let token = ''
-let logined = false
-deviceStorage.save('token', 'tokenvalue')
-    .then((SaveToken)=>{
-        console.log(SaveToken)
-    });
 deviceStorage.get('token').then((GetToken) => {
-            token = GetToken
-            console.log(GetToken)
+        token = GetToken
+        console.log(token)
         });
-if (token !==null) {
-    logined = false
-} else {
-    
-}
 
-const TabView = TabNavigator({
+
+const TabView = createBottomTabNavigator({
     试用: { screen: Home },
     分享: { screen: Share },
     订单: { screen: TaskView },
@@ -44,11 +35,12 @@ const TabView = TabNavigator({
             {
                 iconName: 'ios-person',
                 tabBarOnPress: () => {
-                    if (logined == true) {
-                        defaultHandler
+                    if (!token === '') {
+                        navigation.navigate('Login')
                     }
                     else {
-                        navigation.navigate('Login')
+                        defaultHandler
+                        //defaultHandler
                     }
                 },
             }
@@ -87,7 +79,7 @@ const TabView = TabNavigator({
 // }),
 
 
-const RootStack = StackNavigator(
+const RootStack = createStackNavigator(
     {
         TestMain: {
             screen: TabView,
@@ -121,7 +113,7 @@ const RootStack = StackNavigator(
         },
     },
     {
-        initialRouteName: 'MobileLogin',
+        initialRouteName: 'TestMain',
     }
 )
 

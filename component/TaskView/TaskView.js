@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import { StackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation';
 
 var HomeNavigator = require('./HomeNavigator');
 
@@ -35,7 +35,7 @@ class DeatilScreen extends React.Component{
             </View>
         )}}
 
-const Screen = StackNavigator(
+const Screen = createStackNavigator(
     {
         Home: {
             screen: HomeScreen

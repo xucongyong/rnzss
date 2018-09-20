@@ -1,5 +1,5 @@
 import React from 'react';
-import {TabBarBottom, TabNavigator} from 'react-navigation';
+import {createBottomTabNavigator} from 'react-navigation';
 import {
     Text,
     ScrollView,
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
 })
 
 
-const TopTabNav = TabNavigator(
+const TopTabNav = createBottomTabNavigator(
     {
         全部: { screen: MyComponent },
         红包: { screen: MyComponent },
@@ -190,7 +190,6 @@ const TopTabNav = TabNavigator(
     {
         navigationOptions: ({ navigation }) => ({
         }),
-        tabBarComponent: TabBarBottom,
         tabBarPosition: 'top',
         tabBarOptions: {
             activeTintColor: '#DC3C78',

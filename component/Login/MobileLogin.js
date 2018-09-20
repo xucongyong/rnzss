@@ -1,9 +1,10 @@
 import React from 'react';
-import {StyleSheet, View, Button, TextInput,Text} from 'react-native';
+import {StyleSheet, View, Button, TextInput,Text, } from 'react-native';
 import {NavigationActions,StackActions} from 'react-navigation';
 import DeviceInfo from 'react-native-device-info';
 import axios from 'axios';
-
+import CountDownButton from 'react-native-smscode-count-down'
+import AsyncStorage from './AsyncStorage'
 // const xxxIP = DeviceInfo.getIPAddress()
 // console.log(xxxIP)
 // const getDeviceId = DeviceInfo.getDeviceId()
@@ -29,12 +30,11 @@ class RegScreen extends React.Component{
             VerifyCode:''
         }
         this.loginUserNode = this.loginUserNode.bind(this);
-        this.loginVerify=this.loginVerify.bind(this)
         this.SendSms=this.SendSms.bind(this)
   }
     //NodeJS API
     loginUserNode() {
-
+        console.log('loginUserNode')
         if(this.state.username.length !== 11) {
             this.setState({message:'请输入正确的手机号'});
             return;
@@ -47,8 +47,11 @@ class RegScreen extends React.Component{
                 this.setState({message:'请输入2个相同的密码'});
                 return;
             }
-        var PATTERN_CHINATELECOM = /^1\d{10}$/;
-        if (PATTERN_CHINATELECOM.test(this.state.username) === false) {
+        if (/^\d{6}$/.test(this.state.VerifyCode) === false) {
+                this.setState({message:'验证码不正确'})
+                return
+          }
+        if (/^1\d{10}$/.test(this.state.username) === false) {
                 this.setState({message:'请输入正确的手机号。'})
                 return
           }
@@ -58,18 +61,17 @@ class RegScreen extends React.Component{
                     password: this.state.password,
                     VerifyCode: this.state.VerifyCode,
                    }
-        axios.post('http://127.0.0.1:7001/mobilelogin', LoginData
-                )
+        axios.post('http://127.0.0.1:7001/mobilelogin', LoginData)
           .then((response) => {
             if (response.data.message==='no') {
-              this.setState({message: '账号或密码错误,多次考虑「手机登录」'});
+              this.setState({message: '验证码错误'});
             }  else if (response.data.message==='yes') {
-                deviceStorage.save('token', response.data.token);
+                AsyncStorage.save('token', response.data.token);
                 console.log('SaveToken:'+response.data.token);
                 this.props.navigation.dispatch(resetAction);
               }
 
-          //deviceStorage.saveKey("token", response.data.token);
+          //AsyncStorage.saveKey("token", response.data.token);
           //this.props.newJWT(response.data.token);
           //this.setState(token:response.data)
         })
@@ -81,20 +83,19 @@ class RegScreen extends React.Component{
     //send sms  
     SendSms() {
 
-        if(this.state.username.length !== 11) {
-            this.setState({message:'请输入正确的手机号'});
-            return;
-        }
-        if(this.state.password.length < 6) {
-                this.setState({message:'密码大于5位'});
-                return;
-            }
-        if(this.state.password !==this.state.password1 ) {
-                this.setState({message:'请输入2个相同的密码'});
-                return;
-            }
-        var PATTERN_CHINATELECOM = /^1\d{10}$/;
-        if (PATTERN_CHINATELECOM.test(this.state.username) === false) {
+        // if(this.state.username.length !== 11) {
+        //     this.setState({message:'请输入正确的手机号'});
+        //     return;
+        // }
+        // if(this.state.password.length < 6) {
+        //         this.setState({message:'密码大于5位'});
+        //         return;
+        //     }
+        // if(this.state.password !==this.state.password1 ) {
+        //         this.setState({message:'请输入2个相同的密码'});
+        //         return;
+        //     }
+        if (/^1\d{10}$/.test(this.state.username) === false) {
                 this.setState({message:'请输入正确的手机号。'})
                 return
           }
@@ -111,11 +112,11 @@ class RegScreen extends React.Component{
           if (response.data.message==='no') {
             this.setState({message: '重试一次'});
           }  else if (response.data.message==='yes') {
-            this.setState({message: response.data.message});
+            this.setState({message: '验证码发送'});
               //this.props.navigation.dispatch(resetAction);
             }
 
-          //deviceStorage.saveKey("token", response.data.token);
+          //AsyncStorage.saveKey("token", response.data.token);
           //this.props.newJWT(response.data.token);
           //this.setState(token:response.data)
         })
@@ -123,27 +124,6 @@ class RegScreen extends React.Component{
           this.setState({message: '网络问题，重新提交'});
           this.onLoginFail();
         });
-    }
-
-    loginVerify() {
-        if(this.state.username.length !== 11) {
-            this.setState({message:'请输入正确的手机号'});
-            return;
-        }
-        if(this.state.password.length < 6) {
-                this.setState({message:'密码大于5位'});
-                return;
-            }
-        if(this.state.password !==this.state.password1 ) {
-                this.setState({message:'请输入2个相同的密码'});
-                return;
-            }
-        var PATTERN_CHINATELECOM = /^1\d{10}$/;
-        if (PATTERN_CHINATELECOM.test(this.state.username) === false) {
-                this.setState({message:'请输入正确的手机号。'})
-                return
-          }
-        this.loginUserNode()
     }
 
     render(){
@@ -175,19 +155,33 @@ class RegScreen extends React.Component{
               onChangeText={password1 => this.setState({ password1 })}
             />
             <View style={styles.subButton}>
-            <TextInput
+            <TextInput style={{padding:20}}
               placeholder="请输入验证码"
-              secureTextEntry={true}
+              keyboardType={'numeric'}
+              maxLength={6}
               label='VerifyCode'
               value={this.state.VerifyCode}
               onChangeText={VerifyCode => this.setState({ VerifyCode })}
             />
-              <Button
-                title='获取验证码'
-                onPress={
-                  this.SendSms
-                }
-                />
+              <CountDownButton
+                  style={{width: 120,marginRight: 8}}
+                  textStyle={{color: '#DC3C78'}}
+                  timerCount={60}
+                  timerTitle={'获取验证码'}
+                  //enable={this.loginVerifyx()}
+                  enable={/^1\d{10}$/.test(this.state.username)}
+                  //enable={this.loginVerify()}
+                  onClick={(shouldStartCountting)=>{
+                    //随机模拟发送验证码成功或失败
+                    const requestSucc = Math.random() > 0.5;
+                      shouldStartCountting(requestSucc);
+                      this.SendSms()
+                  }}
+                  timerEnd={()=>{
+                    this.setState({
+                      state: '倒计时结束'
+                    })
+                  }}/>
             </View>
 
             <View style={styles.subButton}>
@@ -238,7 +232,8 @@ const styles = StyleSheet.create({
     color: '#56688a',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 15
+    marginTop: 15,
+    marginBottom: 8
   },
   login: {
     flex: 1,
@@ -246,7 +241,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textinput:{
-    marginBottom: 8
+    marginBottom: 15
   },
     button: {
     flexDirection:'row',

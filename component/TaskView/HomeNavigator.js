@@ -1,5 +1,5 @@
 import React from 'react';
-import {TabBarBottom, TabNavigator} from 'react-navigation';
+import {createBottomTabNavigator} from 'react-navigation';
 import {Text,ScrollView} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -31,7 +31,7 @@ class SignScreen extends React.Component {
 }
 
 
-const TopTabNav = TabNavigator(
+const TopTabNav = createBottomTabNavigator(
     {
         进行: { screen: AllScreen },
         完成: { screen: MoneyScreen },
@@ -41,7 +41,6 @@ const TopTabNav = TabNavigator(
     {
         navigationOptions: ({ navigation }) => ({
         }),
-        tabBarComponent: TabBarBottom,
         tabBarPosition: 'top',
         tabBarOptions: {
             activeTintColor: '#DC3C78',

@@ -81,7 +81,6 @@ class LoginScreen extends React.Component{
             this.setState({message: '账号或密码错误,多次错误请考虑手机登录'});
           }  else if (response.data.message==='yes') {
               deviceStorage.save('token', response.data.token);
-              console.log('SaveToken:'+response.data.token);
               this.props.navigation.dispatch(resetAction);
             }
 
