@@ -20,6 +20,37 @@ export default class App extends Component {
     }
 }
 
+// import {AsyncStorage} from 'react-native';
+//
+// export default class DataGet{
+//     fetchRepository(url){
+//         return new Promise((resolve,reject)=>{
+//             this.fetchLoaclRepository(url)
+//                 .then(result=>{resolve(result);})
+//                 .catch(e=> {resolve(e)});
+//         }
+//     }
+// }
+//
+// fetchLocalRepository(url){
+//     return new Promise((resolve, reject) =>{
+//         AsyncStorage.getItem(url,(error,result)=>{
+//             if(!error){
+//                 try{
+//                     resolve(JSON.parse(result));
+//                 }catch (e){
+//                     reject(e);
+//                 }
+//             }else {
+//                 reject(error);
+//             }
+//         })
+//     }
+
+
+
+
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

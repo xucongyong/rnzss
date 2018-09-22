@@ -27,26 +27,29 @@ deviceStorage.get('token').then((GetToken) => {
 
 const TabView = createBottomTabNavigator({
     试用: { screen: Home },
-    分享: { screen: Share },
-    订单: { screen: TaskView },
-    我的: {
-        screen: Me,
-        navigationOptions: ({ navigation }) => (
-            {
-                iconName: 'ios-person',
-                tabBarOnPress: () => {
-                    if (!token === '') {
-                        navigation.navigate('Login')
-                    }
-                    else {
-                        defaultHandler
-                        //defaultHandler
-                    }
-                },
+    分享: { screen: Share,
+        navigationOptions: ({ navigation }) => ({
+                tabBarOnPress: ({ navigation, defaultHandler }) => {
+                    if (!token === '') {navigation.navigate('Login')
+                        }else {defaultHandler(); }}
+                    })
+    },
+    订单: { screen: TaskView,
+        navigationOptions: ({ navigation }) => ({
+                tabBarOnPress: ({ navigation, defaultHandler }) => {
+                    if (!token === '') {navigation.navigate('Login')
+                        }else {defaultHandler(); }}
+                    })
+    },
+    我的: { screen: Me,
+        navigationOptions: ({ navigation }) => ({
+                tabBarOnPress: ({ navigation, defaultHandler }) => {
+                    if (!token === '') {navigation.navigate('Login')
+                        }else {defaultHandler(); }}
+                    })
             }
-        ),
-    }
-},
+        },
+    
     {
         initialRouteName: '试用',
     },

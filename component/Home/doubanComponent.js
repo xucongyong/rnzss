@@ -1,22 +1,25 @@
 import React from 'react';
 import {
     Text,
-    ScrollView,
     ListView,
     StyleSheet,
     RefreshControl,
     View,
     ActivityIndicator,
     Image,
+    TouchableOpacity,
 } from 'react-native';
 
 import Dimensions from 'Dimensions';
+
+var doubanComponent = require('./doubanComponent');
+
 
 const {width, height} = Dimensions.get('window');
 
 const dataUrl = 'https://api.douban.com/v2/movie/top250?count=350';
 
-export default class doubanComponent extends React.Component {
+export default class MyComponent extends React.Component {
     constructor(props){
         super(props);
         const ds = new ListView.DataSource({rowHasChanged : (row1, row2) =>  row1 !== row2});
@@ -36,8 +39,6 @@ export default class doubanComponent extends React.Component {
 
         this.fetchData();
     }
-
-
     fetchData(refresh){
 
         if(refresh){
@@ -66,12 +67,15 @@ export default class doubanComponent extends React.Component {
     _renderRow(data){
         return (
             <View style={styles.cellBoxStyle}>
+                <TouchableOpacity onPress={()=> {
+                    this.props.navigation.navigate('订单',{data:data})
+                }}>
                 <Image source={{uri:data.images.large}} style={{width:70,height:70}} />
                 <View>
                     <Text style={styles.cellTxt}>{data.title}</Text>
                     <Text style={styles.cellTxt}>{data.genres}</Text>
                 </View>
-
+            </TouchableOpacity>
             </View>
         )
     }
@@ -138,15 +142,46 @@ export default class doubanComponent extends React.Component {
 
         return (
             <View style={styles.container}>
-                /*button send values*/
-
                 {/*练习下拉刷新，上拉加载组件，此处渲染视图*/}
                 {viewList}
+                <View>
+                    <View style={styles.shopcart}>
+                        <View style={{flex: 2, flexDirection: 'row'}}>
+                            <View style={styles.bottomItem}>
+                                <Text>客服</Text>
+                            </View>
+                            <View style={styles.bottomItem}>
+                                <Text>后仓</Text>
+                            </View>
+
+                            <View style={styles.bottomItem}>
+
+                                <Text>购物车</Text>
+
+                            </View>
+
+                        </View>
+
+                            <View style={[styles.bottomItem, {backgroundColor: 'red'}]}>
+
+                                <Text>加入购物车</Text>
+                            </View>
+                        <View style={[styles.bottomItem, {backgroundColor: 'green'}]}>
+                            <Text>看左面{'\n'}加入{'\n'}购物车</Text>
+                        </View>
+
+                    </View>
+
+
+                </View>
+
             </View>
+
         )
 
     }
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 1
@@ -172,7 +207,21 @@ const styles = StyleSheet.create({
     cellTxt:{
         fontSize:16,
         color:'red'
-    }
+    },
+    bottomItem: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1
+        },
+    shopcart: {
+        position: 'absolute',
+        bottom: 0,
+        height: 50,
+        width: 375,
+        flexDirection: 'row',
+        backgroundColor: 'white'
+    },
 })
 
-module.exports= doubanComponent;
+module.exports=MyComponent;

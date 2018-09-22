@@ -47,22 +47,6 @@ class MeScreen extends React.Component{
                             <CommonCell
                                 title={'实名验证'}
                             />
-                            <Button
-                                title="ProductScreen"
-                                onPress={() => this.props.navigation.navigate('ProductScreen',
-                                    {productID:812,
-                                        imageUrl:'https://www.baidu.com/img/bd_logo1.png'
-                                    })}
-                                />
-                            <Button
-                                title="Order"
-                                onPress={() => this.props.navigation.navigate('Order')}/>
-                            <Button
-                                title="Login"
-                                onPress={() => this.props.navigation.navigate('Login')}/>
-                            <Button
-                                title="Reg"
-                                onPress={() => this.props.navigation.navigate('Reg')}/>
                         </View>
 
                     </ScrollView>
