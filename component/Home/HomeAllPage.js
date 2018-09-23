@@ -12,7 +12,7 @@ import {
 
 import Dimensions from 'Dimensions';
 
-var doubanComponent = require('./doubanComponent');
+var doubanComponent = require('./HomeAllPage');
 
 
 const {width, height} = Dimensions.get('window');
@@ -66,17 +66,26 @@ export default class MyComponent extends React.Component {
 
     _renderRow(data){
         return (
+            <TouchableOpacity onPress={()=> {
+                this.props.navigation.navigate('ProductScreen',{data:data})
+            }}>
             <View style={styles.cellBoxStyle}>
-                <TouchableOpacity onPress={()=> {
-                    this.props.navigation.navigate('订单',{data:data})
-                }}>
+
+
                 <Image source={{uri:data.images.large}} style={{width:70,height:70}} />
                 <View>
                     <Text style={styles.cellTxt}>{data.title}</Text>
                     <Text style={styles.cellTxt}>{data.genres}</Text>
                 </View>
-            </TouchableOpacity>
+                <view>
+                    <Text style={styles.cellTxt}>礼物</Text>
+                    <Text style={styles.cellTxt}>红包</Text>
+                    <Text style={styles.cellTxt}>报名</Text>
+                    <Text style={styles.cellTxt}>返现</Text>
+                </view>
             </View>
+            </TouchableOpacity>
+
         )
     }
     // 刷新操作
@@ -144,37 +153,33 @@ export default class MyComponent extends React.Component {
             <View style={styles.container}>
                 {/*练习下拉刷新，上拉加载组件，此处渲染视图*/}
                 {viewList}
-                <View>
-                    <View style={styles.shopcart}>
-                        <View style={{flex: 2, flexDirection: 'row'}}>
-                            <View style={styles.bottomItem}>
-                                <Text>客服</Text>
-                            </View>
-                            <View style={styles.bottomItem}>
-                                <Text>后仓</Text>
-                            </View>
 
-                            <View style={styles.bottomItem}>
+                {/*<View style={styles.shopcart}>*/}
+                    {/*<View style={{flex: 2, flexDirection: 'row'}}>*/}
+                        {/*<View style={styles.bottomItem}>*/}
+                            {/*<Text>客服</Text>*/}
+                        {/*</View>*/}
+                        {/*<View style={styles.bottomItem}>*/}
+                            {/*<Text>后仓</Text>*/}
+                        {/*</View>*/}
 
-                                <Text>购物车</Text>
+                        {/*<View style={styles.bottomItem}>*/}
 
-                            </View>
+                            {/*<Text>购物车</Text>*/}
 
-                        </View>
+                        {/*</View>*/}
 
-                            <View style={[styles.bottomItem, {backgroundColor: 'red'}]}>
+                    {/*</View>*/}
 
-                                <Text>加入购物车</Text>
-                            </View>
-                        <View style={[styles.bottomItem, {backgroundColor: 'green'}]}>
-                            <Text>看左面{'\n'}加入{'\n'}购物车</Text>
-                        </View>
+                    {/*<View style={[styles.bottomItem, {backgroundColor: 'red'}]}>*/}
 
-                    </View>
+                        {/*<Text>加入购物车</Text>*/}
+                    {/*</View>*/}
+                    {/*<View style={[styles.bottomItem, {backgroundColor: 'green'}]}>*/}
+                        {/*<Text>看左面{'\n'}加入{'\n'}购物车</Text>*/}
+                    {/*</View>*/}
 
-
-                </View>
-
+                {/*</View>*/}
             </View>
 
         )
@@ -205,7 +210,9 @@ const styles = StyleSheet.create({
         elevation:2   //   高度，设置Z轴，可以产生立体效果
     },
     cellTxt:{
-        fontSize:16,
+        flex: 1,
+        flexDirection:'row',
+        fontSize:12,
         color:'red'
     },
     bottomItem: {

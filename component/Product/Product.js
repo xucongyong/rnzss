@@ -20,6 +20,7 @@ class ProductScreen extends React.Component{
         console.log(imageUrl)
         return(
             <View>
+
                 <ProductScrollView />
                 <View style={styles.comments}><Image source={imageUrl}/></View>
 
@@ -28,46 +29,45 @@ class ProductScreen extends React.Component{
                     <View><Text>活动类型：</Text></View>
                 <View><Text>剩余活动：</Text></View>
                 </View>
+
                 <ScrollView>
                     <View>
                         <Text>PPRODUCTDETAILS</Text>
                         <CommonCell
                             title={'余额提现'}
                         />
-                        <CommonCell
-                            title={'手机号'}
-                        />
-                        <CommonCell
-                            title={'身份验证'}
-                        />
-                        {console.log('class ProductScreen extends React.Componentthis.props')}
-                        {console.log(this.props)}
 
-                        <Button
-                            title="登陆"
-                            onPress={() => this.props.navigation.navigate('Details')}
-                        />
-                        <Button
-                            title="注册"
-                            onPress={() => this.props.navigation.navigate('Reg')}
-                        />
-                        <Button
-                            title="登陆"
-                            onPress={() => this.props.navigation.navigate('Login')}
-                        />
-                        <Button
-                            title="订单"
-                            onPress={() => this.props.navigation.navigate('订单')}
-                        />
-                        <Button
-                            title="ModalScreen"
-                            onPress={() => this.props.navigation.navigate('MyModal')}/>
-                        <Button
-                            title="goBack"
-                            onPress={() => this.props.navigation.goBack()}/>
                     </View>
+                <View style={styles.shopcart}>
+                    <View style={{flex: 2, flexDirection: 'row'}}>
+                        <View style={styles.bottomItem}>
+                            <Text>客服</Text>
+                        </View>
+                        <View style={styles.bottomItem}>
+                            <Text>后仓</Text>
+                        </View>
+
+                        <View style={styles.bottomItem}>
+
+                            <Text>购物车</Text>
+
+                        </View>
+
+                    </View>
+
+                    <View style={[styles.bottomItem, {backgroundColor: 'red'}]}>
+
+                        <Text>加入购物车</Text>
+                    </View>
+                    <View style={[styles.bottomItem, {backgroundColor: 'green'}]}>
+                        <Text>看左面{'\n'}加入{'\n'}购物车</Text>
+                    </View>
+
+                </View>
                 </ScrollView>
+
             </View>
+
         )
     }
 }
@@ -104,7 +104,21 @@ const styles = StyleSheet.create({
     },
     comments:{
         height: imageHeight * 0.1,
-    }
+    },
+    bottomItem: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1
+    },
+    shopcart: {
+        position: 'absolute',
+        bottom: 0,
+        height: 50,
+        width: 375,
+        flexDirection: 'row',
+        backgroundColor: 'white'
+    },
 });
 
 module.exports = ProductScreen;

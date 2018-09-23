@@ -2,18 +2,26 @@ import React from 'react';
 import {createMaterialTopTabNavigator} from 'react-navigation';
 
 
-let doubanComponent = require('./doubanComponent');
+let HomeAllPage = require('./HomeAllPage');
 
 const TopTabNav = createMaterialTopTabNavigator(
     {
-        全部: { screen: doubanComponent },
-        红包: { screen: doubanComponent },
-        报名: { screen: doubanComponent },
-        返现: { screen: doubanComponent },
-        有礼: { screen: doubanComponent }
+        全部: { screen: HomeAllPage },
+        红包: { screen: HomeAllPage },
+        报名: { screen: HomeAllPage },
+        返现: { screen: HomeAllPage },
+        礼物: { screen: HomeAllPage },
     },
     {
+        initialRouteName:'全部',
         tabBarPosition: 'top',
+        tabBarOptions:{
+            activeTintColor:'red',
+            inactiveTintColor:'#000000',
+            style:{
+              backgroundColor: '#ffffff'
+            },
+        }
     }
 );
 

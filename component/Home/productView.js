@@ -2,7 +2,7 @@ import React from 'react';
 import {TabBarBottom, StackNavigator} from 'react-navigation';
 
 
-var doubanComponent = require('./doubanComponent')
+var doubanComponent = require('./HomeAllPage')
 
 
 var ProductNav = StackNavigator(

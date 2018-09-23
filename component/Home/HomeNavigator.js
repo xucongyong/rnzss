@@ -13,7 +13,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Dimensions from 'Dimensions';
 
-var doubanComponent = require('./doubanComponent');
+var doubanComponent = require('./HomeAllPage');
 
 
 const {width, height} = Dimensions.get('window');
