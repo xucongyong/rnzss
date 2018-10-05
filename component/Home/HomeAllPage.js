@@ -73,17 +73,17 @@ export default class MyComponent extends React.Component {
 
 
                 <Image source={{uri:data.images.large}} style={{width:70,height:70}} />
-                <View>
-                    <Text style={styles.cellTxt}>{data.title}</Text>
-                    <Text style={styles.cellTxt}>{data.genres}</Text>
+                    <View>
+                        <Text style={styles.cellTxt}>{data.title}</Text>
+                        <Text style={styles.cellTxt}>{data.genres}</Text>
+                    </View>
+                    <View>
+                        <Text style={styles.cellTxt}>礼物</Text>
+                        <Text style={styles.cellTxt}>红包</Text>
+                        <Text style={styles.cellTxt}>报名</Text>
+                        <Text style={styles.cellTxt}>返现</Text>
+                    </View>
                 </View>
-                <view>
-                    <Text style={styles.cellTxt}>礼物</Text>
-                    <Text style={styles.cellTxt}>红包</Text>
-                    <Text style={styles.cellTxt}>报名</Text>
-                    <Text style={styles.cellTxt}>返现</Text>
-                </view>
-            </View>
             </TouchableOpacity>
 
         )
