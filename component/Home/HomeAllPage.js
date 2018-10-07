@@ -11,13 +11,12 @@ import {
 } from 'react-native';
 
 import Dimensions from 'Dimensions';
-
-var doubanComponent = require('./HomeAllPage');
-
-
 const {width, height} = Dimensions.get('window');
-
 const dataUrl = 'https://api.douban.com/v2/movie/top250?count=350';
+const MyUrl = 'http://127.0.0.1:7001/m/index';
+
+
+
 
 export default class MyComponent extends React.Component {
     constructor(props){
@@ -33,10 +32,10 @@ export default class MyComponent extends React.Component {
 
     componentDidMount(){
         // 菊花加载
+        console.log('component Will Mount')
         this.setState({
             isLoading:true,
         })
-
         this.fetchData();
     }
     fetchData(refresh){
@@ -47,16 +46,16 @@ export default class MyComponent extends React.Component {
             });
         }
 
-        fetch(dataUrl)
+        fetch(MyUrl)
             .then((response) => response.json())
             .then((data) => {
                 let dataList = data.subjects;
                 this.setState({
-                    dataSource:this.state.dataSource.cloneWithRows(dataList),
+                    dataSource:this.state.dataSource.cloneWithRows(
+                        ),
                     isLoading:false,
                     refreshing:false
                 })
-
             })
             .catch((err) => {
                 console.log(err)
@@ -70,7 +69,6 @@ export default class MyComponent extends React.Component {
                 this.props.navigation.navigate('ProductScreen',{data:data})
             }}>
             <View style={styles.cellBoxStyle}>
-
 
                 <Image source={{uri:data.images.large}} style={{width:70,height:70}} />
                     <View>

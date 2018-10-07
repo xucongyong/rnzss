@@ -1,6 +1,8 @@
 /**
  * Created by penn on 2016/12/19.
  */
+const axios = require('axios');
+
 
 export default class HttpUtils{
     static get(url){

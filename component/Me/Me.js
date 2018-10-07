@@ -1,6 +1,9 @@
 import React from "react";
 import {StyleSheet,Text, View, ScrollView, Button, AsyncStorage} from "react-native";
 import deviceStorage from "../Login/jwt/services/deviceStorage";
+import axios from 'axios';
+import weburl from "../websettings";
+import HttpGetPost from '../HttpGetPost';
 
 var CommonCell = require('./CommonCell');
 class Hometitle extends React.Component{
@@ -47,6 +50,7 @@ class MeScreen extends React.Component{
                             <CommonCell
                                 title={'实名验证'}
                             />
+                            <Text>weburl</Text>
                         </View>
 
                     </ScrollView>

@@ -3,7 +3,6 @@ import React from 'react';
 import { Text, Button, View, AppRegistry} from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import deviceStorage from "./Login/jwt/services/deviceStorage";
-import axios from 'axios';
 
 // const device = {};
 
