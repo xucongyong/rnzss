@@ -7,10 +7,10 @@ let HomeAllPage = require('./HomeAllPage');
 const TopTabNav = createMaterialTopTabNavigator(
     {
         全部: { screen: HomeAllPage },
-        红包: { screen: HomeAllPage },
-        报名: { screen: HomeAllPage },
-        返现: { screen: HomeAllPage },
-        礼物: { screen: HomeAllPage },
+        // 红包: { screen: HomeAllPage },
+        // 报名: { screen: HomeAllPage },
+        // 返现: { screen: HomeAllPage },
+        // 礼物: { screen: HomeAllPage },
     },
     {
         initialRouteName:'全部',

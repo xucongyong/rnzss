@@ -13,9 +13,18 @@ import {
 import Dimensions from 'Dimensions';
 const {width, height} = Dimensions.get('window');
 const dataUrl = 'https://api.douban.com/v2/movie/top250?count=350';
-const MyUrl = 'http://127.0.0.1:7001/m/index';
+const MyUrl = 'http://192.168.201.103:7001/m/index';
 
-
+const axios = require('axios');
+import deviceStorage from "../Login/jwt/services/deviceStorage";
+// device.DeviceID = DeviceInfo.getUniqueID();
+let token = ''
+deviceStorage.get('token').then((GetToken) => {
+        token = GetToken
+        console.log(token)
+        });
+// Make a request for a user with a given ID
+//
 
 
 export default class MyComponent extends React.Component {
@@ -39,28 +48,34 @@ export default class MyComponent extends React.Component {
         this.fetchData();
     }
     fetchData(refresh){
-
         if(refresh){
             this.setState({
                 refreshing:true
             });
-        }
-
-        fetch(MyUrl)
-            .then((response) => response.json())
-            .then((data) => {
-                let dataList = data.subjects;
-                this.setState({
-                    dataSource:this.state.dataSource.cloneWithRows(
-                        ),
-                    isLoading:false,
-                    refreshing:false
-                })
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-            .done()
+            }
+        axios.get(MyUrl, { headers: { Authorization: token } })
+                .then(response => {
+                // If request is good...
+                console.log(response.data);
+              })
+              .catch((error) => {
+                console.log('error 3 ' + error);
+              });
+        // fetch(MyUrl)
+        //     .then((response) => response.json())
+        //     .then((data) => {
+        //         let dataList = data.subjects;
+        //         this.setState({
+        //             dataSource:this.state.dataSource.cloneWithRows(
+        //                 ),
+        //             isLoading:false,
+        //             refreshing:false
+        //         })
+        //     })
+        //     .catch((err) => {
+        //         console.log(err)
+        //     })
+        //     .done()
     }
 
     _renderRow(data){

@@ -20,6 +20,8 @@ let LoginScreen = require('./Login/Login')
 let token = ''
 deviceStorage.get('token').then((GetToken) => {
         token = GetToken
+        console.log(token=== '')
+        console.log(token=== null)
         console.log(token)
         });
 
@@ -29,21 +31,21 @@ const TabView = createBottomTabNavigator({
     分享: { screen: Share,
         navigationOptions: ({ navigation }) => ({
                 tabBarOnPress: ({ navigation, defaultHandler }) => {
-                    if (!token === '') {navigation.navigate('Login')
+                    if (token === '' || token=== null) {navigation.navigate('Login')
                         }else {defaultHandler(); }}
                     })
     },
     订单: { screen: TaskView,
         navigationOptions: ({ navigation }) => ({
                 tabBarOnPress: ({ navigation, defaultHandler }) => {
-                    if (!token === '') {navigation.navigate('Login')
+                    if (token === '' || token=== null) {navigation.navigate('Login')
                         }else {defaultHandler(); }}
                     })
     },
     我的: { screen: Me,
         navigationOptions: ({ navigation }) => ({
                 tabBarOnPress: ({ navigation, defaultHandler }) => {
-                    if (!token === '') {navigation.navigate('Login')
+                    if (token === '' || token=== null) {navigation.navigate('Login')
                         }else {defaultHandler(); }}
                     })
             }
