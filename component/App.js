@@ -27,7 +27,13 @@ deviceStorage.get('token').then((GetToken) => {
 
 
 const TabView = createBottomTabNavigator({
-    试用: { screen: Home },
+    试用: { screen: Home,
+        navigationOptions: ({ navigation }) => ({
+                tabBarOnPress: ({ navigation, defaultHandler }) => {
+                    if (token === '' || token=== null) {navigation.navigate('Login')
+                        }else {defaultHandler(); }}
+                    })
+    },
     分享: { screen: Share,
         navigationOptions: ({ navigation }) => ({
                 tabBarOnPress: ({ navigation, defaultHandler }) => {

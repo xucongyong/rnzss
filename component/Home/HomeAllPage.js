@@ -9,7 +9,6 @@ import {
     Image,
     TouchableOpacity,
 } from 'react-native';
-
 import Dimensions from 'Dimensions';
 const {width, height} = Dimensions.get('window');
 const dataUrl = 'https://api.douban.com/v2/movie/top250?count=350';
@@ -17,13 +16,7 @@ const MyUrl = 'http://192.168.201.103:7001/m/index';
 
 const axios = require('axios');
 import deviceStorage from "../Login/jwt/services/deviceStorage";
-// device.DeviceID = DeviceInfo.getUniqueID();
 let token = ''
-deviceStorage.get('token').then((GetToken) => {
-        token = GetToken
-        console.log(token)
-        });
-// Make a request for a user with a given ID
 //
 
 
@@ -35,7 +28,7 @@ export default class MyComponent extends React.Component {
             dataSource : ds,
             isLoading:false,
             refreshing:false,
-            isMoreloading:true
+            isMoreloading:true,
         }
     }
 
@@ -45,6 +38,8 @@ export default class MyComponent extends React.Component {
         this.setState({
             isLoading:true,
         })
+
+
         this.fetchData();
     }
     fetchData(refresh){
@@ -53,14 +48,25 @@ export default class MyComponent extends React.Component {
                 refreshing:true
             });
             }
-        axios.get(MyUrl, { headers: { Authorization: token } })
-                .then(response => {
-                // If request is good...
-                console.log(response.data);
-              })
-              .catch((error) => {
-                console.log('error 3 ' + error);
-              });
+        // device.DeviceID = DeviceInfo.getUniqueID();
+        deviceStorage.get('token').then((GetToken) => {
+                token = GetToken
+                console.log(token=== '')
+                console.log(token=== null)
+                
+                axios.get(MyUrl, { headers: { Authorization: token, sort:0,version:'1.0'}})
+                    .then(response => {
+                    // If request is good...
+                        console.log('response.data');
+                        console.log(response.data);
+                        console.log('response.data');
+                    })
+                    .catch((error) => {
+                        console.log('error 3 ' + error);
+                    });
+                });
+        // Make a request for a user with a given ID
+
         // fetch(MyUrl)
         //     .then((response) => response.json())
         //     .then((data) => {
