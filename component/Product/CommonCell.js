@@ -9,8 +9,7 @@ import {
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 class CommonCell extends React.Component {
-
-    getDefaultProps(){
+    DefaultProps(){
         return{
             title: '',
         }

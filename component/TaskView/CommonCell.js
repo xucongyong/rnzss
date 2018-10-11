@@ -9,7 +9,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 class CommonCell extends React.Component {{
 
-    getDefaultProps(){
+    DefaultProps(){
       return{
           title: '',
       }
@@ -22,7 +22,6 @@ class CommonCell extends React.Component {{
             </View>
 
             // <Image source={{url: <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/> }} style={{width:8, height:13}} />
-
     )
     }
 }

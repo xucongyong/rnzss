@@ -46,13 +46,9 @@ export default class MyComponent extends React.Component {
         }
         deviceStorage.get('token').then((GetToken) => {
             token = GetToken
-            console.log(token=== '')
-            console.log(token=== null)
+
             axios.get(MyUrl, { headers: { Authorization: token, sort:0,version:'1.0'}})
                 .then(response => {
-                    console.log(response.data)
-                    console.log(typeof response.data)
-                    console.log(typeof response.data)
                     this.setState({
                         dataSource: this.state.dataSource.cloneWithRows(response.data),
                         isLoading:false,
@@ -66,23 +62,17 @@ export default class MyComponent extends React.Component {
     }
     //listview数据加工成页面
     _renderRow(data){
-        console.log('data')
-        console.log(data['Details'])
         var testV  = JSON.parse(data['Details'])
-        console.log(typeof testV)
-        console.log(testV)
-        console.log(typeof data['Details'])
         return (
             <TouchableOpacity onPress={()=> {
-                this.props.navigation.navigate('ProductScreen',{data:data['Id']})}}>
+                this.props.navigation.navigate('ProductScreen',{taskId:data['SellOrderId']})}}>
             <View style={styles.cellBoxStyle}>
                 <View>
-                    <Text style={styles.cellTxt}>{data['Id']}</Text>
+                    <Text style={styles.cellTxt}>{data['SellOrderId']}</Text>
                     <Text style={styles.cellTxt}>{testV['name']}</Text>
                 </View>
             </View>
             </TouchableOpacity>
-
         )
     }
     // 刷新操作

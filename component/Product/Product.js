@@ -4,40 +4,87 @@ const ProductScrollView = require('./ProductScrollView')
 const window = Dimensions.get('window');
 const imageWidth = (window.width/3)+30;
 const imageHeight = window.height;
-
 var CommonCell = require('./CommonCell');
-
+const productUrl = 'http://192.168.201.103:7001/m/product';
+const axios = require('axios');
+import deviceStorage from "../Login/jwt/services/deviceStorage";
+let token = ''
+var productDetail ;
+// 如果你想读取子项，
 
 
 class ProductScreen extends React.Component{
-    // static navigationOptions =({
-    //     headerTransparent:true
-    // })
+    constructor(props){
+        super(props);
+        this.state = {
+            PD:'',
+            //ImageTest:'https://www.baidu.com/img/bd_logo1.png',
+            ImageTest:'http://mat1.gtimg.com/www/qq2018/imgs/qq_logo_2018x2.png',
+            testvalues: 0,
+            taskId:this.props.navigation.getParam('taskId','NO-ID'),
+        }
+    }
+    componentDidMount(){
+        console.log(this.state.taskId)
+        this.fetchData(this.state.taskId); //启动的时候载入数据
+    }
+    fetchData(posttaskid){
+        console.log(posttaskid)
+        deviceStorage.get('token').then((GetToken) => {
+            token = GetToken
+            console.log(this.props.navigation.getParam('taskId','NO-ID'))
+            axios.get(productUrl, { headers: { Authorization: token, sort:0,version:'1.0',taskId:posttaskid}})
+                .then(response => {
+                    productDetail = response.data
+                    this.setState({ImageTest:'https://www.baidu.com/img/bd_logo1.png'})
+                    this.setState({testvalues:1})
+                })
+                .catch((error) => {
+                    console.log('error 3 ' + error);
+                });
+        });
+    }
+    fetchReturnView(GetPdvalues){
+        console.log(GetPdvalues)
+        return 'helloKetty'
+    }
+
     render(){
-        const productID = this.props.navigation.getParam('productID','NO-ID')
+        const taskId = this.props.navigation.getParam('taskId','NO-ID')
         const imageUrl = this.props.navigation.getParam('imageUrl','NO-ImageUrl')
         //const imageUrl = JSON.stringify(this.props.navigation.getParam('imageUrl','NO-ImageUrl'))
         console.log(imageUrl)
         return(
             <View>
+                <View style={styles.comments}>
+                <Image source={{
+                        uri: this.state.ImageTest,
+                        method: 'GET',
+                    headers: {
+                            Pragma: 'no-cache',
+                            },
+                            body: 'Your Body goes here',
+                    }}
+                    style={{width: 400, height: 400}}
+                    />
+                    </View>
 
                 <ProductScrollView />
-                <View style={styles.comments}><Image source={imageUrl}/></View>
-
                 <View style={styles.comments}>
-                <View><Text>{productID}</Text></View>
-                    <View><Text>活动类型：</Text></View>
+
+                <View><Text>{taskId}testvalues：{this.state.testvalues}</Text></View>
+                <View><Text>活动类型：{this.fetchReturnView(productDetail)}</Text></View>
                 <View><Text>剩余活动：</Text></View>
                 </View>
-
                 <ScrollView>
                     <View>
-                        <Text>PPRODUCTDETAILS</Text>
+                        <Text>test</Text>
                         <CommonCell
-                            title={'余额提现'}
-                        />
+                            title={'余额提现'}/>
 
                     </View>
+
+                </ScrollView>
                 <View style={styles.shopcart}>
                     <View style={{flex: 2, flexDirection: 'row'}}>
                         <View style={styles.bottomItem}>
@@ -46,15 +93,10 @@ class ProductScreen extends React.Component{
                         <View style={styles.bottomItem}>
                             <Text>后仓</Text>
                         </View>
-
                         <View style={styles.bottomItem}>
-
                             <Text>购物车</Text>
-
                         </View>
-
                     </View>
-
                     <View style={[styles.bottomItem, {backgroundColor: 'red'}]}>
 
                         <Text>加入购物车</Text>
@@ -62,9 +104,7 @@ class ProductScreen extends React.Component{
                     <View style={[styles.bottomItem, {backgroundColor: 'green'}]}>
                         <Text>看左面{'\n'}加入{'\n'}购物车</Text>
                     </View>
-
                 </View>
-                </ScrollView>
 
             </View>
 
