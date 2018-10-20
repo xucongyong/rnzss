@@ -56,22 +56,10 @@ class ProductScreen extends React.Component{
         console.log(imageUrl)
         return(
             <View>
-                <View style={styles.comments}>
-                <Image source={{
-                        uri: this.state.ImageTest,
-                        method: 'GET',
-                    headers: {
-                            Pragma: 'no-cache',
-                            },
-                            body: 'Your Body goes here',
-                    }}
-                    style={{width: 400, height: 400}}
-                    />
-                    </View>
-
+            <View>
                 <ProductScrollView />
-                <View style={styles.comments}>
 
+                <View>
                 <View><Text>{taskId}testvalues：{this.state.testvalues}</Text></View>
                 <View><Text>活动类型：{this.fetchReturnView(productDetail)}</Text></View>
                 <View><Text>剩余活动：</Text></View>
@@ -79,11 +67,31 @@ class ProductScreen extends React.Component{
                 <ScrollView>
                     <View>
                         <Text>test</Text>
-                        <CommonCell
-                            title={'余额提现'}/>
-
+                        <Text>test</Text>
+                        <Text>test</Text>
+                        <Text>test</Text>
+                        <Text>test</Text>
+                        <Text>test</Text>
+                        <Text>test</Text>
+                        <Text>test</Text>
+                        <Text>test</Text>
+                        <Text>test</Text>
+                        <Text>test</Text>
+                        <Text>test</Text>
+                        <Text>test</Text>
+                        <Text>test</Text>
+                        <Text>test</Text>
+                        <Text>test</Text>
+                        <Text>test</Text>
+                        <Text>test</Text>
+                        <Text>test</Text>
+                        <Text>test</Text>
+                        <Text>test</Text>
+                        <Text>test</Text>
+                        <Text>test</Text>
+                        <Text>test</Text>
+                        <Text>test</Text>
                     </View>
-
                 </ScrollView>
                 <View style={styles.shopcart}>
                     <View style={{flex: 2, flexDirection: 'row'}}>
@@ -105,9 +113,9 @@ class ProductScreen extends React.Component{
                         <Text>看左面{'\n'}加入{'\n'}购物车</Text>
                     </View>
                 </View>
-
             </View>
 
+            </View>
         )
     }
 }
