@@ -68,12 +68,16 @@ export default class MyComponent extends React.Component {
                 this.props.navigation.navigate('ProductScreen',{taskId:data['SellOrderId']})}}>
             <View style={styles.cellBoxStyle}>
                 <View>
-                    <Image
-                          style={{width: 50, height: 50}}
+                        <Image
+                          style={{width: 80, height: 80}}
                           source={{uri: testV['mainImage'][0]}}
                         />
-                    <Text style={styles.cellTxt}>{data['SellOrderId']}</Text>
-                    <Text style={styles.cellTxt}>{testV['name']}</Text>
+                </View>
+                <View>
+                    <Text>{testV['name']}</Text>
+                <Text>付：{data['buyNum'] * data['buyPrice']}：返：{data['BuyGetPrice']},红包：{data['BuyGetPrice'] -(data['buyNum'] * data['buyPrice'])}，剩：{data['orderNumber']}</Text>
+                    <Text>时间：{data['MinTime']} - {data['MaxTime']},开始：{data['startDate']} </Text>
+                    <Text>{data['ShopSort']}，任务类型：{data['event']}，用户要求：{data['huabeiId']}</Text>
                 </View>
             </View>
             </TouchableOpacity>
@@ -125,6 +129,9 @@ export default class MyComponent extends React.Component {
                     //         onRefresh={this.reloadNewData.bind(this)}
                     //         colors={['red','orange']}
                     //     />}
+                    pageSize = {2}
+                    initialListSize={3}
+                    //removeClippedSubviews ＝ {false}
                     renderFooter={()=>this.renderFooter()}
                     onEndReached={ ()=>this._toEnd() }
                 />
@@ -149,6 +156,7 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         backgroundColor: 'white',
         padding: 10,
+        height: 95,
         marginLeft: 5,
         marginRight: 5,
         marginVertical: 3,

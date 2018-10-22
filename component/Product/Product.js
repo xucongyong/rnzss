@@ -1,33 +1,38 @@
 import React from "react";
-import {StyleSheet,Dimensions,Text, View, ScrollView, Button,Image} from "react-native";
-const ProductScrollView = require('./ProductScrollView')
+import {StyleSheet,Dimensions,Text, View, ScrollView, Button,Image,ActivityIndicator} from "react-native";
 const window = Dimensions.get('window');
 const imageWidth = (window.width/3)+30;
 const imageHeight = window.height;
 var CommonCell = require('./CommonCell');
-const productUrl = 'http://192.168.201.103:7001/m/product';
+const productUrl = 'http://127.0.0.1:7001/m/product';
 const axios = require('axios');
 import deviceStorage from "../Login/jwt/services/deviceStorage";
+var ScreenWidth = Dimensions.get('window').width;
+var boxWidth = Dimensions.get('window').height/2;
 let token = ''
-var productDetail ;
 // 如果你想读取子项，
-
 
 class ProductScreen extends React.Component{
     constructor(props){
         super(props);
         this.state = {
             PD:'',
-            //ImageTest:'https://www.baidu.com/img/bd_logo1.png',
-            ImageTest:'http://mat1.gtimg.com/www/qq2018/imgs/qq_logo_2018x2.png',
-            testvalues: 0,
+            productDetail:'',
+            currentPage: 0,
+            ImageMain:[],
+            loading: false,
             taskId:this.props.navigation.getParam('taskId','NO-ID'),
         }
     }
-    componentDidMount(){
-        console.log(this.state.taskId)
+    componentWillMount(){
         this.fetchData(this.state.taskId); //启动的时候载入数据
+        // this.startTimer();
     }
+    //取消定时器
+    // componentWillUnmount(){
+    //     clearInterval(this.timer);
+    // }
+
     fetchData(posttaskid){
         console.log(posttaskid)
         deviceStorage.get('token').then((GetToken) => {
@@ -35,9 +40,9 @@ class ProductScreen extends React.Component{
             console.log(this.props.navigation.getParam('taskId','NO-ID'))
             axios.get(productUrl, { headers: { Authorization: token, sort:0,version:'1.0',taskId:posttaskid}})
                 .then(response => {
-                    productDetail = response.data
-                    this.setState({ImageTest:'https://www.baidu.com/img/bd_logo1.png'})
-                    this.setState({testvalues:1})
+                    this.setState({productDetail:response.data})
+                    this.setState({ImageMain:JSON.parse(this.state.productDetail['Details'])['mainImage']})
+                    this.setState({loading:true})
                 })
                 .catch((error) => {
                     console.log('error 3 ' + error);
@@ -48,74 +53,82 @@ class ProductScreen extends React.Component{
         console.log(GetPdvalues)
         return 'helloKetty'
     }
+    //渲染图
+    renderChilds(){
+        var productDetailNum = 0
+        return this.state.ImageMain.map((x)=>{
+            productDetailNum +=1
+            return <Image key={{productDetailNum}} source={{uri:x}} style={styles.imageStyle} />;
+        })
+        }
+   // 渲染圆
+    renderCircles = () =>{
+        return this.state.productDetail.map((x)=>{
+            var style = {};
+            var productDetailNum = 0
+            if (i === this.state.currentPage){
+                style = {color: 'orange'};
+            }
+            return <Text key={productDetailNum} style={[styles.circleStyle.style]}>&bull;</Text>
+        })}
 
+    //滚动回调
+    handleScroll = (e) => {
+        var x = e.nativeEvent.contentOffset.x;
+        var currentPage = Math.floor(e.nativeEvent.contentOffset.x / ScreenWidth);
+        this.setState({currentPage: currentPage});
+        console.log('creentPage:'+currentPage);
+    }
+
+    //定时器
+    startTimer = () => {
+        this.timer = setInterval(() => {
+            //计算出滚动的页面索引，改变state
+            var currentPage = ++ this.state.currentPage == this.state.productDetail.length ? 0 : this.state.currentPage;
+            this.setState({currentPage: currentPage});
+            //计算滚动的距离
+            var offsetX = currentPage * ScreenWidth;
+            this.refs.scrollView.scrollTo({x: offsetX, y:0, animated: true})
+            console.log(currentPage);
+        }, 30000)
+    }
+    //开始滚动
+    handleScrollBegin = () =>{
+        console.log('handleScrollBegin');
+        clearInterval(this.timer);
+    }
+    //上面启动，下面关闭
+    handleScrollEnd = () =>{
+        this.startTimer();
+    }
     render(){
+        let productView;
         const taskId = this.props.navigation.getParam('taskId','NO-ID')
         const imageUrl = this.props.navigation.getParam('imageUrl','NO-ImageUrl')
-        //const imageUrl = JSON.stringify(this.props.navigation.getParam('imageUrl','NO-ImageUrl'))
-        console.log(imageUrl)
-        return(
-            <View>
-            <View>
-                <ProductScrollView />
+        if(this.state.loading){
 
-                <View>
-                <View><Text>{taskId}testvalues：{this.state.testvalues}</Text></View>
-                <View><Text>活动类型：{this.fetchReturnView(productDetail)}</Text></View>
-                <View><Text>剩余活动：</Text></View>
-                </View>
-                <ScrollView>
-                    <View>
-                        <Text>test</Text>
-                        <Text>test</Text>
-                        <Text>test</Text>
-                        <Text>test</Text>
-                        <Text>test</Text>
-                        <Text>test</Text>
-                        <Text>test</Text>
-                        <Text>test</Text>
-                        <Text>test</Text>
-                        <Text>test</Text>
-                        <Text>test</Text>
-                        <Text>test</Text>
-                        <Text>test</Text>
-                        <Text>test</Text>
-                        <Text>test</Text>
-                        <Text>test</Text>
-                        <Text>test</Text>
-                        <Text>test</Text>
-                        <Text>test</Text>
-                        <Text>test</Text>
-                        <Text>test</Text>
-                        <Text>test</Text>
-                        <Text>test</Text>
-                        <Text>test</Text>
-                        <Text>test</Text>
-                    </View>
+            productView = (<View style={styles.container}>
+                <ScrollView
+                    ref="scrollView"
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    pagingEnabled={true}
+                    onMomentumScrollEnd={this.handleScroll}
+                    onScrollBeginDrag={this.handleScrollBegin}
+                    onScrollEndDrag={this.handleScrollEnd}>
+                    {/*子元素*/}
+                    {this.renderChilds()}
+                    {/*<View style={styles.circleWrapperStyle}>*/}
+                    {/*{this.renderCircles()}*/}
+                    {/*</View>*/}
                 </ScrollView>
-                <View style={styles.shopcart}>
-                    <View style={{flex: 2, flexDirection: 'row'}}>
-                        <View style={styles.bottomItem}>
-                            <Text>客服</Text>
-                        </View>
-                        <View style={styles.bottomItem}>
-                            <Text>后仓</Text>
-                        </View>
-                        <View style={styles.bottomItem}>
-                            <Text>购物车</Text>
-                        </View>
-                    </View>
-                    <View style={[styles.bottomItem, {backgroundColor: 'red'}]}>
+            </View>)
+        }else{
+            productView=(<ActivityIndicator color="#0000ff" style={{marginTop:50}} />)
+        }
+        return(
+            <View>{productView}</View>
 
-                        <Text>加入购物车</Text>
-                    </View>
-                    <View style={[styles.bottomItem, {backgroundColor: 'green'}]}>
-                        <Text>看左面{'\n'}加入{'\n'}购物车</Text>
-                    </View>
-                </View>
-            </View>
-
-            </View>
         )
     }
 }
@@ -167,6 +180,24 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: 'white'
     },
+    container:{
+        flexDirection:'column'
+    },
+    imageStyle:{
+        width: ScreenWidth,
+        height: boxWidth
+    },
+    circleWrapperStyle:{
+        flexDirection: 'row',
+        //absolute‘绝对定位’
+        //relative'相对定位
+        position:'absolute',
+        bottom:0,
+        left:10
+    },
+    circleStyle:{
+        fontSize:25,
+        color:'#FFF'}
 });
 
 module.exports = ProductScreen;
