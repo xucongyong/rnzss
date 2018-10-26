@@ -1,10 +1,12 @@
 import React from "react";
-import {StyleSheet,Dimensions,Text, View, ScrollView, Button,Image,ActivityIndicator} from "react-native";
+import {StyleSheet,Dimensions,Text, View, ScrollView, Button,Image,ActivityIndicator,TouchableOpacity,Alert} from "react-native";
 const window = Dimensions.get('window');
 const imageWidth = (window.width/3)+30;
 const imageHeight = window.height;
 var CommonCell = require('./CommonCell');
-const productUrl = 'http://127.0.0.1:7001/m/product';
+const serverUrl = 'http://127.0.0.1:7001';
+const productUrl = serverUrl+'/m/product';
+const OrderUrl = serverUrl+'/m/genratetask';
 const axios = require('axios');
 import deviceStorage from "../Login/jwt/services/deviceStorage";
 var ScreenWidth = Dimensions.get('window').width;
@@ -20,8 +22,10 @@ class ProductScreen extends React.Component{
             productDetail:'',
             currentPage: 0,
             ImageMain:[],
+            ImageDetails:[],
             loading: false,
             taskId:this.props.navigation.getParam('taskId','NO-ID'),
+            GenrateTasking:false,
         }
     }
     componentWillMount(){
@@ -42,6 +46,7 @@ class ProductScreen extends React.Component{
                 .then(response => {
                     this.setState({productDetail:response.data})
                     this.setState({ImageMain:JSON.parse(this.state.productDetail['Details'])['mainImage']})
+                    this.setState({ImageDetails:JSON.parse(this.state.productDetail['Details'])['DetailsImage']})
                     this.setState({loading:true})
                 })
                 .catch((error) => {
@@ -49,85 +54,107 @@ class ProductScreen extends React.Component{
                 });
         });
     }
-    fetchReturnView(GetPdvalues){
-        console.log(GetPdvalues)
-        return 'helloKetty'
-    }
+
     //渲染图
     renderChilds(){
-        var productDetailNum = 0
+        var N = 1
         return this.state.ImageMain.map((x)=>{
-            productDetailNum +=1
-            return <Image key={{productDetailNum}} source={{uri:x}} style={styles.imageStyle} />;
-        })
-        }
-   // 渲染圆
-    renderCircles = () =>{
-        return this.state.productDetail.map((x)=>{
-            var style = {};
-            var productDetailNum = 0
-            if (i === this.state.currentPage){
-                style = {color: 'orange'};
-            }
-            return <Text key={productDetailNum} style={[styles.circleStyle.style]}>&bull;</Text>
+            N +=1
+            return <Image key={N} source={{uri:x}} style={styles.imageStyle} />;
+        })}
+        // }
+
+
+    //渲染图
+    renderDeatlsImage(){
+        var Y = 10
+        return this.state.ImageDetails.map((x)=>{
+            Y +=1
+            console.log(x)
+            return <Image key={Y} source={{uri:x}} style={styles.DeatlsImageStyle} />;
         })}
 
-    //滚动回调
-    handleScroll = (e) => {
-        var x = e.nativeEvent.contentOffset.x;
-        var currentPage = Math.floor(e.nativeEvent.contentOffset.x / ScreenWidth);
-        this.setState({currentPage: currentPage});
-        console.log('creentPage:'+currentPage);
+    //购物按钮
+    genrateTask(){
+        console.log(this.state.taskId)
+        console.log(OrderUrl)
+        deviceStorage.get('token').then((GetToken) => {
+            token = GetToken
+            console.log(this.state.taskId)
+            axios.get(OrderUrl, { headers: { Authorization: token, version:'1.0',orderid:this.state.taskId}})
+                .then(response => {
+                    this.setState({productDetail:response.data})
+                    //this.setState({ImageMain:JSON.parse(this.state.productDetail['Details'])['mainImage']})
+                    //this.setState({ImageDetails:JSON.parse(this.state.productDetail['Details'])['DetailsImage']})
+                    //this.setState({loading:true})
+                })
+                .catch((error) => {
+                    console.log('error 3 ' + error);
+                });
+        });
     }
 
-    //定时器
-    startTimer = () => {
-        this.timer = setInterval(() => {
-            //计算出滚动的页面索引，改变state
-            var currentPage = ++ this.state.currentPage == this.state.productDetail.length ? 0 : this.state.currentPage;
-            this.setState({currentPage: currentPage});
-            //计算滚动的距离
-            var offsetX = currentPage * ScreenWidth;
-            this.refs.scrollView.scrollTo({x: offsetX, y:0, animated: true})
-            console.log(currentPage);
-        }, 30000)
-    }
-    //开始滚动
-    handleScrollBegin = () =>{
-        console.log('handleScrollBegin');
-        clearInterval(this.timer);
-    }
-    //上面启动，下面关闭
-    handleScrollEnd = () =>{
-        this.startTimer();
-    }
     render(){
         let productView;
         const taskId = this.props.navigation.getParam('taskId','NO-ID')
         const imageUrl = this.props.navigation.getParam('imageUrl','NO-ImageUrl')
         if(this.state.loading){
 
-            productView = (<View style={styles.container}>
+            productView = (
+
+                <View style={{flex:1}}>
+                <View style={styles.container}>
                 <ScrollView
-                    ref="scrollView"
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}
-                    pagingEnabled={true}
-                    onMomentumScrollEnd={this.handleScroll}
-                    onScrollBeginDrag={this.handleScrollBegin}
-                    onScrollEndDrag={this.handleScrollEnd}>
-                    {/*子元素*/}
+                    pagingEnabled={true}>
                     {this.renderChilds()}
-                    {/*<View style={styles.circleWrapperStyle}>*/}
-                    {/*{this.renderCircles()}*/}
-                    {/*</View>*/}
                 </ScrollView>
-            </View>)
+                    <ScrollView>
+                        <Button
+                            title="Delete Record"
+                            onPress={() => Alert.alert(
+                                'Alert Title',
+                                'alertMessage',
+                                [
+                                    {text: 'Cancel', onPress: () => console.log('Cancel Pressed!')},
+                                    {text: 'OK', onPress: this.onDeleteBTN},
+                                ],
+                                { cancelable: false }
+                            )}
+                        />
+                        <Text>xxxx</Text>
+                        {this.renderDeatlsImage()}
+                        <Text>x</Text>
+                        <Text>123213</Text>
+                    </ScrollView>
+                </View>
+
+                <View style={styles.shopcart}>
+                    <View style={styles.bottomItem}><Text>客服</Text></View>
+                    <View style={styles.bottomItem}><Text>后仓</Text></View>
+                    <View style={styles.bottomItem}><Text>购物车</Text></View>
+                    <View style={[styles.bottomItem, {backgroundColor: 'red'}]}>
+                        <Text>加入购物车</Text>
+                    </View>
+
+                    <View style={[styles.bottomItem, {backgroundColor: 'green'}]}>
+                        <Button
+                            onPress={this.genrateTask()}
+                            title='now buy'
+                            color='blue'
+                            accessibilityLabel="Learn more about this purple button"
+                        />
+                        <Text>立即购买{'\n'}购物车</Text>
+                    </View>
+                    </View>
+                </View>
+            )
         }else{
             productView=(<ActivityIndicator color="#0000ff" style={{marginTop:50}} />)
         }
         return(
-            <View>{productView}</View>
+            <View style={{flex:1}}>{productView}</View>
 
         )
     }
@@ -167,23 +194,30 @@ const styles = StyleSheet.create({
         height: imageHeight * 0.1,
     },
     bottomItem: {
-        flex: 1,
+        width:window.width/5,
         alignItems: 'center',
         justifyContent: 'center',
         borderWidth: 1
+
     },
     shopcart: {
-        position: 'absolute',
-        bottom: 0,
+        flex:0.07,
         height: 50,
-        width: 375,
         flexDirection: 'row',
-        backgroundColor: 'white'
+        //backgroundColor: 'red',
     },
     container:{
+        flex: 0.93,
         flexDirection:'column'
     },
+    contentContainer: {
+        paddingVertical: 20
+    },
     imageStyle:{
+        width: ScreenWidth,
+        height: boxWidth
+    },
+    DeatlsImageStyle:{
         width: ScreenWidth,
         height: boxWidth
     },

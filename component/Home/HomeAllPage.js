@@ -129,8 +129,8 @@ export default class MyComponent extends React.Component {
                     //         onRefresh={this.reloadNewData.bind(this)}
                     //         colors={['red','orange']}
                     //     />}
-                    pageSize = {2}
-                    initialListSize={3}
+                    pageSize = {5}
+                    initialListSize={5}
                     //removeClippedSubviews ＝ {false}
                     renderFooter={()=>this.renderFooter()}
                     onEndReached={ ()=>this._toEnd() }
