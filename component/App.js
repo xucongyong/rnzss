@@ -5,14 +5,14 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import deviceStorage from "./Login/jwt/services/deviceStorage";
 
 // const device = {};
-
 // device.DeviceID = DeviceInfo.getUniqueID();
 
 //** --- input class --- **//
 let Home = require('./Home/Home');
 let Share = require('./Share/Share');
 let TaskView = require('./TaskView/TaskView');
-let Me = require('./Me/Me');
+let MeScreen = require('./Me/Me');
+let addTbAccountScreen = require('./Me/AddTbAccount');
 let ProductScreen = require('./Product/Product')
 let OrderScreen = require('./Order/Order')
 let MobileLoginScreen = require('./Login/MobileLogin')
@@ -48,7 +48,7 @@ const TabView = createBottomTabNavigator({
                         }else {defaultHandler(); }}
                     })
     },
-    我的: { screen: Me,
+    我的: { screen: MeScreen,
         navigationOptions: ({ navigation }) => ({
                 tabBarOnPress: ({ navigation, defaultHandler }) => {
                     if (token === '' || token=== null) {navigation.navigate('Login')
@@ -88,7 +88,6 @@ const TabView = createBottomTabNavigator({
 //     },
 // }),
 
-
 const RootStack = createStackNavigator(
     {
         TestMain: {
@@ -97,31 +96,42 @@ const RootStack = createStackNavigator(
                 headerTransparent: true,
             }
         },
+        //产品页
         ProductScreen: {
             screen: ProductScreen,
             navigationOptions: {
                 headerTransparent: true,
             }
         },
+        //产品登录
         Login: {
             screen: LoginScreen,
             navigationOptions: {
                 headerTransparent: true,
             }
         },
+        //手机号登录
         MobileLogin: {
             screen: MobileLoginScreen,
             navigationOptions: {
                 headerTransparent: true,
             }
         },
+        //订单
         Order: {
             screen: OrderScreen,
             navigationOptions: {
                 headerTransparent: true,
             }
         },
-    },
+        //绑定tb账号
+        addTbAccount: {
+            screen: addTbAccountScreen,
+            navigationOptions: {
+                headerTransparent: true,
+            }
+        },
+     },
     {
         initialRouteName: 'TestMain',
     }

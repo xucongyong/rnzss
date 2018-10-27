@@ -73,11 +73,9 @@ class ProductScreen extends React.Component{
             console.log(x)
             return <Image key={Y} source={{uri:x}} style={styles.DeatlsImageStyle} />;
         })}
-
     //购物按钮
     genrateTask(){
         console.log(this.state.taskId)
-        console.log(OrderUrl)
         deviceStorage.get('token').then((GetToken) => {
             token = GetToken
             console.log(this.state.taskId)
@@ -92,16 +90,29 @@ class ProductScreen extends React.Component{
                     console.log('error 3 ' + error);
                 });
         });
+        if(this.state.productDetail !== ''){
+        Alert.alert(
+            '需要绑定账号后，开始试用游戏活动噢',
+            'alertMessage',
+            [
+                {text: '马上绑定', onPress: () => this.props.navigation.navigate('addTbAccount')},
+                {text: '先不绑定', onPress: () => console.log('Cancel Pressed!')},
+            ],
+            { cancelable: false }
+            )
+        }else{
+            this.props.navigation.navigate('addTbAccount')
+        }
+
     }
+    //关键词
 
     render(){
         let productView;
         const taskId = this.props.navigation.getParam('taskId','NO-ID')
         const imageUrl = this.props.navigation.getParam('imageUrl','NO-ImageUrl')
         if(this.state.loading){
-
             productView = (
-
                 <View style={{flex:1}}>
                 <View style={styles.container}>
                 <ScrollView
@@ -114,11 +125,11 @@ class ProductScreen extends React.Component{
                         <Button
                             title="Delete Record"
                             onPress={() => Alert.alert(
-                                'Alert Title',
+                                '还没捆绑账号哦，(づ￣3￣)づ╭❤～请绑定账号，',
                                 'alertMessage',
                                 [
-                                    {text: 'Cancel', onPress: () => console.log('Cancel Pressed!')},
-                                    {text: 'OK', onPress: this.onDeleteBTN},
+                                    {text: '先不绑定', onPress: () => console.log('Cancel Pressed!')},
+                                    {text: '马上绑定', onPress: this.onDeleteBTN},
                                 ],
                                 { cancelable: false }
                             )}
@@ -131,22 +142,12 @@ class ProductScreen extends React.Component{
                 </View>
 
                 <View style={styles.shopcart}>
-                    <View style={styles.bottomItem}><Text>客服</Text></View>
-                    <View style={styles.bottomItem}><Text>后仓</Text></View>
-                    <View style={styles.bottomItem}><Text>购物车</Text></View>
-                    <View style={[styles.bottomItem, {backgroundColor: 'red'}]}>
-                        <Text>加入购物车</Text>
-                    </View>
-
-                    <View style={[styles.bottomItem, {backgroundColor: 'green'}]}>
-                        <Button
-                            //onPress={this.genrateTask()}
-                            title='now buy'
-                            color='blue'
-                            accessibilityLabel="Learn more about this purple button"
-                        />
-                        <Text>立即购买{'\n'}购物车</Text>
-                    </View>
+                    <View style={[styles.bottomItem,{width:window.width*0.7}]}>
+                    <Text>红包试用：</Text><Text style={{ color : "red"}}>5.51元</Text></View>
+                    <View style={[styles.bottomItem,{width:window.width*0.3,backgroundColor: 'red'} ]}>
+                    <Text
+                    onPress={() => this.genrateTask()}
+                    >下单试用</Text></View>
                     </View>
                 </View>
             )
