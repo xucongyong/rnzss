@@ -140,7 +140,7 @@ class ProductScreen extends React.Component{
 
                     <View style={[styles.bottomItem, {backgroundColor: 'green'}]}>
                         <Button
-                            onPress={this.genrateTask()}
+                            //onPress={this.genrateTask()}
                             title='now buy'
                             color='blue'
                             accessibilityLabel="Learn more about this purple button"
