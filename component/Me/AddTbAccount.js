@@ -79,7 +79,7 @@ class tbScreen extends React.Component{
 			      />
 			      <Text>{this.state.text}</Text>
                 	<Button
-			            onPress={() =>this.verify(this)}
+			            onPress={() =>this.verify()}
 			            title="Press Me"
 			            color="#841584"
 			          />
