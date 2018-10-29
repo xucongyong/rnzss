@@ -1,9 +1,11 @@
 import React from "react";
-import {StyleSheet,Text, View, ScrollView, Button, AsyncStorage,Image,TextInput} from "react-native";
+import {StyleSheet,Text, View, ScrollView, Button, AsyncStorage,Image,TextInput, Alert} from "react-native";
 import deviceStorage from "../Login/jwt/services/deviceStorage";
 import axios from 'axios';
 import weburl from "../websettings";
 import HttpGetPost from '../HttpGetPost';
+const serverUrl = 'http://127.0.0.1:7001';
+const addTbAccountUrl = serverUrl+'/m/addaccount';
 
 var CommonCell = require('./CommonCell');
 class Hometitle extends React.Component{
@@ -15,7 +17,7 @@ class Hometitle extends React.Component{
             </View>
         )}}
 class tbScreen extends React.Component{
-        constructor(props){
+    constructor(props){
         super(props);
         this.state = {
             username: '',
@@ -23,28 +25,69 @@ class tbScreen extends React.Component{
             error: '',
             loading: false,
             text:'',
+            tbdata:'',
+            token:''
         }
+        this.verify = this.verify.bind(this)
     }
-        render(){
-            return(
-                        <View style={{flex:1,flexDirection: 'column',justifyContent:'center',alignItems: 'center'}}>
-                            <Image
-					          style={{width: 150, height: 150}}
-					          source={{uri: 'https://shiyong-1251434521.cos.ap-shanghai.myqcloud.com/alipay.png'}}
-					        />
-					        <Text>保存图片，请打开'支付宝app'，打开扫码二维码</Text>
-				              <View style={{padding: 10}}>
-						      <TextInput
-						        placeholder="请输入支付宝绑定的淘宝账号"
-						        style={{height:40}}
-						        onChangeText={(text) => this.setState({text})}
-						        value={this.state.text}
-						      />
-						      </View>
+    verify(){
+    	console.log(addTbAccountUrl)
+        console.log(this.state.text)
+        deviceStorage.get('token').then((GetToken) => {
+            this.setState({token:GetToken})
+            console.log(this.state.text)
+            axios.get(addTbAccountUrl,{headers:{Authorization:this.state.token,version:'1.0',account:this.state.text,platform:'tb'}})
+                .then(response => {
+                	console.log(response.data)
+                    this.setState({tbdata:response.data})
+                    //this.setState({ImageMain:JSON.parse(this.state.productDetail['Details'])['mainImage']})
+                    //this.setState({ImageDetails:JSON.parse(this.state.productDetail['Details'])['DetailsImage']})
+                    //this.setState({loading:true})
+                    if(this.state.tbdata !== ''){
+				        Alert.alert(
+				            '绑定成功',
+				            'alertMessage',
+				            [
+				                {text: '返回首页', onPress: () => this.props.navigation.navigate('addTbAccount')}
+				            ],
+				            { cancelable: false }
+				            )
+				        }else{
+				            this.props.navigation.navigate('addTbAccount')
+				        }
+                })
+                .catch((error) => {
+                    console.log('error 3 ' + error);
+                });
+        });
 
-                </View>
+    }
+    render(){
+        return(
+            <View style={{flex:1,flexDirection: 'column',justifyContent:'center',alignItems: 'center'}}>
+                <Image
+		          style={{width: 150, height: 150}}
+		          source={{uri: 'https://shiyong-1251434521.cos.ap-shanghai.myqcloud.com/alipay.png'}}
+		        />
+		        <Text>保存图片，请打开支付宝app，打开扫码二维码</Text>
+              <View style={{padding: 10}}>
+			      <TextInput
+			        placeholder="请输入支付宝绑定的淘宝账号"
+			        style={{height:40}}
+			        onChangeText={(text) => this.setState({text})}
+			        value={this.state.text}
+			      />
+			      <Text>{this.state.text}</Text>
+                	<Button
+			            onPress={() =>this.verify(this)}
+			            title="Press Me"
+			            color="#841584"
+			          />
+			      </View>
+            </View>
         )
-}}
+		}
+    }
 
 const styles = StyleSheet.create({
     HeaderTitle: {
