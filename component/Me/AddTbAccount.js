@@ -36,7 +36,7 @@ class tbScreen extends React.Component{
         deviceStorage.get('token').then((GetToken) => {
             this.setState({token:GetToken})
             console.log(this.state.text)
-            axios.get(addTbAccountUrl,{headers:{Authorization:this.state.token,version:'1.0',account:this.state.text,platform:'tb'}})
+            axios.post(addTbAccountUrl,{headers:{Authorization:this.state.token,version:'1.0',account:this.state.text,platform:'tb'}})
                 .then(response => {
                 	console.log(response.data)
                     this.setState({tbdata:response.data})
