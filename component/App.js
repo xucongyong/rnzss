@@ -103,8 +103,15 @@ const RootStack = createStackNavigator(
                 headerTransparent: true,
             }
         },
-        //产品登录
-        Login: {
+        //订单
+        Order: {
+            screen: OrderScreen,
+            navigationOptions: {
+                headerTransparent: true,
+            }
+        },
+        //任务详情页
+        TaskDetail: {
             screen: LoginScreen,
             navigationOptions: {
                 headerTransparent: true,
@@ -117,9 +124,9 @@ const RootStack = createStackNavigator(
                 headerTransparent: true,
             }
         },
-        //订单
-        Order: {
-            screen: OrderScreen,
+        //密码登录
+        Login: {
+            screen: LoginScreen,
             navigationOptions: {
                 headerTransparent: true,
             }

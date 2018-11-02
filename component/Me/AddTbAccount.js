@@ -42,19 +42,25 @@ class tbScreen extends React.Component{
                     this.setState({tbdata:response.data})
                     //this.setState({ImageMain:JSON.parse(this.state.productDetail['Details'])['mainImage']})
                     //this.setState({ImageDetails:JSON.parse(this.state.productDetail['Details'])['DetailsImage']})
-                    //this.setState({loading:true})
-                    if(this.state.tbdata !== ''){
+                    console.log(this.state.tbdata)
+                    if(this.state.tbdata.status === 1){
 				        Alert.alert(
 				            '绑定成功',
 				            'alertMessage',
 				            [
-				                {text: '返回首页', onPress: () => this.props.navigation.navigate('addTbAccount')}
+				                {text: '返回首页', onPress: () => this.props.navigation.navigate('TestMain')}
 				            ],
 				            { cancelable: false }
 				            )
 				        }else{
-				            this.props.navigation.navigate('addTbAccount')
-				        }
+				        Alert.alert(
+				            '账号还没入库，请从新扫描二维码',
+				            'alertMessage',
+				            [
+                                    {text: '确定', onPress: () => console.log('Cancel Pressed!')},
+				            ],
+				            { cancelable: false }
+				            )				        }
                 })
                 .catch((error) => {
                     console.log('error 3 ' + error);

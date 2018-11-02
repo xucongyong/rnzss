@@ -14,7 +14,7 @@ var boxWidth = Dimensions.get('window').height/2;
 let token = ''
 // 如果你想读取子项，
 
-class ProductScreen extends React.Component{
+class TaskScreen extends React.Component{
     constructor(props){
         super(props);
         this.state = {
@@ -86,20 +86,21 @@ class ProductScreen extends React.Component{
                     //this.setState({ImageMain:JSON.parse(this.state.productDetail['Details'])['mainImage']})
                     //this.setState({ImageDetails:JSON.parse(this.state.productDetail['Details'])['DetailsImage']})
                     //this.setState({loading:true})
-                    //state 1：没有账号
-                    //state 2: 不能下单
-                    //state 3: 生成订单
-                    console.log('status:'+this.state.productDetail.status)
                 })
                 .catch((error) => {
                     console.log('error 3 ' + error);
                 });
-                });
+        });
+        //state 0：not login
+        //state 1：没有账号
+        //state 2: 不能下单
+        //state 3: 生成订单
         if(this.state.productDetail.status === '0'){
-            this.props.navigation.navigate('Login')
+            this.props.navigation.navigate('Login')}
         }else if(this.state.productDetail.status === '1'){
+            if
             Alert.alert(
-                this.state.productDetail.message,
+                '需绑定「花呗、白条账号」，才能开始试用游戏噢',
                 [
                     {text: '先不绑定', onPress: () => console.log('Cancel Pressed!')},
                     {text: '马上淘宝绑定', onPress: () => this.props.navigation.navigate('addTbAccount')},
@@ -107,27 +108,19 @@ class ProductScreen extends React.Component{
                 ],
                 { cancelable: false }
                 )
+
         }else if(this.state.productDetail.status === '2'){
             Alert.alert(
-                  'Alert Title',
-                  'My Alert Msg',
+                '因为之前做过这个订单，复购时间还没到。请到首页试用其他产品',
                 [
                     {text: '返回首页', onPress: () => this.props.navigation.navigate('TestMain')}
                 ],
                 { cancelable: false }
-                )
+                )        
         }else if(this.state.productDetail.status === '3'){
-            this.props.navigation.navigate('TaskDetail',{taskid:this.state.productDetail})
-        }else if(this.state.productDetail.status === '4'){
-            Alert.alert(
-                this.state.productDetail.message,
-                [
-                    {text: '返回首页', onPress: () => this.props.navigation.navigate('TestMain')}
-                ],
-                { cancelable: false }
-                )
-        }           
+            this.props.navigation.navigate('TaskDetail')
         }
+
     //关键词
 
     render(){
@@ -258,4 +251,5 @@ const styles = StyleSheet.create({
         color:'#FFF'}
 });
 
-module.exports = ProductScreen;
+module.exports = TaskScreen;
+
