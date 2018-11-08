@@ -4,7 +4,7 @@ import deviceStorage from "../Login/jwt/services/deviceStorage";
 import axios from 'axios';
 import weburl from "../websettings";
 import HttpGetPost from '../HttpGetPost';
-const serverUrl = 'http://127.0.0.1:7001';
+var serverUrl = require("../websettings")
 const addTbAccountUrl = serverUrl+'/m/addaccount';
 
 var CommonCell = require('./CommonCell');

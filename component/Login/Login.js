@@ -4,6 +4,8 @@ import axios from 'axios';
 import deviceStorage from "./jwt/services/deviceStorage";
 import {NavigationActions,StackActions} from 'react-navigation';
 import DeviceInfo from 'react-native-device-info';
+var serverUrl = require("../websettings")
+
 // const xxxIP = DeviceInfo.getIPAddress()
 // console.log(xxxIP)
 // const getDeviceId = DeviceInfo.getDeviceId()
@@ -51,7 +53,7 @@ class LoginScreen extends React.Component{
     //django restframework API
     loginUser() {
         this.setState({error:'', loading:true});
-        axios.post("http://127.0.0.1:7001/login",{
+        axios.post(serverUrl+"/login",{
         username: username,
         password: password
         })
@@ -72,7 +74,7 @@ class LoginScreen extends React.Component{
     //NodeJS API
     loginUserNode() {
         const{ username, password, error} = this.state;
-        axios.post("http://127.0.0.1:7001/login",{
+        axios.post(serverUrl+"/login",{
             username: username,
             password: password
         })

@@ -11,6 +11,7 @@ import deviceStorage from "./Login/jwt/services/deviceStorage";
 let Home = require('./Home/Home');
 let Share = require('./Share/Share');
 let TaskView = require('./TaskView/TaskView');
+let TaskDetailsScreen = require('./TaskDetails/Task');
 let MeScreen = require('./Me/Me');
 let addTbAccountScreen = require('./Me/AddTbAccount');
 let ProductScreen = require('./Product/Product')
@@ -20,11 +21,8 @@ let LoginScreen = require('./Login/Login')
 let token = ''
 deviceStorage.get('token').then((GetToken) => {
         token = GetToken
-        console.log(token=== '')
-        console.log(token=== null)
         console.log(token)
         });
-
 
 const TabView = createBottomTabNavigator({
     试用: { screen: Home,
@@ -111,11 +109,12 @@ const RootStack = createStackNavigator(
             }
         },
         //任务详情页
-        TaskDetail: {
-            screen: LoginScreen,
+        TaskDetails: {
+            screen: TaskDetailsScreen,
             navigationOptions: {
                 headerTransparent: true,
             }
+
         },
         //手机号登录
         MobileLogin: {

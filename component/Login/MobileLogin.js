@@ -5,6 +5,8 @@ import DeviceInfo from 'react-native-device-info';
 import axios from 'axios';
 import CountDownButton from 'react-native-smscode-count-down'
 import AsyncStorage from './AsyncStorage'
+var serverUrl = require("../websettings")
+
 // const xxxIP = DeviceInfo.getIPAddress()
 // console.log(xxxIP)
 // const getDeviceId = DeviceInfo.getDeviceId()
@@ -61,7 +63,7 @@ class RegScreen extends React.Component{
                     password: this.state.password,
                     VerifyCode: this.state.VerifyCode,
                    }
-        axios.post('http://127.0.0.1:7001/mobilelogin', LoginData)
+        axios.post(serverUrl+'/mobilelogin', LoginData)
           .then((response) => {
             if (response.data.message==='no') {
               this.setState({message: '验证码错误'});
@@ -101,7 +103,7 @@ class RegScreen extends React.Component{
           }
         console.log('this.state.username:'+this.state.username)
         axios({ method: 'POST', 
-          url: 'http://127.0.0.1:7001/sms', 
+          url: serverUrl+'/sms', 
           data: { 
             username: this.state.username,
             password: this.state.password

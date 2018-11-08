@@ -1,33 +1,55 @@
 import React from "react";
-import {StyleSheet,Dimensions,Text, View, ScrollView, Button,Image,ActivityIndicator,TouchableOpacity,Alert} from "react-native";
+import {StyleSheet,TextInput,Dimensions,Text, View, ScrollView,Image,ActivityIndicator,TouchableOpacity,Alert} from "react-native";
 const window = Dimensions.get('window');
 const imageWidth = (window.width/3)+30;
 const imageHeight = window.height;
-var CommonCell = require('./CommonCell');
-const serverUrl = 'http://127.0.0.1:7001';
-const productUrl = serverUrl+'/m/product';
-const OrderUrl = serverUrl+'/m/genratetask';
+var serverUrl = require("../websettings")
+const taskUrl = serverUrl+'/m/task';
 const axios = require('axios');
 import deviceStorage from "../Login/jwt/services/deviceStorage";
 var ScreenWidth = Dimensions.get('window').width;
 var boxWidth = Dimensions.get('window').height/2;
-let token = ''
-// 如果你想读取子项，
+import * as picker  from "react-native-image-picker";
+import {TextareaItem,ImagePicker,InputItem,List,WhiteSpace,Button} from 'antd-mobile-rn';
+var qiniu = require('react-native-qiniu');
+var data = [];
 
-class TaskScreen extends React.Component{
+let token = ''
+const photoOptions = {
+    title:'请选择图片',//标题
+    cancelButtonTitle:'取消',//取消按钮名称
+    takePhotoButtonTitle:'拍照',//相机按钮名称
+    chooseFromLibraryButtonTitle:'选择相册...',//从相册取照片名称
+      quality: 0.8,//照片质量
+    mediaType:'photo',//可以是照片，也可以是video
+    videoQuality:'high',//视频质量
+    durationLimit:10,//video最长10s
+    allowsEditing: true,//照片是否可以被修改，Ios有效
+    noData: false,
+    storageOptions: {
+        skipBackup: true,
+        path: 'images'
+    }
+};
+
+
+class taskScreen extends React.Component{
     constructor(props){
         super(props);
         this.state = {
             PD:'',
             productDetail:'',
+            files: data,
             currentPage: 0,
             ImageMain:[],
             ImageDetails:[],
             loading: false,
             taskId:this.props.navigation.getParam('taskId','NO-ID'),
             GenrateTasking:false,
+            TaskState:10,
         }
         this.genrateTask = this.genrateTask.bind(this)
+        this.cancelTask = this.cancelTask.bind(this)
     }
     componentWillMount(){
         this.fetchData(this.state.taskId); //启动的时候载入数据
@@ -43,9 +65,10 @@ class TaskScreen extends React.Component{
         deviceStorage.get('token').then((GetToken) => {
             token = GetToken
             console.log(this.props.navigation.getParam('taskId','NO-ID'))
-            axios.get(productUrl, { headers: { Authorization: token, sort:0,version:'1.0',taskId:posttaskid}})
+            axios.get(taskUrl, { headers: { Authorization: token, sort:0,version:'1.0',taskId:posttaskid}})
                 .then(response => {
                     this.setState({productDetail:response.data})
+                    this.setState({TaskState:response.data.BuyTaskState})
                     this.setState({ImageMain:JSON.parse(this.state.productDetail['Details'])['mainImage']})
                     this.setState({ImageDetails:JSON.parse(this.state.productDetail['Details'])['DetailsImage']})
                     this.setState({loading:true})
@@ -74,7 +97,20 @@ class TaskScreen extends React.Component{
             console.log(x)
             return <Image key={Y} source={{uri:x}} style={styles.DeatlsImageStyle} />;
         })}
-    //购物按钮
+
+    cancelTask(){
+        console.log('cancelTask')
+        Alert.alert(
+              '确定要取消订单吗？',
+              'My Alert Msg',
+              [
+                {text: '坚持取消', onPress: () => console.log('Ask me later pressed')},
+                {text: '不取消', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+              ],
+              { cancelable: false }
+            )
+    }
+    //state2->3
     genrateTask(){
         console.log(this.state.taskId)
         deviceStorage.get('token').then((GetToken) => {
@@ -86,48 +122,97 @@ class TaskScreen extends React.Component{
                     //this.setState({ImageMain:JSON.parse(this.state.productDetail['Details'])['mainImage']})
                     //this.setState({ImageDetails:JSON.parse(this.state.productDetail['Details'])['DetailsImage']})
                     //this.setState({loading:true})
+                    //state 1：没有账号
+                    //state 2: 不能下单
+                    //state 3: 生成订单
+                    console.log('status:'+this.state.productDetail.status)
+                    if(this.state.productDetail.status === 0){
+                        this.props.navigation.navigate('Login')
+                    }else if(this.state.productDetail.status === 1){
+                        Alert.alert(
+                            this.state.productDetail.message,
+                            [
+                                {text: '先不绑定', onPress: () => console.log('Cancel Pressed!')},
+                                {text: '马上淘宝绑定', onPress: () => this.props.navigation.navigate('addTbAccount')},
+                                {text: '马上京东绑定', onPress: () => this.props.navigation.navigate('addTbAccount')},
+                            ],
+                            { cancelable: false }
+                            )
+                    }else if(this.state.productDetail.status === 2){
+                        Alert.alert(
+                              'Alert Title',
+                              'My Alert Msg',
+                            [
+                                {text: '返回首页', onPress: () => this.props.navigation.navigate('TestMain')}
+                            ],
+                            { cancelable: false }
+                            )
+                    }else if(this.state.productDetail.status === 3){
+                        this.props.navigation.navigate('TaskDetails',{taskid:this.state.productDetail.taskid})
+                    }else if(this.state.productDetail.status === 4){
+                        Alert.alert(
+                            this.state.productDetail.message,
+                            [
+                                {text: '返回首页', onPress: () => this.props.navigation.navigate('TestMain')}
+                            ],
+                            { cancelable: false }
+                            )
+                    }
                 })
                 .catch((error) => {
                     console.log('error 3 ' + error);
                 });
-        });
-        //state 0：not login
-        //state 1：没有账号
-        //state 2: 不能下单
-        //state 3: 生成订单
-        if(this.state.productDetail.status === '0'){
-            this.props.navigation.navigate('Login')}
-        }else if(this.state.productDetail.status === '1'){
-            if
-            Alert.alert(
-                '需绑定「花呗、白条账号」，才能开始试用游戏噢',
-                [
-                    {text: '先不绑定', onPress: () => console.log('Cancel Pressed!')},
-                    {text: '马上淘宝绑定', onPress: () => this.props.navigation.navigate('addTbAccount')},
-                    {text: '马上京东绑定', onPress: () => this.props.navigation.navigate('addTbAccount')},
-                ],
-                { cancelable: false }
-                )
-
-        }else if(this.state.productDetail.status === '2'){
-            Alert.alert(
-                '因为之前做过这个订单，复购时间还没到。请到首页试用其他产品',
-                [
-                    {text: '返回首页', onPress: () => this.props.navigation.navigate('TestMain')}
-                ],
-                { cancelable: false }
-                )        
-        }else if(this.state.productDetail.status === '3'){
-            this.props.navigation.navigate('TaskDetail')
+                });     
         }
-
     //关键词
+    //获取照片
+    choosePicker=()=>{
+            picker.showImagePicker(photoOptions, (response) => {
+                console.log('Response = ', response);
+                if (response.didCancel) {
+                    console.log('User cancelled image picker');
+                }
+                else if (response.error) {
+                    console.log('ImagePicker Error: ', response.error);
+                }else {
+                    let source = {url: response.uri} ;
+                            console.log('source===' + source.url)
+                    console.log(response)
+                    var files = this.state.files;
+                    files.push(source);
+                    this.setState({
+                               files:files
+                           });
+                    console.log('data===' + this.state.files)
+                }
+            });
+        }
+    upload(uri) {//这里是核心上传的代码
+          qiniu.Rpc.uploadFile(uri,'_5q1hS4hLzHrWvNfK5wnQczIPub43_NnvMl7d-4B:RD93EuPYVULGU7AAmBMVp0T8oxs=:eyJzY29wZSI6Im15YXBwIiwiZGVhZGxpbmUiOjE1MjE4OTAyOTh9', {
+                key:'asdf',
+                type:'application/octet-stream',
+                name:undefined,
+              }
+            ,function (resp) {
+            console.log(resp);
+          });
+     }
+
+
 
     render(){
         let productView;
-        const taskId = this.props.navigation.getParam('taskId','NO-ID')
-        const imageUrl = this.props.navigation.getParam('imageUrl','NO-ImageUrl')
+        //2 任务开始 30分钟内关闭
+        //3 任务确认 ->以填写单号
+        //4 商家发货
+        //5 买家驳回任务
+        //6 卖家驳回任务
+        //7 客服介入
+
         if(this.state.loading){
+            if(this.state.TaskState === 2){
+            console.log(this.state.TaskState)
+            files = this.state.files
             productView = (
                 <View style={{flex:1}}>
                 <View style={styles.container}>
@@ -138,35 +223,59 @@ class TaskScreen extends React.Component{
                     {this.renderChilds()}
                 </ScrollView>
                     <ScrollView>
-                        <Button
-                            title="Delete Record"
-                            onPress={() => Alert.alert(
-                                '还没捆绑账号哦，请绑定账号，',
-                                'alertMessage',
-                                [
-                                    {text: '先不绑定', onPress: () => console.log('Cancel Pressed!')},
-                                    {text: '马上绑定', onPress: this.onDeleteBTN},
-                                ],
-                                { cancelable: false }
-                            )}
-                        />
-                        <Text>xxxx</Text>
+                     <View>
+                        <Text>类型：</Text>
+                        <Text>请打开平台：APP</Text>
+                        <Text>搜关键词、通道：</Text>
+                        <Text>产品单价：</Text><Text>拍：件</Text><Text>共计： 元</Text>
+                        <Text>城市：</Text><Text>搜索排序：</Text><Text>价格区间： 100 - 2000</Text>
+                        <Text>礼物：礼物x - x 时间付款</Text>
+                        <Text>领优惠劵 ：</Text>
+                        <Text>允许用银行卡付款</Text>
+                        <Text>备注 ：</Text>
+                        <View>
+                                <ImagePicker
+                                          files={files}
+                                          selectable={files.length < 2}
+                                          onChange={this.onChange}
+                                          onImageClick={(index, files) =>{
+                                            console.log(files[index].url)
+                                          } }
+                                          onAddImageClick={
+                                            this.choosePicker
+                                          }
+                                        />
+                            <TouchableOpacity onPress={()=>{
+                              let imgAry = this.state.files;
+                              console.log(this.state.files)
+                              this.upload(imgAry[0].url);}}><Text>上传</Text></TouchableOpacity>
+                         </View>
+                    </View>
                         {this.renderDeatlsImage()}
-                        <Text>x</Text>
-                        <Text>123213</Text>
                     </ScrollView>
                 </View>
-
                 <View style={styles.shopcart}>
-                    <View style={[styles.bottomItem,{width:window.width*0.7}]}>
-                    <Text>红包试用：</Text><Text style={{ color : "red"}}>5.51元</Text></View>
-                    <View style={[styles.bottomItem,{width:window.width*0.3,backgroundColor: 'red'} ]}>
+                    <View style={[styles.bottomItem,{width:window.width*0.2}]}>
+                    <Text
+                    onPress={() => this.cancelTask()}
+                    >取消试用</Text></View>
+                    <View style={[styles.bottomItem,{width:window.width*0.3}]}>
+                    <Text>倒计时：</Text><Text style={{ color : "red"}}>5分</Text></View>
+                    <View style={[styles.bottomItem,{width:window.width*0.5,backgroundColor: 'red'} ]}>
                     <Text
                     onPress={() => this.genrateTask()}
-                    >下单试用</Text></View>
+                    >已付款，写订单号</Text></View>
                     </View>
-                </View>
-            )
+                </View>)
+            }else if(this.state.TaskState === 3){
+                console.log(this.state.TaskState)
+            }else if(this.state.TaskState === 4){
+                console.log(this.state.TaskState)
+            }else if(this.state.TaskState === 5){
+                console.log(this.state.TaskState)
+            }else{
+            productView=(<ActivityIndicator color="#0000ff" style={{marginTop:50}} />)
+            }
         }else{
             productView=(<ActivityIndicator color="#0000ff" style={{marginTop:50}} />)
         }
@@ -251,5 +360,4 @@ const styles = StyleSheet.create({
         color:'#FFF'}
 });
 
-module.exports = TaskScreen;
-
+module.exports = taskScreen;

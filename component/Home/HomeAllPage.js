@@ -12,7 +12,8 @@ import {
 import Dimensions from 'Dimensions';
 const {width, height} = Dimensions.get('window');
 const dataUrl = 'https://api.douban.com/v2/movie/top250?count=350';
-const MyUrl = 'http://127.0.0.1:7001/m/index';
+var serverUrl = require("../websettings")
+const MyUrl = serverUrl+'/m/index';
 
 const axios = require('axios');
 import deviceStorage from "../Login/jwt/services/deviceStorage";

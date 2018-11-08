@@ -4,7 +4,7 @@ const window = Dimensions.get('window');
 const imageWidth = (window.width/3)+30;
 const imageHeight = window.height;
 var CommonCell = require('./CommonCell');
-const serverUrl = 'http://127.0.0.1:7001';
+var serverUrl = require("../websettings")
 const productUrl = serverUrl+'/m/product';
 const OrderUrl = serverUrl+'/m/genratetask';
 const axios = require('axios');
@@ -90,50 +90,50 @@ class ProductScreen extends React.Component{
                     //state 2: 不能下单
                     //state 3: 生成订单
                     console.log('status:'+this.state.productDetail.status)
+                    if(this.state.productDetail.status === 0){
+                        this.props.navigation.navigate('Login')
+                    }else if(this.state.productDetail.status === 1){
+                        Alert.alert(
+                            this.state.productDetail.message,
+                            [
+                                {text: '先不绑定', onPress: () => console.log('Cancel Pressed!')},
+                                {text: '马上淘宝绑定', onPress: () => this.props.navigation.navigate('addTbAccount')},
+                                {text: '马上京东绑定', onPress: () => this.props.navigation.navigate('addTbAccount')},
+                            ],
+                            { cancelable: false }
+                            )
+                    }else if(this.state.productDetail.status === 2){
+                        Alert.alert(
+                              'Alert Title',
+                              'My Alert Msg',
+                            [
+                                {text: '返回首页', onPress: () => this.props.navigation.navigate('TestMain')}
+                            ],
+                            { cancelable: false }
+                            )
+                    }else if(this.state.productDetail.status === 3){
+                        console.log('this.state.productDetail.taskId:'+this.state.productDetail.taskId)
+                        this.props.navigation.navigate('TaskDetails',{taskId:this.state.productDetail.taskId})
+                    }else if(this.state.productDetail.status === 4){
+                        Alert.alert(
+                            this.state.productDetail.message,
+                            [
+                                {text: '返回首页', onPress: () => this.props.navigation.navigate('TestMain')}
+                            ],
+                            { cancelable: false }
+                            )
+                    }
                 })
                 .catch((error) => {
                     console.log('error 3 ' + error);
                 });
-                });
-        if(this.state.productDetail.status === '0'){
-            this.props.navigation.navigate('Login')
-        }else if(this.state.productDetail.status === '1'){
-            Alert.alert(
-                this.state.productDetail.message,
-                [
-                    {text: '先不绑定', onPress: () => console.log('Cancel Pressed!')},
-                    {text: '马上淘宝绑定', onPress: () => this.props.navigation.navigate('addTbAccount')},
-                    {text: '马上京东绑定', onPress: () => this.props.navigation.navigate('addTbAccount')},
-                ],
-                { cancelable: false }
-                )
-        }else if(this.state.productDetail.status === '2'){
-            Alert.alert(
-                  'Alert Title',
-                  'My Alert Msg',
-                [
-                    {text: '返回首页', onPress: () => this.props.navigation.navigate('TestMain')}
-                ],
-                { cancelable: false }
-                )
-        }else if(this.state.productDetail.status === '3'){
-            this.props.navigation.navigate('TaskDetail',{taskid:this.state.productDetail})
-        }else if(this.state.productDetail.status === '4'){
-            Alert.alert(
-                this.state.productDetail.message,
-                [
-                    {text: '返回首页', onPress: () => this.props.navigation.navigate('TestMain')}
-                ],
-                { cancelable: false }
-                )
-        }           
+                });     
         }
     //关键词
 
     render(){
         let productView;
-        const taskId = this.props.navigation.getParam('taskId','NO-ID')
-        const imageUrl = this.props.navigation.getParam('imageUrl','NO-ImageUrl')
+        const taskId = this.props.navigation.getParam('taskid','NO-ID')
         if(this.state.loading){
             productView = (
                 <View style={{flex:1}}>
@@ -175,7 +175,9 @@ class ProductScreen extends React.Component{
                 </View>
             )
         }else{
-            productView=(<ActivityIndicator color="#0000ff" style={{marginTop:50}} />)
+            productView=(
+            <View><Text>this.state.taskId</Text></View>
+            )
         }
         return(
             <View style={{flex:1}}>{productView}</View>
