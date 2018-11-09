@@ -5,6 +5,7 @@ const imageWidth = (window.width/3)+30;
 const imageHeight = window.height;
 var serverUrl = require("../websettings")
 const taskUrl = serverUrl+'/m/task';
+const closeTaskUrl = serverUrl+'/m/closetask';
 const axios = require('axios');
 import deviceStorage from "../Login/jwt/services/deviceStorage";
 var ScreenWidth = Dimensions.get('window').width;
@@ -24,7 +25,7 @@ const photoOptions = {
     mediaType:'photo',//可以是照片，也可以是video
     videoQuality:'high',//视频质量
     durationLimit:10,//video最长10s
-    allowsEditing: true,//照片是否可以被修改，Ios有效
+    allowsEditing: false,//照片是否可以被修改，Ios有效
     noData: false,
     storageOptions: {
         skipBackup: true,
@@ -50,6 +51,8 @@ class taskScreen extends React.Component{
         }
         this.genrateTask = this.genrateTask.bind(this)
         this.cancelTask = this.cancelTask.bind(this)
+        this.closeTask = this.closeTask.bind(this)
+        this.choosePicker = this.choosePicker.bind(this)
     }
     componentWillMount(){
         this.fetchData(this.state.taskId); //启动的时候载入数据
@@ -65,7 +68,8 @@ class taskScreen extends React.Component{
         deviceStorage.get('token').then((GetToken) => {
             token = GetToken
             console.log(this.props.navigation.getParam('taskId','NO-ID'))
-            axios.get(taskUrl, { headers: { Authorization: token, sort:0,version:'1.0',taskId:posttaskid}})
+
+            axios.get(taskUrl, { headers: { Authorization: token, sort:0,version:'1.0',taskId:this.state.taskId}})
                 .then(response => {
                     this.setState({productDetail:response.data})
                     this.setState({TaskState:response.data.BuyTaskState})
@@ -97,15 +101,30 @@ class taskScreen extends React.Component{
             console.log(x)
             return <Image key={Y} source={{uri:x}} style={styles.DeatlsImageStyle} />;
         })}
+    //关闭订单
+    closeTask(){
+        console.log('closeTask')
+        deviceStorage.get('token').then((GetToken) => {
+            token = GetToken
+            axios.get(closeTaskUrl, { headers: { Authorization: token, sort:0,version:'1.0',taskId:this.state.taskId}})
+                .then(response => {
+                    this.props.navigation.navigate('TestMain')
+                })
+                .catch((error) => {
+                    console.log('error 3 ' + error);
+                });
+        });
+    
+    }
 
     cancelTask(){
         console.log('cancelTask')
         Alert.alert(
-              '确定要取消订单吗？',
-              'My Alert Msg',
+              '取消订单',
+              '确定取消订单吗？',
               [
-                {text: '坚持取消', onPress: () => console.log('Ask me later pressed')},
-                {text: '不取消', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                {text: '确定取消', onPress: () => this.closeTask()},
+                {text: '不取消', onPress: () => console.log('Cancel Pressed')},
               ],
               { cancelable: false }
             )
@@ -140,8 +159,8 @@ class taskScreen extends React.Component{
                             )
                     }else if(this.state.productDetail.status === 2){
                         Alert.alert(
-                              'Alert Title',
-                              'My Alert Msg',
+                              '',
+                              '已有任务，请到任务中心操作',
                             [
                                 {text: '返回首页', onPress: () => this.props.navigation.navigate('TestMain')}
                             ],
@@ -166,7 +185,8 @@ class taskScreen extends React.Component{
         }
     //关键词
     //获取照片
-    choosePicker=()=>{
+    //choosePicker=()=>{
+    choosePicker(){
             picker.showImagePicker(photoOptions, (response) => {
                 console.log('Response = ', response);
                 if (response.didCancel) {
@@ -197,8 +217,6 @@ class taskScreen extends React.Component{
             console.log(resp);
           });
      }
-
-
 
     render(){
         let productView;

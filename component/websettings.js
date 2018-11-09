@@ -1,2 +1,2 @@
-var weburl = 'http://127.0.0.1:7001'
+var weburl = 'http://192.168.201.106:7001'
 module.exports = weburl

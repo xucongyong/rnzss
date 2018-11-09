@@ -98,7 +98,7 @@ class ProductScreen extends React.Component{
                             [
                                 {text: '先不绑定', onPress: () => console.log('Cancel Pressed!')},
                                 {text: '马上淘宝绑定', onPress: () => this.props.navigation.navigate('addTbAccount')},
-                                {text: '马上京东绑定', onPress: () => this.props.navigation.navigate('addTbAccount')},
+                                {text: '马上京东绑定', onPress: () => this.props.navigation.navigate('addJdAccount')},
                             ],
                             { cancelable: false }
                             )
