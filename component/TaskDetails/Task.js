@@ -20,7 +20,7 @@ const photoOptions = {
     title:'请选择图片',//标题
     cancelButtonTitle:'取消',//取消按钮名称
     takePhotoButtonTitle:'拍照',//相机按钮名称
-    chooseFromLibraryButtonTitle:'选择相册...',//从相册取照片名称
+    chooseFromLibraryButtonTitle:'选择相册',//从相册取照片名称
       quality: 0.8,//照片质量
     mediaType:'photo',//可以是照片，也可以是video
     videoQuality:'high',//视频质量
@@ -254,7 +254,7 @@ class taskScreen extends React.Component{
                         <View>
                                 <ImagePicker
                                           files={files}
-                                          selectable={files.length < 2}
+                                          selectable={files.length < 5}
                                           onChange={this.onChange}
                                           onImageClick={(index, files) =>{
                                             console.log(files[index].url)
