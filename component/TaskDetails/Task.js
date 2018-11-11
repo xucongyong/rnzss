@@ -34,50 +34,55 @@ const photoOptions = {
 };
 
 
-class taskScreen extends React.Component{
-    constructor(props){
+class taskScreen extends React.Component {
+    constructor(props) {
         super(props);
         this.state = {
-            PD:'',
-            productDetail:'',
+            PD: '',
+            productDetail: '',
             files: data,
             currentPage: 0,
-            ImageMain:[],
-            ImageDetails:[],
+            ImageMain: [],
+            ImageDetails: [],
             loading: false,
-            taskId:this.props.navigation.getParam('taskId','NO-ID'),
-            GenrateTasking:false,
-            TaskState:10}
+            taskId: this.props.navigation.getParam('taskId', 'NO-ID'),
+            GenrateTasking: false,
+            TaskState: 10,
+            testt:(<Text>2221</Text>),
+        }
         this.genrateTask = this.genrateTask.bind(this)
         this.cancelTask = this.cancelTask.bind(this)
         this.closeTask = this.closeTask.bind(this)
         this.choosePicker = this.choosePicker.bind(this)
         this.upload = this.upload.bind(this)
         var files = this.state.files;
+        this.onChange = this.onChange.bind(this)
 
     }
-    componentWillMount(){
+
+    componentWillMount() {
         this.fetchData(this.state.taskId); //启动的时候载入数据
         // this.startTimer();
     }
+
     //取消定时器
     // componentWillUnmount(){
     //     clearInterval(this.timer);
     // }
 
-    fetchData(posttaskid){
+    fetchData(posttaskid) {
         console.log(posttaskid)
         deviceStorage.get('token').then((GetToken) => {
             token = GetToken
-            console.log(this.props.navigation.getParam('taskId','NO-ID'))
+            console.log(this.props.navigation.getParam('taskId', 'NO-ID'))
 
-            axios.get(taskUrl, { headers: { Authorization: token, sort:0,version:'1.0',taskId:this.state.taskId}})
+            axios.get(taskUrl, {headers: {Authorization: token, sort: 0, version: '1.0', taskId: this.state.taskId}})
                 .then(response => {
-                    this.setState({productDetail:response.data})
-                    this.setState({TaskState:response.data.BuyTaskState})
-                    this.setState({ImageMain:JSON.parse(this.state.productDetail['Details'])['mainImage']})
-                    this.setState({ImageDetails:JSON.parse(this.state.productDetail['Details'])['DetailsImage']})
-                    this.setState({loading:true})
+                    this.setState({productDetail: response.data})
+                    this.setState({TaskState: response.data.BuyTaskState})
+                    this.setState({ImageMain: JSON.parse(this.state.productDetail['Details'])['mainImage']})
+                    this.setState({ImageDetails: JSON.parse(this.state.productDetail['Details'])['DetailsImage']})
+                    this.setState({loading: true})
                 })
                 .catch((error) => {
                     console.log('error 3 ' + error);
@@ -86,29 +91,46 @@ class taskScreen extends React.Component{
     }
 
     //渲染图
-    renderChilds(){
+    renderChilds() {
         var N = 1
-        return this.state.ImageMain.map((x)=>{
-            N +=1
-            return <Image key={N} source={{uri:x}} style={styles.imageStyle} />;
-        })}
-        // }
+        return this.state.ImageMain.map((x) => {
+            N += 1
+            return <Image key={N} source={{uri: x}} style={styles.imageStyle}/>;
+        })
+    }
+
+    // }
 
 
     //渲染图
-    renderDeatlsImage(){
+    renderDeatlsImage() {
         var Y = 10
-        return this.state.ImageDetails.map((x)=>{
-            Y +=1
+        return this.state.ImageDetails.map((x) => {
+            Y += 1
             console.log(x)
-            return <Image key={Y} source={{uri:x}} style={styles.DeatlsImageStyle} />;
-        })}
+            return <Image key={Y} source={{uri: x}} style={styles.DeatlsImageStyle}/>;
+        })
+    }
+    onChange = (files, type, index) => {
+        console.log('onChange')
+        console.log(files, type, index);
+        this.setState({
+            files,
+        });
+    };
     //关闭订单
-    closeTask(){
+    closeTask() {
         console.log('closeTask')
         deviceStorage.get('token').then((GetToken) => {
             token = GetToken
-            axios.get(closeTaskUrl, { headers: { Authorization: token, sort:0,version:'1.0',taskId:this.state.taskId}})
+            axios.get(closeTaskUrl, {
+                headers: {
+                    Authorization: token,
+                    sort: 0,
+                    version: '1.0',
+                    taskId: this.state.taskId
+                }
+            })
                 .then(response => {
                     this.props.navigation.navigate('TestMain')
                 })
@@ -116,40 +138,38 @@ class taskScreen extends React.Component{
                     console.log('error 3 ' + error);
                 });
         });
-    
+
     }
 
-    cancelTask(){
+    cancelTask() {
         console.log('cancelTask')
         Alert.alert(
-              '取消订单',
-              '确定取消订单吗？',
-              [
+            '取消订单',
+            '确定取消订单吗？',
+            [
                 {text: '确定取消', onPress: () => this.closeTask()},
                 {text: '不取消', onPress: () => console.log('Cancel Pressed')},
-              ],
-              { cancelable: false }
-            )
+            ],
+            {cancelable: false}
+        )
     }
+
     //state2->3
-    genrateTask(){
+    genrateTask() {
         console.log(this.state.taskId)
         deviceStorage.get('token').then((GetToken) => {
             token = GetToken
             console.log(this.state.taskId)
-            axios.post(OrderUrl, { headers: { Authorization: token, version:'1.0',orderid:this.state.taskId}})
+            axios.post(OrderUrl, {headers: {Authorization: token, version: '1.0', orderid: this.state.taskId}})
                 .then(response => {
-                    this.setState({productDetail:response.data})
-                    //this.setState({ImageMain:JSON.parse(this.state.productDetail['Details'])['mainImage']})
-                    //this.setState({ImageDetails:JSON.parse(this.state.productDetail['Details'])['DetailsImage']})
-                    //this.setState({loading:true})
+                    this.setState({productDetail: response.data})
                     //state 1：没有账号
                     //state 2: 不能下单
                     //state 3: 生成订单
-                    console.log('status:'+this.state.productDetail.status)
-                    if(this.state.productDetail.status === 0){
+                    console.log('status:' + this.state.productDetail.status)
+                    if (this.state.productDetail.status === 0) {
                         this.props.navigation.navigate('Login')
-                    }else if(this.state.productDetail.status === 1){
+                    } else if (this.state.productDetail.status === 1) {
                         Alert.alert(
                             this.state.productDetail.message,
                             [
@@ -157,77 +177,79 @@ class taskScreen extends React.Component{
                                 {text: '马上淘宝绑定', onPress: () => this.props.navigation.navigate('addTbAccount')},
                                 {text: '马上京东绑定', onPress: () => this.props.navigation.navigate('addTbAccount')},
                             ],
-                            { cancelable: false }
-                            )
-                    }else if(this.state.productDetail.status === 2){
+                            {cancelable: false}
+                        )
+                    } else if (this.state.productDetail.status === 2) {
                         Alert.alert(
-                              '',
-                              '已有任务，请到任务中心操作',
+                            '',
+                            '已有任务，请到任务中心操作',
                             [
                                 {text: '返回首页', onPress: () => this.props.navigation.navigate('TestMain')}
                             ],
-                            { cancelable: false }
-                            )
-                    }else if(this.state.productDetail.status === 3){
-                        this.props.navigation.navigate('TaskDetails',{taskid:this.state.productDetail.taskid})
-                    }else if(this.state.productDetail.status === 4){
+                            {cancelable: false}
+                        )
+                    } else if (this.state.productDetail.status === 3) {
+                        this.props.navigation.navigate('TaskDetails', {taskid: this.state.productDetail.taskid})
+                    } else if (this.state.productDetail.status === 4) {
                         Alert.alert(
                             this.state.productDetail.message,
                             [
                                 {text: '返回首页', onPress: () => this.props.navigation.navigate('TestMain')}
                             ],
-                            { cancelable: false }
-                            )
+                            {cancelable: false}
+                        )
                     }
                 })
                 .catch((error) => {
                     console.log('error 3 ' + error);
                 });
-                });     
-        }
+        });
+    }
+
     //关键词
     //获取照片
     //choosePicker=()=>{
-    choosePicker(){
-            picker.showImagePicker(photoOptions, (response) => {
-                console.log('Response = ', response);
-                if (response.didCancel) {
-                    console.log('User cancelled image picker');
-                }
-                else if (response.error) {
-                    console.log('ImagePicker Error: ', response.error);
-                }else {
-                    let source = {url: response.uri} ;
-                            console.log('source===' + source.url)
-                    console.log(response)
+    choosePicker() {
+        picker.showImagePicker(photoOptions, (response) => {
+            console.log('Response = ', response);
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            }
+            else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else {
+                let source = {url: response.uri};
+                console.log('source===' + source.url)
+                console.log(response)
 
-                    files.push(source);
-                    this.setState({
-                               files:files
-                           });
-                    console.log('data===' + this.state.files)
-                }
-            });
-        }
+                files.push(source);
+                this.setState({
+                    files: files
+                });
+                console.log('data===' + this.state.files)
+            }
+        });
+    }
+
     upload(uri) {//这里是核心上传的代码
         var options = {
-              scope: 'crysystem',
-            };
-          var putPolicy = new qiniu.Auth.PutPolicy2(
-                {scope: "crysystem"}
-            );
-          var uptoken = putPolicy.token();
-          qiniu.Rpc.uploadFile(uri,uptoken, {
-                key:uptoken,
-                type:'application/octet-stream',
+            scope: 'crysystem',
+        };
+        var putPolicy = new qiniu.Auth.PutPolicy2(
+            {scope: "crysystem"}
+        );
+        var uptoken = putPolicy.token();
+        qiniu.Rpc.uploadFile(uri, uptoken, {
+                key: uptoken,
+                type: 'application/octet-stream',
                 //name:undefined,
-              }
-            ,function (resp) {
-            console.log(resp);
-          });
-     }
-     
-    render(){
+            }
+            , function (resp) {
+                console.log(resp);
+            });
+    }
+
+    render() {
         let productView;
         //2 任务开始 30分钟内关闭
         //3 任务确认 ->以填写单号
@@ -236,99 +258,108 @@ class taskScreen extends React.Component{
         //6 卖家驳回任务
         //7 客服介入
 
-        if(this.state.loading){
-            if(this.state.TaskState === 2){
-            console.log(this.state.TaskState)
-            files = this.state.files
-            var testa = ('21121')
-        productView = (<View style={{flex:1}}>
-                <View style={styles.container}>
-              <ScrollView
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                    pagingEnabled={true}>
-                    {this.renderChilds()}
-                    
-                </ScrollView>
-                    <ScrollView>
-                        <View>
-                            <ImagePicker
-                                  files={files}
-                                  selectable={files.length < 1}
-                                  onChange={this.onChange}
-                                  onImageClick={(index, files) =>{
-                                    console.log(files[index].url)
-                                   } }
-                                  onAddImageClick={
-                                  this.choosePicker
-                                   }
-                                   />
-                          <TouchableOpacity onPress={()=>{
-                              let files = this.state.files;
-                              console.log(this.state.files)
-                              this.upload(files[0].url);}}>
-                              <Text>上传</Text><Text>上传</Text></TouchableOpacity>
+        if (this.state.loading) {
+            if (this.state.TaskState === 2) {
+                console.log(this.state.TaskState)
+                files = this.state.files
+                var testa = ('21121')
+                productView = (<View style={{flex: 1}}>
+                    <View style={styles.container}>
+                        <ScrollView
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                            pagingEnabled={true}>
+                            {this.renderChilds()}
+
+                        </ScrollView>
+                        <ScrollView>
+                            <View>
+                                <ImagePicker
+                                    files={files}
+                                    selectable={files.length < 1}
+                                    onChange={this.onChange}
+                                    onImageClick={(index, files) => {
+                                        console.log(files[index].url)
+                                    }}
+                                    onAddImageClick={
+                                        this.choosePicker
+                                    }
+                                />
+                                <ImagePicker
+                                    files={files}
+                                    onChange={this.onChange}
+                                    onImageClick={(index, fs) => console.log(index, fs)}
+                                    selectable={files.length < 1}
+                                    onAddImageClick={this.choosePicker}
+                                />
+                                <TouchableOpacity onPress={() => {
+                                    let files = this.state.files;
+                                    console.log(this.state.files)
+                                    this.upload(files[0].url);
+                                }}>
+                                    <View><Text>上传</Text><Text>上传</Text>{this.state.testt}</View></TouchableOpacity>
 
                                 <ImagePicker
-                                          files={files}
-                                          selectable={files.length < 1}
-                                          onChange={this.onChange}
-                                          onImageClick={(index, files) =>{
-                                            console.log(files[index].url)
-                                          } }
-                                          onAddImageClick={
-                                            this.choosePicker
-                                          }
-                                        />
-              </View>
-                     <View>
-                        <Text>类型：</Text>
-                        <Text>请打开平台：APP</Text>
-                        <Text>搜关键词、通道：</Text>
-                        <Text>产品单价：</Text><Text>拍：件</Text><Text>共计： 元</Text>
-                        <Text>城市：</Text><Text>搜索排序：</Text><Text>价格区间： 100 - 2000</Text>
-                        <Text>礼物：礼物x - x 时间付款</Text>
-                        <Text>领优惠劵 ：</Text>
-                        <Text>允许用银行卡付款</Text>
-                        <Text>备注 ：</Text>
+                                    files={files}
+                                    selectable={files.length < 1}
+                                    onChange={this.onChange}
+                                    onImageClick={(index, files) => {
+                                        console.log(files[index].url)
+                                    }}
+                                    onAddImageClick={
+                                        this.choosePicker
+                                    }
+                                />
+                            </View>
+                            <View>
+                                <Text>类型：</Text>
+                                <Text>请打开平台：APP</Text>
+                                <Text>搜关键词、通道：</Text>
+                                <Text>产品单价：</Text><Text>拍：件</Text><Text>共计： 元</Text>
+                                <Text>城市：</Text><Text>搜索排序：</Text><Text>价格区间： 100 - 2000</Text>
+                                <Text>礼物：礼物x - x 时间付款</Text>
+                                <Text>领优惠劵 ：</Text>
+                                <Text>允许用银行卡付款</Text>
+                                <Text>备注 ：</Text>
 
+                            </View>
+                            {this.renderDeatlsImage()}
+                        </ScrollView>
                     </View>
-                        {this.renderDeatlsImage()}
-                    </ScrollView>
-                </View>
-                <View style={styles.shopcart}>
-                    <View style={[styles.bottomItem,{width:window.width*0.2}]}>
-                    <Text
-                    onPress={() => this.cancelTask()}
-                    >取消试用</Text></View>
-                    <View style={[styles.bottomItem,{width:window.width*0.3}]}>
-                    <Text>倒计时：</Text><Text style={{ color : "red"}}>5分</Text></View>
-                    <View style={[styles.bottomItem,{width:window.width*0.5,backgroundColor: 'red'} ]}>
-                    <Text
-                    onPress={() => this.genrateTask()}
-                    >已付款，写订单号</Text></View>
+                    <View style={styles.shopcart}>
+                        <View style={[styles.bottomItem, {width: window.width * 0.2}]}>
+                            <Text
+                                onPress={() => this.cancelTask()}
+                            >取消试用</Text></View>
+                        <View style={[styles.bottomItem, {width: window.width * 0.3}]}>
+                            <Text>倒计时：</Text><Text style={{color: "red"}}>5分</Text></View>
+                        <View style={[styles.bottomItem, {width: window.width * 0.5, backgroundColor: 'red'}]}>
+                            <Text
+                                onPress={() => this.genrateTask()}
+                            >已付款，写订单号</Text></View>
                     </View>
                 </View>)
                 console.log('test312')
-            }else if(this.state.TaskState === 3){
+            } else if (this.state.TaskState === 3) {
                 console.log(this.state.TaskState)
-            }else if(this.state.TaskState === 4){
+            } else if (this.state.TaskState === 4) {
                 console.log(this.state.TaskState)
-            }else if(this.state.TaskState === 5){
+            } else if (this.state.TaskState === 5) {
                 console.log(this.state.TaskState)
-            }else{
-            productView=(<ActivityIndicator color="#0000ff" style={{marginTop:50}} />)
+            } else {
+                //productView=(<ActivityIndicator color="#0000ff" style={{marginTop:50}} />)
+                productView = (<View><Text>21</Text>{this.state.testt}</View>)
             }
-        }else{
-            productView=(<ActivityIndicator color="#0000ff" style={{marginTop:50}} />)
-            productView=(<ActivityIndicator color="#0000ff" style={{marginTop:50}} />)
+        } else {
+            //productView=(<ActivityIndicator color="#0000ff" style={{marginTop:50}} />)
+            productView = (<View><Text>21</Text>{this.state.testt}</View>)
         }
-        return(
-            <View style={{flex:1}}>{productView}</View>
-
+        return (
+            <View style={{flex: 1}}>{productView}</View>
         )
     }
 }
+
 
 
 const styles = StyleSheet.create({
