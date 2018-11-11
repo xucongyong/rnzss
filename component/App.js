@@ -21,13 +21,15 @@ let LoginScreen = require('./Login/Login')
 let token = ''
 deviceStorage.get('token').then((GetToken) => {
         token = GetToken
-        console.log(token)
         });
 
 const TabView = createBottomTabNavigator({
     试用: { screen: Home,
         navigationOptions: ({ navigation }) => ({
                 tabBarOnPress: ({ navigation, defaultHandler }) => {
+                    deviceStorage.get('token').then((GetToken) => {
+                    token = GetToken
+                    })
                     if (token === '' || token=== null) {navigation.navigate('Login')
                         }else {defaultHandler(); }}
                     })
@@ -35,6 +37,9 @@ const TabView = createBottomTabNavigator({
     分享: { screen: Share,
         navigationOptions: ({ navigation }) => ({
                 tabBarOnPress: ({ navigation, defaultHandler }) => {
+                    deviceStorage.get('token').then((GetToken) => {
+                    token = GetToken
+                    })
                     if (token === '' || token=== null) {navigation.navigate('Login')
                         }else {defaultHandler(); }}
                     })
@@ -42,6 +47,9 @@ const TabView = createBottomTabNavigator({
     订单: { screen: TaskView,
         navigationOptions: ({ navigation }) => ({
                 tabBarOnPress: ({ navigation, defaultHandler }) => {
+                    deviceStorage.get('token').then((GetToken) => {
+                    token = GetToken
+                    })
                     if (token === '' || token=== null) {navigation.navigate('Login')
                         }else {defaultHandler(); }}
                     })
@@ -49,6 +57,9 @@ const TabView = createBottomTabNavigator({
     我的: { screen: MeScreen,
         navigationOptions: ({ navigation }) => ({
                 tabBarOnPress: ({ navigation, defaultHandler }) => {
+                    deviceStorage.get('token').then((GetToken) => {
+                    token = GetToken
+                    })
                     if (token === '' || token=== null) {navigation.navigate('Login')
                         }else {defaultHandler(); }}
                     })

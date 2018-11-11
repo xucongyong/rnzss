@@ -47,12 +47,14 @@ class taskScreen extends React.Component{
             loading: false,
             taskId:this.props.navigation.getParam('taskId','NO-ID'),
             GenrateTasking:false,
-            TaskState:10,
-        }
+            TaskState:10}
         this.genrateTask = this.genrateTask.bind(this)
         this.cancelTask = this.cancelTask.bind(this)
         this.closeTask = this.closeTask.bind(this)
         this.choosePicker = this.choosePicker.bind(this)
+        this.upload = this.upload.bind(this)
+        var files = this.state.files;
+
     }
     componentWillMount(){
         this.fetchData(this.state.taskId); //启动的时候载入数据
@@ -198,7 +200,7 @@ class taskScreen extends React.Component{
                     let source = {url: response.uri} ;
                             console.log('source===' + source.url)
                     console.log(response)
-                    var files = this.state.files;
+
                     files.push(source);
                     this.setState({
                                files:files
@@ -208,16 +210,23 @@ class taskScreen extends React.Component{
             });
         }
     upload(uri) {//这里是核心上传的代码
-          qiniu.Rpc.uploadFile(uri,'_5q1hS4hLzHrWvNfK5wnQczIPub43_NnvMl7d-4B:RD93EuPYVULGU7AAmBMVp0T8oxs=:eyJzY29wZSI6Im15YXBwIiwiZGVhZGxpbmUiOjE1MjE4OTAyOTh9', {
-                key:'asdf',
+        var options = {
+              scope: 'crysystem',
+            };
+          var putPolicy = new qiniu.Auth.PutPolicy2(
+                {scope: "crysystem"}
+            );
+          var uptoken = putPolicy.token();
+          qiniu.Rpc.uploadFile(uri,uptoken, {
+                key:uptoken,
                 type:'application/octet-stream',
-                name:undefined,
+                //name:undefined,
               }
             ,function (resp) {
             console.log(resp);
           });
      }
-
+     
     render(){
         let productView;
         //2 任务开始 30分钟内关闭
@@ -231,16 +240,47 @@ class taskScreen extends React.Component{
             if(this.state.TaskState === 2){
             console.log(this.state.TaskState)
             files = this.state.files
-            productView = (
-                <View style={{flex:1}}>
+            var testa = ('21121')
+        productView = (<View style={{flex:1}}>
                 <View style={styles.container}>
-                <ScrollView
+              <ScrollView
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}
                     pagingEnabled={true}>
                     {this.renderChilds()}
+                    
                 </ScrollView>
                     <ScrollView>
+                        <View>
+                            <ImagePicker
+                                  files={files}
+                                  selectable={files.length < 1}
+                                  onChange={this.onChange}
+                                  onImageClick={(index, files) =>{
+                                    console.log(files[index].url)
+                                   } }
+                                  onAddImageClick={
+                                  this.choosePicker
+                                   }
+                                   />
+                          <TouchableOpacity onPress={()=>{
+                              let files = this.state.files;
+                              console.log(this.state.files)
+                              this.upload(files[0].url);}}>
+                              <Text>上传</Text><Text>上传</Text></TouchableOpacity>
+
+                                <ImagePicker
+                                          files={files}
+                                          selectable={files.length < 1}
+                                          onChange={this.onChange}
+                                          onImageClick={(index, files) =>{
+                                            console.log(files[index].url)
+                                          } }
+                                          onAddImageClick={
+                                            this.choosePicker
+                                          }
+                                        />
+              </View>
                      <View>
                         <Text>类型：</Text>
                         <Text>请打开平台：APP</Text>
@@ -251,23 +291,7 @@ class taskScreen extends React.Component{
                         <Text>领优惠劵 ：</Text>
                         <Text>允许用银行卡付款</Text>
                         <Text>备注 ：</Text>
-                        <View>
-                                <ImagePicker
-                                          files={files}
-                                          selectable={files.length < 5}
-                                          onChange={this.onChange}
-                                          onImageClick={(index, files) =>{
-                                            console.log(files[index].url)
-                                          } }
-                                          onAddImageClick={
-                                            this.choosePicker
-                                          }
-                                        />
-                            <TouchableOpacity onPress={()=>{
-                              let imgAry = this.state.files;
-                              console.log(this.state.files)
-                              this.upload(imgAry[0].url);}}><Text>上传</Text></TouchableOpacity>
-                         </View>
+
                     </View>
                         {this.renderDeatlsImage()}
                     </ScrollView>
@@ -285,6 +309,7 @@ class taskScreen extends React.Component{
                     >已付款，写订单号</Text></View>
                     </View>
                 </View>)
+                console.log('test312')
             }else if(this.state.TaskState === 3){
                 console.log(this.state.TaskState)
             }else if(this.state.TaskState === 4){
@@ -295,6 +320,7 @@ class taskScreen extends React.Component{
             productView=(<ActivityIndicator color="#0000ff" style={{marginTop:50}} />)
             }
         }else{
+            productView=(<ActivityIndicator color="#0000ff" style={{marginTop:50}} />)
             productView=(<ActivityIndicator color="#0000ff" style={{marginTop:50}} />)
         }
         return(
