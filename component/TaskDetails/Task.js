@@ -111,13 +111,7 @@ class taskScreen extends React.Component {
             return <Image key={Y} source={{uri: x}} style={styles.DeatlsImageStyle}/>;
         })
     }
-    onChange = (files, type, index) => {
-        console.log('onChange')
-        console.log(files, type, index);
-        this.setState({
-            files,
-        });
-    };
+
     //关闭订单
     closeTask() {
         console.log('closeTask')
@@ -140,7 +134,7 @@ class taskScreen extends React.Component {
         });
 
     }
-
+    //取消订单
     cancelTask() {
         console.log('cancelTask')
         Alert.alert(
@@ -153,6 +147,14 @@ class taskScreen extends React.Component {
             {cancelable: false}
         )
     }
+    //上传图片的变更
+    onChange = (files, type, index) => {
+        console.log('onChange')
+        console.log(files, type, index);
+        this.setState({
+            files,
+        });
+    };
 
     //state2->3
     genrateTask() {
@@ -251,14 +253,24 @@ class taskScreen extends React.Component {
 
     render() {
         let productView;
-        //2 任务开始 30分钟内关闭
-        //3 任务确认 ->以填写单号
-        //4 商家发货
-        //5 买家驳回任务
-        //6 卖家驳回任务
-        //7 客服介入
-
-        if (this.state.loading) {
+/*
+* 信息
+     1. 所有行为的截图
+     2. 订单编号
+    3. 1-4天的行为截图
+0. 关闭交易
+1. 完成交易
+2. 任务开始
+    * 按键提醒：40分钟内关闭(按钮确认)
+3. 填写订单号\验证链接\需要的截图\付款金额截图  time:40分钟\ [可关闭交易]
+    * 3.1 等待修改信息：time：1天  如果不改，关闭交易=0  [可关闭交易]
+4. 等商家发货 可补图和改单号  time：2天、可拒绝：返回3.1 [可关交易]
+5. 商家发货：如果有评价那么关联评价截图、如果没有，等待默认好评 [可关闭交易]
+6. 上传好评截图:截图 任务好以后等待资金到账   [可确认收货]
+   * 6.1 订单驳回：请重新评价   [可确认收货]
+   * 申诉:任务等待\买家没拍任务、价格不对、威胁[在后台管理中加申诉中心]
+*/        
+      if (this.state.loading) {
             if (this.state.TaskState === 2) {
                 console.log(this.state.TaskState)
                 files = this.state.files
@@ -297,21 +309,13 @@ class taskScreen extends React.Component {
                                     console.log(this.state.files)
                                     this.upload(files[0].url);
                                 }}>
-                                    <View><Text>上传</Text><Text>上传</Text>{this.state.testt}</View></TouchableOpacity>
+                                    <View><Text>上传</Text>{this.state.testt}</View></TouchableOpacity>
 
-                                <ImagePicker
-                                    files={files}
-                                    selectable={files.length < 1}
-                                    onChange={this.onChange}
-                                    onImageClick={(index, files) => {
-                                        console.log(files[index].url)
-                                    }}
-                                    onAddImageClick={
-                                        this.choosePicker
-                                    }
-                                />
                             </View>
                             <View>
+                                <Text>链接验证：</Text><InputItem/>
+                                <Text>订单号：</Text><InputItem/>
+                                <Text>付款金额：</Text><InputItem/>
                                 <Text>类型：</Text>
                                 <Text>请打开平台：APP</Text>
                                 <Text>搜关键词、通道：</Text>
@@ -336,7 +340,7 @@ class taskScreen extends React.Component {
                         <View style={[styles.bottomItem, {width: window.width * 0.5, backgroundColor: 'red'}]}>
                             <Text
                                 onPress={() => this.genrateTask()}
-                            >已付款，写订单号</Text></View>
+                            >付款，写订单号</Text></View>
                     </View>
                 </View>)
                 console.log('test312')

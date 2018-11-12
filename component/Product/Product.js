@@ -76,6 +76,7 @@ class ProductScreen extends React.Component{
         })}
     //购物按钮
     genrateTask(){
+        this.setState({loading:false})
         console.log(this.state.taskId)
         deviceStorage.get('token').then((GetToken) => {
             token = GetToken
@@ -83,6 +84,7 @@ class ProductScreen extends React.Component{
             axios.post(OrderUrl, { headers: { Authorization: token, version:'1.0',orderid:this.state.taskId}})
                 .then(response => {
                     this.setState({productDetail:response.data})
+                    this.setState({loading:true})
                     //this.setState({ImageMain:JSON.parse(this.state.productDetail['Details'])['mainImage']})
                     //this.setState({ImageDetails:JSON.parse(this.state.productDetail['Details'])['DetailsImage']})
                     //this.setState({loading:true})
@@ -151,6 +153,7 @@ class ProductScreen extends React.Component{
                                 '还没捆绑账号哦，请绑定账号，',
                                 'alertMessage',
                                 [
+                        
                                     {text: '先不绑定', onPress: () => console.log('Cancel Pressed!')},
                                     {text: '马上绑定', onPress: this.onDeleteBTN},
                                 ],
@@ -169,7 +172,16 @@ class ProductScreen extends React.Component{
                     <Text>红包试用：</Text><Text style={{ color : "red"}}>5.51元</Text></View>
                     <View style={[styles.bottomItem,{width:window.width*0.3,backgroundColor: 'red'} ]}>
                     <Text
-                    onPress={() => this.genrateTask()}
+                    onPress={() => Alert.alert(
+                                    '马上开始试用？',
+                                    '开始试用吗？请在40分钟内完成噢',
+                            [ 
+                                {text: '先不开始', onPress: () => console.log('close')},
+                                {text: '马上试用', onPress: () => this.genrateTask()}
+                            ],
+                            { cancelable: false }
+                            )
+                            }
                     >下单试用</Text></View>
                     </View>
                 </View>
