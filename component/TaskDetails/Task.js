@@ -13,7 +13,6 @@ var boxWidth = Dimensions.get('window').height/2;
 import * as picker  from "react-native-image-picker";
 import {TextareaItem,ImagePicker,InputItem,List,WhiteSpace,Button} from 'antd-mobile-rn';
 var qiniu = require('react-native-qiniu');
-var data = [];
 
 let token = ''
 const photoOptions = {
@@ -38,17 +37,45 @@ class taskScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            PD: '',
             productDetail: '',
-            files: data,
-            currentPage: 0,
+            files: [],
             ImageMain: [],
             ImageDetails: [],
+            image_num:1,
+            event:0,
+            gift:'',
+            gifturl:'',
+            buyPrice:0,
+            buyNum:0,
+            showPrice:0,
+            ReturnBuyPrice:0,
+            buyRules:'',
+            Node:'',
+            AddCoupons:'',
+            AddOpenOtherProduct:'',
+            AddSaveShop:'',
+            AddOpenProduct:'',
+            AddShoppingCar:'',
+            AddChat:'',
+            AddCommandsLike:'',
+            PayCard:'',
+            PayCoupons:'',
+            Payhuabei:'',
+            huabeiId:'',
+            keyWord:'',
+            orderNumber:'',
+            city:'',
+            orderSort:'综合排序',
+            priceMin:'',
+            priceMax:'',
+            SellPayPrice:0,
+            BuyGetPrice:0,
+            productId:'',
+            ShopUserName:'',
+            ShopNickName:'', 
             loading: false,
             taskId: this.props.navigation.getParam('taskId', 'NO-ID'),
-            GenrateTasking: false,
             TaskState: 10,
-            testt:(<Text>2221</Text>),
         }
         this.genrateTask = this.genrateTask.bind(this)
         this.cancelTask = this.cancelTask.bind(this)
@@ -64,8 +91,6 @@ class taskScreen extends React.Component {
         this.fetchData(this.state.taskId); //启动的时候载入数据
         // this.startTimer();
     }
-
-    //取消定时器
     // componentWillUnmount(){
     //     clearInterval(this.timer);
     // }
@@ -79,9 +104,75 @@ class taskScreen extends React.Component {
             axios.get(taskUrl, {headers: {Authorization: token, sort: 0, version: '1.0', taskId: this.state.taskId}})
                 .then(response => {
                     this.setState({productDetail: response.data})
+                    this.setState({image_num: response.data.img_num})
                     this.setState({TaskState: response.data.BuyTaskState})
                     this.setState({ImageMain: JSON.parse(this.state.productDetail['Details'])['mainImage']})
                     this.setState({ImageDetails: JSON.parse(this.state.productDetail['Details'])['DetailsImage']})
+                    if(response.data.event===1){
+                      this.setState({event:'红包试用'})
+                    }else if(response.data.event===2){
+                      this.setState({event:'实物免费折扣'})
+                    }
+                    this.setState({gift:response.data.gift})
+                    this.setState({gifturl:response.data.gifturl})
+                    this.setState({buyPrice: response.data.buyPrice})
+                    this.setState({buyNum: response.data.buyNum})
+                    this.setState({showPrice: response.data.showPrice})
+                    this.setState({ReturnBuyPrice: response.data.ReturnBuyPrice})
+                    this.setState({buyRules: response.data.buyRules})
+                    this.setState({Node: response.data.Node})
+                    this.setState({AddCoupons: response.data.AddCoupons})
+                    if(response.data.AddCoupons===1){
+                      this.setState({AddCoupons:'领优惠卷'}) }
+                    if(response.data.AddOpenOtherProduct===1){
+                      this.setState({AddOpenOtherProduct:'打开对手产品'})
+                    }
+                    if(response.data.AddSaveShop===1){
+                      this.setState({AddSaveShop:'收藏店铺'})
+                    }
+                    if(response.data.AddOpenProduct===1){
+                      this.setState({AddOpenProduct:'店铺其他产品'})
+                    }
+                    if(response.data.AddShoppingCar===1){
+                      this.setState({AddShoppingCar:'加购物车'})
+                    }
+                    if(response.data.AddChat===1){
+                      this.setState({AddChat:'聊天'})
+                    }
+                    if(response.data.AddCommandsLike===1){
+                      this.setState({AddCommandsLike:'好评点赞'})
+                    }
+                    if(response.data.PayCard===1){
+                      this.setState({PayCard:''})
+                    }else{
+                      this.setState({PayCard:'信用卡'})
+                    }
+                    if(response.data.PayCoupons===1){
+                      this.setState({PayCoupons:''})
+                    }else{
+                      this.setState({PayCoupons:'优惠卷'})
+                    }
+                    if(response.data.Payhuwbei===1){
+                      this.setState({Payhuabei:''})
+                    }else{
+                      this.setState({Payhuabei:'花呗'})
+                    }
+                    if(response.data.huabeiId===1){
+                      this.setState({huabeiId:'花呗白条账号'})
+                    }else{
+                      this.setState({huabeiId:''})
+                    }
+                    this.setState({keyWord:response.data.keyWord})
+                    this.setState({orderNumber:response.data.orderNumber})
+                    this.setState({city:response.data.city})
+                    this.setState({orderSort:response.data.orderSort})
+                    this.setState({priceMin:response.data.priceMin})
+                    this.setState({priceMax:response.data.priceMax})
+                    this.setState({BuyGetPrice:response.data.BuyGetPrice})
+                    this.setState({SellPayPrice:response.data.SellPayPrice})
+                    this.setState({productId:response.data.SellPayPrice})
+                    this.setState({ShopUserName:response.data.ShopUserName})
+                    this.setState({ShopNickName:response.data.ShopNickName})
                     this.setState({loading: true})
                 })
                 .catch((error) => {
@@ -212,6 +303,9 @@ class taskScreen extends React.Component {
     //获取照片
     //choosePicker=()=>{
     choosePicker() {
+        //1.图片state文件名
+        //2.图片上传服务器名
+        //3.图片文字
         picker.showImagePicker(photoOptions, (response) => {
             console.log('Response = ', response);
             if (response.didCancel) {
@@ -223,7 +317,6 @@ class taskScreen extends React.Component {
                 let source = {url: response.uri};
                 console.log('source===' + source.url)
                 console.log(response)
-
                 files.push(source);
                 this.setState({
                     files: files
@@ -282,26 +375,34 @@ class taskScreen extends React.Component {
                             showsHorizontalScrollIndicator={false}
                             pagingEnabled={true}>
                             {this.renderChilds()}
-
                         </ScrollView>
                         <ScrollView>
-                            <View>
+                            <View style={{
+                              flexDirection: 'row',
+                            }}>
+                                <Text>
+                                <Text>类型：</Text>
+                                <Text>淘宝app</Text>
+                                {'\n'}
+                                <Text>关键词、通道：</Text>
+                                <Text>城市：</Text>
+                                <Text>搜索排序：</Text><Text>价格： 100 - 2000</Text>{'\n'}
+                                <Text>产品单价：</Text><Text>拍：件</Text>
+                                <Text>共计： 元</Text>{'\n'}
+                                <Text>礼物:时间付款</Text>
+                                <Text>领优惠劵：</Text>
+                                <Text>允许用银行卡付款</Text>
+                                <Text>备注 ：</Text>
+                                </Text>
+                            </View>
+                                <View>
                                 <ImagePicker
-                                    files={files}
-                                    selectable={files.length < 1}
+                                    files={this.state.files}
+                                    selectable={files.length < this.state.image_num}
                                     onChange={this.onChange}
                                     onImageClick={(index, files) => {
                                         console.log(files[index].url)
                                     }}
-                                    onAddImageClick={
-                                        this.choosePicker
-                                    }
-                                />
-                                <ImagePicker
-                                    files={files}
-                                    onChange={this.onChange}
-                                    onImageClick={(index, fs) => console.log(index, fs)}
-                                    selectable={files.length < 1}
                                     onAddImageClick={this.choosePicker}
                                 />
                                 <TouchableOpacity onPress={() => {
@@ -309,22 +410,15 @@ class taskScreen extends React.Component {
                                     console.log(this.state.files)
                                     this.upload(files[0].url);
                                 }}>
-                                    <View><Text>上传</Text>{this.state.testt}</View></TouchableOpacity>
-
+                         <View><Button>保存图片</Button>
+                                  </View></TouchableOpacity>
                             </View>
+                            
                             <View>
-                                <Text>链接验证：</Text><InputItem/>
-                                <Text>订单号：</Text><InputItem/>
-                                <Text>付款金额：</Text><InputItem/>
-                                <Text>类型：</Text>
-                                <Text>请打开平台：APP</Text>
-                                <Text>搜关键词、通道：</Text>
-                                <Text>产品单价：</Text><Text>拍：件</Text><Text>共计： 元</Text>
-                                <Text>城市：</Text><Text>搜索排序：</Text><Text>价格区间： 100 - 2000</Text>
-                                <Text>礼物：礼物x - x 时间付款</Text>
-                                <Text>领优惠劵 ：</Text>
-                                <Text>允许用银行卡付款</Text>
-                                <Text>备注 ：</Text>
+                                <Text>需要截图：搜索关键词</Text>
+                                <InputItem>链接验证</InputItem>
+                                <InputItem>订单号</InputItem>
+                                <InputItem>付款金额</InputItem>
 
                             </View>
                             {this.renderDeatlsImage()}
@@ -408,8 +502,8 @@ const styles = StyleSheet.create({
     shopcart: {
         flex:0.07,
         height: 50,
-        flexDirection: 'row',
         //backgroundColor: 'red',
+        flexDirection: 'row',
     },
     container:{
         flex: 0.93,
