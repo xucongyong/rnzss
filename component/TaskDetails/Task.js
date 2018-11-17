@@ -6,12 +6,14 @@ const imageHeight = window.height;
 var serverUrl = require("../websettings")
 const taskUrl = serverUrl+'/m/task';
 const closeTaskUrl = serverUrl+'/m/closetask';
+const TaskStateUrl = serverUrl+'/m/TaskState';
 const axios = require('axios');
 import deviceStorage from "../Login/jwt/services/deviceStorage";
 var ScreenWidth = Dimensions.get('window').width;
 var boxWidth = Dimensions.get('window').height/2;
 import * as picker  from "react-native-image-picker";
-import {TextareaItem,ImagePicker,InputItem,List,WhiteSpace,Button} from 'antd-mobile-rn';
+import {TextareaItem,ImagePicker,WhiteSpace,Button} from 'antd-mobile-rn';
+import { TextInputMask,MaskService } from 'react-native-masked-text'
 var qiniu = require('react-native-qiniu');
 
 let token = ''
@@ -41,12 +43,14 @@ class taskScreen extends React.Component {
             files: [],
             ImageMain: [],
             ImageDetails: [],
-            image_num:1,
+            ImageNumber:1,
             event:0,
             gift:'',
             gifturl:'',
             buyPrice:0,
             buyNum:0,
+            PayMoney:'',
+            AddMoney:'',
             showPrice:0,
             ReturnBuyPrice:0,
             buyRules:'',
@@ -72,9 +76,12 @@ class taskScreen extends React.Component {
             BuyGetPrice:0,
             productId:'',
             ShopUserName:'',
-            ShopNickName:'', 
+            ShopNickName:'',
+            ShopSort:'', 
             loading: false,
+            PlatFormUserName:'',
             taskId: this.props.navigation.getParam('taskId', 'NO-ID'),
+            PlatFormOrderId:'',
             TaskState: 10,
         }
         this.genrateTask = this.genrateTask.bind(this)
@@ -84,7 +91,6 @@ class taskScreen extends React.Component {
         this.upload = this.upload.bind(this)
         var files = this.state.files;
         this.onChange = this.onChange.bind(this)
-
     }
 
     componentWillMount() {
@@ -100,14 +106,15 @@ class taskScreen extends React.Component {
         deviceStorage.get('token').then((GetToken) => {
             token = GetToken
             console.log(this.props.navigation.getParam('taskId', 'NO-ID'))
-
             axios.get(taskUrl, {headers: {Authorization: token, sort: 0, version: '1.0', taskId: this.state.taskId}})
                 .then(response => {
-                    this.setState({productDetail: response.data})
-                    this.setState({image_num: response.data.img_num})
+                    this.setState({productDetail:response.data})
+                    this.setState({ImageMain:JSON.parse(this.state.productDetail['Details'])['mainImage']})
+                    this.setState({ImageDetails:JSON.parse(this.state.productDetail['Details'])['DetailsImage']})
+                    this.setState({ImageNumber: response.data.ImageNumber})
                     this.setState({TaskState: response.data.BuyTaskState})
-                    this.setState({ImageMain: JSON.parse(this.state.productDetail['Details'])['mainImage']})
-                    this.setState({ImageDetails: JSON.parse(this.state.productDetail['Details'])['DetailsImage']})
+                    console.log(response.data.Details)
+                    console.log(this.state.productDetail['Details'])
                     if(response.data.event===1){
                       this.setState({event:'红包试用'})
                     }else if(response.data.event===2){
@@ -162,7 +169,7 @@ class taskScreen extends React.Component {
                     }else{
                       this.setState({huabeiId:''})
                     }
-                    this.setState({keyWord:response.data.keyWord})
+                    this.setState({keyWord:response.data.KeyWord})
                     this.setState({orderNumber:response.data.orderNumber})
                     this.setState({city:response.data.city})
                     this.setState({orderSort:response.data.orderSort})
@@ -170,14 +177,30 @@ class taskScreen extends React.Component {
                     this.setState({priceMax:response.data.priceMax})
                     this.setState({BuyGetPrice:response.data.BuyGetPrice})
                     this.setState({SellPayPrice:response.data.SellPayPrice})
-                    this.setState({productId:response.data.SellPayPrice})
+                    this.setState({productId:response.data.ProductId})
                     this.setState({ShopUserName:response.data.ShopUserName})
                     this.setState({ShopNickName:response.data.ShopNickName})
+                    this.setState({PlatFormUserName:response.data.PlatFormUserName})
+                    this.setState({PayMoney:"" +response.data.PayMoney})
+                    this.setState({AddMoney:"" +response.data.AddMoney})
+                    if(response.data.PlatFormOrderId!==null){
+                        this.setState({PlatFormOrderId:""+response.data.PlatFormOrderId})
+                    }
+                    if(response.data.ShopSort==='1688'){
+                      this.setState({ShopSort:'1688'})
+                    }else if(response.data.ShopSort==='jd'){
+                      this.setState({ShopSort:'京东'})
+                    }else if(response.data.ShopSort==='tmall'){
+                      this.setState({ShopSort:'天猫\淘宝'})
+                    }else if(response.data.ShopSort==='taobao'){
+                      this.setState({ShopSort:'淘宝'})
+                    }                    
                     this.setState({loading: true})
                 })
                 .catch((error) => {
                     console.log('error 3 ' + error);
-                });
+                }
+                );
         });
     }
 
@@ -249,11 +272,9 @@ class taskScreen extends React.Component {
 
     //state2->3
     genrateTask() {
-        console.log(this.state.taskId)
         deviceStorage.get('token').then((GetToken) => {
             token = GetToken
-            console.log(this.state.taskId)
-            axios.post(OrderUrl, {headers: {Authorization: token, version: '1.0', orderid: this.state.taskId}})
+            axios.post(TaskStateUrl, {headers: {Authorization: token,TaskId: this.state.taskId,UserOrderId:this.state.UserOrderId,TaskMonoey:this.state.TaskMonoey,AddMonoey:this.state.AddMonoey,ImageFile:this.state.taskId,TaskState:this.state.TaskState}})
                 .then(response => {
                     this.setState({productDetail: response.data})
                     //state 1：没有账号
@@ -370,35 +391,50 @@ class taskScreen extends React.Component {
                 var testa = ('21121')
                 productView = (<View style={{flex: 1}}>
                     <View style={styles.container}>
+
+                        <ScrollView>
                         <ScrollView
                             horizontal={true}
                             showsHorizontalScrollIndicator={false}
                             pagingEnabled={true}>
                             {this.renderChilds()}
                         </ScrollView>
-                        <ScrollView>
                             <View style={{
                               flexDirection: 'row',
-                            }}>
-                                <Text>
-                                <Text>类型：</Text>
-                                <Text>淘宝app</Text>
+                            }}><Text>
+                                <Text>任务：{this.state.event}</Text>{'\n'}
+                                <Text>试用账号：{this.state.PlatFormUserName}</Text>{'\n'}
+                                <Text>手机打开：「<Text style={{color: "red"}}>{this.state.ShopSort}</Text>」应用</Text>{'\n'}
+                                <Text>关键词：「<Text style={{color: "red"}}>{this.state.keyWord}</Text>」</Text>{'     '}
+                                <Text>城市：{this.state.city}</Text>{'     '}
+                                <Text>价格区间：{this.state.priceMin} - {this.state.priceMax}</Text>{'\n'}
+                                <Text>店铺：{this.state.ShopUserName}\{this.state.ShopNickName}</Text>{'\n'}
+                                <Text>产品id：{this.state.productId}</Text>{'\n'}
+                                <Text>页面价格：{this.state.showPrice}</Text>{'\n'}
+                                <Text>付款金额：{this.state.buyPrice}元 x {this.state.buyNum}件 =  <Text style={{color: "red"}}>{this.state.buyPrice*this.state.buyNum}</Text>元，返现：<Text style={{color: "red"}}>{this.state.BuyGetPrice}</Text>元</Text>{'\n'}
+                                <Text>购买规格：{this.state.buyRules}</Text>{'\n'}
+                                <Text>账号要求：{this.state.huabeiId}</Text>{'\n'}
+                                <Text>礼物：{this.state.gift} - {this.state.gifturl}</Text>{'\n'}
+                                <Text>备注：{this.state.Node}</Text>{'\n'}
                                 {'\n'}
-                                <Text>关键词、通道：</Text>
-                                <Text>城市：</Text>
-                                <Text>搜索排序：</Text><Text>价格： 100 - 2000</Text>{'\n'}
-                                <Text>产品单价：</Text><Text>拍：件</Text>
-                                <Text>共计： 元</Text>{'\n'}
-                                <Text>礼物:时间付款</Text>
-                                <Text>领优惠劵：</Text>
-                                <Text>允许用银行卡付款</Text>
-                                <Text>备注 ：</Text>
+                                <Text>支付：不允许用「
+                                {this.state.PayCard} {' '}
+                                {this.state.PayCoupons} {' '}
+                                {this.state.Payhuabei}{' '}淘宝客」支付
+                                </Text>{'\n\n'}
+                                <Text><Text style={{color: "red"}}>截图</Text>：「搜索{' '}{this.state.AddCoupons}{' '}
+                                {this.state.AddOpenOtherProduct}{' '}
+                                {this.state.AddSaveShop}{' '}
+                                {this.state.AddOpenProduct}{' '}
+                                {this.state.AddShoppingCar}{' '}
+                                {this.state.AddChat}{' '}
+                                {this.state.AddCommandsLike}」
                                 </Text>
-                            </View>
+                                </Text></View>
                                 <View>
                                 <ImagePicker
                                     files={this.state.files}
-                                    selectable={files.length < this.state.image_num}
+                                    selectable={files.length < this.state.ImageNumber}
                                     onChange={this.onChange}
                                     onImageClick={(index, files) => {
                                         console.log(files[index].url)
@@ -413,16 +449,24 @@ class taskScreen extends React.Component {
                          <View><Button>保存图片</Button>
                                   </View></TouchableOpacity>
                             </View>
-                            
-                            <View>
-                                <Text>需要截图：搜索关键词</Text>
-                                <InputItem>链接验证</InputItem>
-                                <InputItem>订单号</InputItem>
-                                <InputItem>付款金额</InputItem>
-
-                            </View>
-                            {this.renderDeatlsImage()}
-                        </ScrollView>
+                                <TextInput
+                                    name='UserOrderId'
+                                    value= {this.state.PlatFormOrderId}
+                                    type="number"
+                                    />
+                                <TextInput
+                                     name='UserOrderMoney'
+                                     value={this.state.PayMoney}
+                                     type="money"
+                                    extra={<Text>元</Text>}
+                                    />
+                                <Text>附加任务：</Text><TextInput
+                                     name='AddMoney'
+                                     value={this.state.AddMoney.toString()}
+                                     type="number"
+                                    extra={<Text>件</Text>}
+                                />
+                    </ScrollView>
                     </View>
                     <View style={styles.shopcart}>
                         <View style={[styles.bottomItem, {width: window.width * 0.2}]}>
@@ -430,14 +474,13 @@ class taskScreen extends React.Component {
                                 onPress={() => this.cancelTask()}
                             >取消试用</Text></View>
                         <View style={[styles.bottomItem, {width: window.width * 0.3}]}>
-                            <Text>倒计时：</Text><Text style={{color: "red"}}>5分</Text></View>
+                            <Text>倒计时：</Text><Text style={{color: "red"}}>5分{this.state.PayMoney}{this.state.AddMoney}{this.state.PlatFormOrderId}</Text></View>
                         <View style={[styles.bottomItem, {width: window.width * 0.5, backgroundColor: 'red'}]}>
                             <Text
                                 onPress={() => this.genrateTask()}
-                            >付款，写订单号</Text></View>
+                            >提交保存</Text></View>
                     </View>
                 </View>)
-                console.log('test312')
             } else if (this.state.TaskState === 3) {
                 console.log(this.state.TaskState)
             } else if (this.state.TaskState === 4) {
@@ -445,12 +488,11 @@ class taskScreen extends React.Component {
             } else if (this.state.TaskState === 5) {
                 console.log(this.state.TaskState)
             } else {
-                //productView=(<ActivityIndicator color="#0000ff" style={{marginTop:50}} />)
-                productView = (<View><Text>21</Text>{this.state.testt}</View>)
+                productView=(<ActivityIndicator color="#0000ff" style={{marginTop:50}} />)
             }
         } else {
             //productView=(<ActivityIndicator color="#0000ff" style={{marginTop:50}} />)
-            productView = (<View><Text>21</Text>{this.state.testt}</View>)
+                productView=(<ActivityIndicator color="#0000ff" style={{marginTop:50}} />)
         }
         return (
             <View style={{flex: 1}}>{productView}</View>
