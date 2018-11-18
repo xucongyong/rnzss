@@ -13,7 +13,7 @@ var ScreenWidth = Dimensions.get('window').width;
 var boxWidth = Dimensions.get('window').height/2;
 import * as picker  from "react-native-image-picker";
 import {TextareaItem,ImagePicker,WhiteSpace,Button} from 'antd-mobile-rn';
-import { TextInputMask,MaskService } from 'react-native-masked-text'
+import CurrencyInput from 'react-currency-input';
 var qiniu = require('react-native-qiniu');
 
 let token = ''
@@ -84,13 +84,14 @@ class taskScreen extends React.Component {
             PlatFormOrderId:'',
             TaskState: 10,
         }
-        this.genrateTask = this.genrateTask.bind(this)
+        this.TaskStateUpdate = this.TaskStateUpdate.bind(this)
         this.cancelTask = this.cancelTask.bind(this)
         this.closeTask = this.closeTask.bind(this)
         this.choosePicker = this.choosePicker.bind(this)
         this.upload = this.upload.bind(this)
-        var files = this.state.files;
         this.onChange = this.onChange.bind(this)
+        this.clearPayMoney = this.clearPayMoney.bind(this)
+        this.ClearPlatFormOrderId = this.ClearPlatFormOrderId.bind(this)
     }
 
     componentWillMount() {
@@ -215,8 +216,33 @@ class taskScreen extends React.Component {
 
     // }
 
-
-    //渲染图
+    clearPayMoney(xx){
+        var re = /^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/
+        if(re.test(xx)===false){
+            this.setState({PayMoney:''})
+        }else{
+            this.setState({PayMoney:xx})
+        }
+        console.log(this.state.PayMoney)
+    }
+    ClearPlatFormOrderId(xx){
+        var reNumber = /^([1-9]\d{0,30})$/
+        if(reNumber.test(xx)===false){
+            this.setState({PlatFormOrderId:''})
+        }else{
+            this.setState({PlatFormOrderId:xx})
+        }
+        console.log(this.state.PlatFormOrderId)
+    }
+    clearAddMoney(xx){
+        var reAddMoney = /^([1-9]\d{0,1})$/
+        if(reAddMoney.test(xx)===false){
+            this.setState({AddMoney:''})
+        }else{
+            this.setState({AddMoney:xx})
+        }
+        console.log(this.state.Ad2Money)
+    }    //渲染图
     renderDeatlsImage() {
         var Y = 10
         return this.state.ImageDetails.map((x) => {
@@ -225,7 +251,6 @@ class taskScreen extends React.Component {
             return <Image key={Y} source={{uri: x}} style={styles.DeatlsImageStyle}/>;
         })
     }
-
     //关闭订单
     closeTask() {
         console.log('closeTask')
@@ -271,53 +296,74 @@ class taskScreen extends React.Component {
     };
 
     //state2->3
-    genrateTask() {
-        deviceStorage.get('token').then((GetToken) => {
-            token = GetToken
-            axios.post(TaskStateUrl, {headers: {Authorization: token,TaskId: this.state.taskId,UserOrderId:this.state.UserOrderId,TaskMonoey:this.state.TaskMonoey,AddMonoey:this.state.AddMonoey,ImageFile:this.state.taskId,TaskState:this.state.TaskState}})
-                .then(response => {
-                    this.setState({productDetail: response.data})
-                    //state 1：没有账号
-                    //state 2: 不能下单
-                    //state 3: 生成订单
-                    console.log('status:' + this.state.productDetail.status)
-                    if (this.state.productDetail.status === 0) {
-                        this.props.navigation.navigate('Login')
-                    } else if (this.state.productDetail.status === 1) {
-                        Alert.alert(
-                            this.state.productDetail.message,
-                            [
-                                {text: '先不绑定', onPress: () => console.log('Cancel Pressed!')},
-                                {text: '马上淘宝绑定', onPress: () => this.props.navigation.navigate('addTbAccount')},
-                                {text: '马上京东绑定', onPress: () => this.props.navigation.navigate('addTbAccount')},
-                            ],
-                            {cancelable: false}
-                        )
-                    } else if (this.state.productDetail.status === 2) {
-                        Alert.alert(
-                            '',
-                            '已有任务，请到任务中心操作',
-                            [
-                                {text: '返回首页', onPress: () => this.props.navigation.navigate('TestMain')}
-                            ],
-                            {cancelable: false}
-                        )
-                    } else if (this.state.productDetail.status === 3) {
-                        this.props.navigation.navigate('TaskDetails', {taskid: this.state.productDetail.taskid})
-                    } else if (this.state.productDetail.status === 4) {
-                        Alert.alert(
-                            this.state.productDetail.message,
-                            [
-                                {text: '返回首页', onPress: () => this.props.navigation.navigate('TestMain')}
-                            ],
-                            {cancelable: false}
-                        )
-                    }
-                })
-                .catch((error) => {
-                    console.log('error 3 ' + error);
-                });
-        });
+    TaskStateUpdate() {
+        //上传图片
+        let files = this.state.files
+        this.upload(files[0].url);
+        // for(var x=0;files.length>x;x++){
+        //     console.log('x:'+x)
+        //     this.upload(files[x].url);
+        // }
+        var re = /^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/
+        var reNumber = /^([1-9]\d{0,30})$/
+        var reAddMoney = /^([1-9]\d{0,1})$/
+        if(reNumber.test(this.state.UserOrderId) ===false||re.test(this.state.PayMoney) ===false ||reAddMoney.test(this.state.AddMoney) ===false){
+            Alert.alert(
+                '',
+                '请填写正确的订单号、交易订单号、交易费 ',
+                [
+                    {text: '马上填写', onPress: () => console.log('Cancel Pressed')},
+                ],
+                {cancelable: false}
+            )
+        }else{
+            deviceStorage.get('token').then((GetToken) => {
+                token = GetToken
+                axios.post(TaskStateUrl, {headers: {Authorization: token,TaskId:this.state.TaskId,UserOrderId:this.state.UserOrderId, PayMoney:this.state.PayMoney,AddMoney:this.state.AddMoney,files:this.state.files,TaskState:this.state.TaskState}})
+                    .then(response => {
+                        console.log(response.data)
+                        this.setState({productDetail: response.data})
+                        //state 1：没有账号
+                        //state 2: 不能下单
+                        //state 3: 生成订单
+                        if (this.state.productDetail.status === 0) {
+                            this.props.navigation.navigate('Login')
+                        } else if (this.state.productDetail.status === 1) {
+                            Alert.alert(
+                                this.state.productDetail.message,
+                                [
+                                    {text: '先不绑定', onPress: () => console.log('Cancel Pressed!')},
+                                    {text: '马上淘宝绑定', onPress: () => this.props.navigation.navigate('addTbAccount')},
+                                    {text: '马上京东绑定', onPress: () => this.props.navigation.navigate('addTbAccount')},
+                                ],
+                                {cancelable: false}
+                            )
+                        } else if (this.state.productDetail.status === 2) {
+                            Alert.alert(
+                                '',
+                                '已有任务，请到任务中心操作',
+                                [
+                                    {text: '返回首页', onPress: () => this.props.navigation.navigate('TestMain')}
+                                ],
+                                {cancelable: false}
+                            )
+                        } else if (this.state.productDetail.status === 3) {
+                            this.props.navigation.navigate('TaskDetails', {taskid: this.state.productDetail.taskid})
+                        } else if (this.state.productDetail.status === 4) {
+                            Alert.alert(
+                                this.state.productDetail.message,
+                                [
+                                    {text: '返回首页', onPress: () => this.props.navigation.navigate('TestMain')}
+                                ],
+                                {cancelable: false}
+                            )
+                        }
+                    })
+                    .catch((error) => {
+                        console.log('error 3 ' + error);
+                    });
+            });
+        }
     }
 
     //关键词
@@ -342,12 +388,12 @@ class taskScreen extends React.Component {
                 this.setState({
                     files: files
                 });
-                console.log('data===' + this.state.files)
             }
         });
     }
 
     upload(uri) {//这里是核心上传的代码
+        console.log('upload(url)')
         var options = {
             scope: 'crysystem',
         };
@@ -355,15 +401,31 @@ class taskScreen extends React.Component {
             {scope: "crysystem"}
         );
         var uptoken = putPolicy.token();
-        qiniu.Rpc.uploadFile(uri, uptoken, {
-                key: uptoken,
-                type: 'application/octet-stream',
-                //name:undefined,
-            }
-            , function (resp) {
-                console.log(resp);
-            });
-    }
+        // console.log('qiniu.Rpc.uploadFile:'+uri)
+        // console.log('uptoken:'+uptoken)
+        // qiniu.Rpc.uploadFile(uri, uptoken, {
+        //         key: uptoken,
+        //         type: 'application/octet-stream',
+        //         name:undefined,
+        //     }
+        //     , function (resp) {
+        //         console.log('resp:'+resp);
+        //     });
+        let formInput = {
+            key : uptoken,
+            // formInput对象如何配置请参考七牛官方文档“直传文件”一节
+        }
+        qiniu.Rpc.uploadFile(uri, uptoken, formInput);
+        // qiniu.Rpc.uploadFile(uri, uptoken, {key: uptoken}, function (err,ret) {
+        //           if(!err) {
+        //             // 上传成功， 处理返回值
+        //             console.log(ret.hash, ret.key, ret.persistentId);       
+        //           } else {
+        //             // 上传失败， 处理返回代码
+        //             console.log(err);
+        //           }
+        //   });
+        }
 
     render() {
         let productView;
@@ -431,7 +493,28 @@ class taskScreen extends React.Component {
                                 {this.state.AddCommandsLike}」
                                 </Text>
                                 </Text></View>
-                                <View>
+
+                                <Text>购物订单号：{this.state.PlatFormOrderId}</Text><TextInput style = {styles.input}
+                                    name='UserOrderId'
+                                    type="number"
+                                    onChangeText={(xx)=>this.ClearPlatFormOrderId(xx)}
+                                    value= {this.state.PlatFormOrderId}
+                                    />
+                                <Text>支付金额：{this.state.PayMoney}</Text>
+                                <TextInput style = {styles.input}
+                                    name='PayMoney'
+                                    value= {this.state.PayMoney}
+                                    type="number"
+                                    onChangeText={(xx)=>this.clearPayMoney(xx)}
+                                    value={this.state.PayMoney}
+                                    />
+                                <Text>试用附加任务：{this.state.AddMoney}</Text>
+                                <TextInput style = {styles.input}
+                                    name='AddMoney'
+                                    onChangeText={(xx)=>this.clearAddMoney(xx)}
+                                    value={this.state.AddMoney}
+                                    type="number"
+                                />
                                 <ImagePicker
                                     files={this.state.files}
                                     selectable={files.length < this.state.ImageNumber}
@@ -441,31 +524,10 @@ class taskScreen extends React.Component {
                                     }}
                                     onAddImageClick={this.choosePicker}
                                 />
-                                <TouchableOpacity onPress={() => {
-                                    let files = this.state.files;
-                                    console.log(this.state.files)
-                                    this.upload(files[0].url);
-                                }}>
-                         <View><Button>保存图片</Button>
-                                  </View></TouchableOpacity>
-                            </View>
-                                <TextInput
-                                    name='UserOrderId'
-                                    value= {this.state.PlatFormOrderId}
-                                    type="number"
-                                    />
-                                <TextInput
-                                     name='UserOrderMoney'
-                                     value={this.state.PayMoney}
-                                     type="money"
-                                    extra={<Text>元</Text>}
-                                    />
-                                <Text>附加任务：</Text><TextInput
-                                     name='AddMoney'
-                                     value={this.state.AddMoney.toString()}
-                                     type="number"
-                                    extra={<Text>件</Text>}
-                                />
+                                <Button 
+                                    onPress={() => console.log('fxiles :'+this.state.files)}
+                                >保存图片</Button>
+                            
                     </ScrollView>
                     </View>
                     <View style={styles.shopcart}>
@@ -474,10 +536,10 @@ class taskScreen extends React.Component {
                                 onPress={() => this.cancelTask()}
                             >取消试用</Text></View>
                         <View style={[styles.bottomItem, {width: window.width * 0.3}]}>
-                            <Text>倒计时：</Text><Text style={{color: "red"}}>5分{this.state.PayMoney}{this.state.AddMoney}{this.state.PlatFormOrderId}</Text></View>
+                            <Text>倒计时：</Text><Text style={{color: "red"}}>5分</Text></View>
                         <View style={[styles.bottomItem, {width: window.width * 0.5, backgroundColor: 'red'}]}>
                             <Text
-                                onPress={() => this.genrateTask()}
+                                onPress={() => this.TaskStateUpdate()}
                             >提交保存</Text></View>
                     </View>
                 </View>)
@@ -507,6 +569,12 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         height: 150
     },
+   input: {
+      margin: 11,
+      height: 20,
+      borderColor: '#ffffff',
+      borderWidth: 1
+   },
     HeaderTitle: {
         width: 250,
         height: 30,
