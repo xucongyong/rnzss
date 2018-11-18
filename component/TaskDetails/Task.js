@@ -305,9 +305,9 @@ class taskScreen extends React.Component {
         //     this.upload(files[x].url);
         // }
         var re = /^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/
-        var reNumber = /^([1-9]\d{0,30})$/
+        var reNumber = /^([1-9]\d{1,30})/
         var reAddMoney = /^([1-9]\d{0,1})$/
-        if(reNumber.test(this.state.UserOrderId) ===false||re.test(this.state.PayMoney) ===false ||reAddMoney.test(this.state.AddMoney) ===false){
+        if(reNumber.test(this.state.PlatFormOrderId) ===false||re.test(this.state.PayMoney) ===false ||reAddMoney.test(this.state.AddMoney) ===false){
             Alert.alert(
                 '',
                 '请填写正确的订单号、交易订单号、交易费 ',
