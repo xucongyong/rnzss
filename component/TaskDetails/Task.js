@@ -14,7 +14,7 @@ var boxWidth = Dimensions.get('window').height/2;
 import * as picker  from "react-native-image-picker";
 import {TextareaItem,ImagePicker,WhiteSpace,Button} from 'antd-mobile-rn';
 import CurrencyInput from 'react-currency-input';
-var qiniu = require('react-native-qiniu');
+import Qiniu,{Auth,ImgOps,Conf,Rs,Rpc} from 'react-native-qiniu';
 
 let token = ''
 const photoOptions = {
@@ -299,7 +299,8 @@ class taskScreen extends React.Component {
     TaskStateUpdate() {
         //上传图片
         let files = this.state.files
-        this.upload(files[0].url);
+        let urll = files[0].url
+        this.upload(urll);
         // for(var x=0;files.length>x;x++){
         //     console.log('x:'+x)
         //     this.upload(files[x].url);
@@ -391,31 +392,135 @@ class taskScreen extends React.Component {
             }
         });
     }
-
     upload(uri) {//这里是核心上传的代码
-        console.log('upload(url)')
-        var options = {
-            scope: 'crysystem',
-        };
-        var putPolicy = new qiniu.Auth.PutPolicy2(
-            {scope: "crysystem"}
-        );
-        var uptoken = putPolicy.token();
-        // console.log('qiniu.Rpc.uploadFile:'+uri)
-        // console.log('uptoken:'+uptoken)
-        // qiniu.Rpc.uploadFile(uri, uptoken, {
-        //         key: uptoken,
-        //         type: 'application/octet-stream',
-        //         name:undefined,
-        //     }
-        //     , function (resp) {
-        //         console.log('resp:'+resp);
-        //     });
-        let formInput = {
-            key : uptoken,
-            // formInput对象如何配置请参考七牛官方文档“直传文件”一节
-        }
-        qiniu.Rpc.uploadFile(uri, uptoken, formInput);
+        console.log(uri)
+            let key= Date.now()+'.jpg';
+            let randomName= Date.now()+'.jpg';
+            var putPolicy = new Auth.PutPolicy2(
+                {scope: "crysystem:"+key}
+            );
+            var uptoken = putPolicy.token();
+            // 创建form表单
+            let body = new FormData();
+
+            // token和key都是通过七牛返回的参数
+            body.append('token',uptoken);
+            body.append('key',key);
+            body.append('file',{
+                        // 设定上传的格式
+                        type : 'application/octet-stream',
+                        // 通过react-native-image-picker获取的图片地址
+                        uri : uri,
+                        name : key,
+                    });
+            //body = JSON.stringify(body)
+            let options = {};
+            options.body = body;
+            options.method = 'post';
+            fetch('https://upload-z2.qiniup.com', options)
+                    .then((response)=>{
+                            console.log(response)})
+            }
+
+            // fetch('http://upload-z2.qiniup.com', options)
+            //     .then((response)=>{
+            //         console.log(response)
+            //     })
+
+            // // 开启XMLHttpRequest服务
+            // let xhr = new XMLHttpRequest();
+            // /** 上传到七牛云的地址 */
+            // let url ='http://upload-z2.qiniup.com';
+            // // 开启post上传
+            // xhr.open('POST',url);
+            // // 如果正在上传,返回上传进度
+            // if (xhr.upload){
+            //     xhr.upload.onprogress = (event)=>{
+            //         if (event.lengthComputable){
+            //             let perent = event.loaded / event.total.toFixed(2);
+            //             // 打印上传进度
+            //             console.log(perent);
+            //         }
+            //     }
+            // }
+            //  // 上传过成功的返回
+            // xhr.onload = ()=>{
+            //     // 状态码如果不等于200就代表错误
+            //     if (xhr.status !== 200){
+            //         console.log('请求失败');
+            //         console.log(xhr.responseText);
+            //         return;
+            //     }
+            //     if (!xhr.responseText){
+            //          console.log('请求失败');
+            //          console.log(xhr.responseText);
+            //          return;
+            //     }
+            //     // 服务器最后返回的数据
+            //     let response;
+            //     // try{
+            //     //     // 将返回数据还原
+            //     response = JSON.parse(xhr.response);
+            //     console.log(response);
+            //     //     // ...通过返回数据做接下来的处理
+            //     // }
+            //     // 发送请求
+            //     xhr.send(body)
+
+        // console.log('upload(url)xx')
+        // // let randomName= Date.now()+'.jpg';
+        // // var putPolicy = new Auth.PutPolicy2(
+        // //     {scope: "crysystem:"+randomName}
+        // // );
+        // // var uptoken = putPolicy.token();
+        // let formInput = {
+        //     key : uptoken,
+        //     type:'application/octet-stream',
+        //     name:randomName,
+        //     // formInput对象如何配置请参考七牛官方文档“直传文件”一节
+        // }
+        // Rpc.uploadFile(uri, uptoken, formInput,function (resp) {
+        //     console.log(resp);
+        //   });
+        // Rpc.post(uri, uptoken, formInput);
+        // let formData = new FormData();
+        // // formData.append('file',{source:uri,key:uptoken,name:randomName})
+        // formData.append("file", {uri: uri, key:uptoken, type: 'application/octet-stream', name: randomName});
+        // fetch('http://upload-z2.qiniup.com',{
+        //         method:'POST',
+        //         headers:{
+        //             'Content-Type':'multipart/form-data',
+        //         },
+        //         body:formData,
+        //     })
+        //     .then((response) => response.json())
+        //     .then((responseData)=>{
+        //         console.log('responseData=',responseData);
+        //         })
+        //     .catch((error)=>{console.error('error=',error)});
+        // }
+        // var options = {
+        //     scope: 'crysystem',
+        // };
+        // var putPolicy = new qiniu.Auth.PutPolicy(
+        //     {scope: "crysystem"}
+        // );
+        // var uptoken = putPolicy.token();
+        // // console.log('qiniu.Rpc.uploadFile:'+uri)
+        // // console.log('uptoken:'+uptoken)
+        // // qiniu.Rpc.uploadFile(uri, uptoken, {
+        // //         key: uptoken,
+        // //         type: 'application/octet-stream',
+        // //         name:undefined,
+        // //     }
+        // //     , function (resp) {
+        // //         console.log('resp:'+resp);
+        // //     });
+        // let formInput = {
+        //     key : uptoken,
+        //     // formInput对象如何配置请参考七牛官方文档“直传文件”一节
+        // }
+        // qiniu.Rpc.uploadFile(uri, uptoken, formInput);
         // qiniu.Rpc.uploadFile(uri, uptoken, {key: uptoken}, function (err,ret) {
         //           if(!err) {
         //             // 上传成功， 处理返回值
@@ -425,7 +530,7 @@ class taskScreen extends React.Component {
         //             console.log(err);
         //           }
         //   });
-        }
+        //}
 
     render() {
         let productView;

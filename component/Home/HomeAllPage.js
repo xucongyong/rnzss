@@ -30,6 +30,7 @@ export default class MyComponent extends React.Component {
             isLoading:false, //载入数据判断
             refreshing:false, //
             isMoreloading:true,
+            token:'',
         }
     }
     componentDidMount(){
@@ -47,7 +48,7 @@ export default class MyComponent extends React.Component {
         }
         deviceStorage.get('token').then((GetToken) => {
             token = GetToken
-
+            this.setState({token:GetToken})
             axios.get(MyUrl, { headers: { Authorization: token, sort:0,version:'1.0'}})
                 .then(response => {
                     this.setState({
@@ -117,25 +118,24 @@ export default class MyComponent extends React.Component {
         let viewList;
         if(this.state.isLoading){
             viewList = (
-                <ActivityIndicator color="#0000ff" style={{marginTop:50}} />
+                <View>
+                <ActivityIndicator color="#0000ff" style={{marginTop:100}}/>
+                <Text>token:{this.state.token}</Text>
+                </View>
+                
             )
         }else{
             viewList = (
+                <View>
                 <ListView
                     dataSource={this.state.dataSource}
                     renderRow={(data) => this._renderRow(data)}
-                    // refreshControl={
-                    //     <RefreshControl
-                    //         refreshing={this.state.refreshing}
-                    //         onRefresh={this.reloadNewData.bind(this)}
-                    //         colors={['red','orange']}
-                    //     />}
+
                     pageSize = {5}
                     initialListSize={5}
-                    //removeClippedSubviews ＝ {false}
                     renderFooter={()=>this.renderFooter()}
                     onEndReached={ ()=>this._toEnd() }
-                />
+                /><Text>token{this.state.token}</Text></View>
             )
         }
 
