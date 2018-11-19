@@ -176,8 +176,8 @@ class ProductScreen extends React.Component{
                                     '马上开始试用？',
                                     '开始试用吗？请在40分钟内完成噢',
                             [ 
+                                {text: '马上试用', onPress: () => this.genrateTask()},
                                 {text: '先不开始', onPress: () => console.log('close')},
-                                {text: '马上试用', onPress: () => this.genrateTask()}
                             ],
                             { cancelable: false }
                             )

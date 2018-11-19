@@ -7,6 +7,7 @@ var serverUrl = require("../websettings")
 const taskUrl = serverUrl+'/m/task';
 const closeTaskUrl = serverUrl+'/m/closetask';
 const TaskStateUrl = serverUrl+'/m/taskstate';
+const GetTokenUrl = serverUrl+'/m/qntoken';
 const axios = require('axios');
 import deviceStorage from "../Login/jwt/services/deviceStorage";
 var ScreenWidth = Dimensions.get('window').width;
@@ -22,7 +23,7 @@ const photoOptions = {
     cancelButtonTitle:'取消',//取消按钮名称
     takePhotoButtonTitle:'拍照',//相机按钮名称
     chooseFromLibraryButtonTitle:'选择相册',//从相册取照片名称
-      quality: 0.8,//照片质量
+      quality: 0.3,//照片质量
     mediaType:'photo',//可以是照片，也可以是video
     videoQuality:'high',//视频质量
     durationLimit:10,//video最长10s
@@ -87,6 +88,7 @@ class taskScreen extends React.Component {
             taskId: this.props.navigation.getParam('taskId', 'NO-ID'),
             PlatFormOrderId:'',
             TaskState: 10,
+            uptoken:'',
         }
         this.TaskStateUpdate = this.TaskStateUpdate.bind(this)
         this.cancelTask = this.cancelTask.bind(this)
@@ -96,10 +98,20 @@ class taskScreen extends React.Component {
         this.onChange = this.onChange.bind(this)
         this.clearPayMoney = this.clearPayMoney.bind(this)
         this.ClearPlatFormOrderId = this.ClearPlatFormOrderId.bind(this)
+        this.AlertTaskStateUpdate = this.AlertTaskStateUpdate.bind(this)
     }
 
     componentWillMount() {
+        deviceStorage.get('token').then((GetToken) => {
+            token = GetToken
+            axios.post(GetTokenUrl, {headers: {Authorization: token}})
+                .then(response => {
+                    console.log('UrlGetUptoken:'+response.data)
+                    this.setState({uptoken:response.data})}
+                    )
+            })
         this.fetchData(this.state.taskId); //启动的时候载入数据
+        
         // this.startTimer();
     }
     // componentWillUnmount(){
@@ -284,8 +296,8 @@ class taskScreen extends React.Component {
             '取消订单',
             '确定取消订单吗？',
             [
-                {text: '确定取消', onPress: () => this.closeTask()},
                 {text: '不取消', onPress: () => console.log('Cancel Pressed')},
+                {text: '确定取消', onPress: () => this.closeTask()},
             ],
             {cancelable: false}
         )
@@ -299,18 +311,33 @@ class taskScreen extends React.Component {
         });
     };
 
+
+    //取消订单
+    AlertTaskStateUpdate() {
+        console.log('cancelTask')
+        Alert.alert(
+            '订单保存',
+            '确定试用保存吗？',
+            [
+                {text: '提交保存', onPress: () => this.TaskStateUpdate()},
+                {text: '不保存', onPress: () => console.log('Cancel Pressed')},
+            ],
+            {cancelable: false}
+        )
+    }
+
     //state2->3
     TaskStateUpdate() {
         //上传图片
         let files = this.state.files
         for(var x=0;files.length>x;x++){
                 this.upload(files[x].url);
-        }
-        console.log('uploadDone_'+Date.now())
-        var re = /^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/
-        var reNumber = /^([1-9]\d{1,30})/
+            }
+        //console.log('uploadDone_'+Date.now())
+        var rePayMoney = /^([1-5]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/
+        var reOrderId = /^([1-9]\d{1,30})/
         var reAddMoney = /^([1-9]\d{0,1})$/
-        if(reNumber.test(this.state.PlatFormOrderId) ===false||re.test(this.state.PayMoney) ===false ||reAddMoney.test(this.state.AddMoney) ===false){
+        if(reOrderId.test(this.state.PlatFormOrderId) ===false||rePayMoney.test(this.state.PayMoney) ===false ||reAddMoney.test(this.state.AddMoney) ===false){
             Alert.alert(
                 '',
                 '请填写正确的订单号、交易订单号、交易费 ',
@@ -322,7 +349,7 @@ class taskScreen extends React.Component {
         }else{
             deviceStorage.get('token').then((GetToken) => {
                 token = GetToken
-                axios.post(TaskStateUrl, {headers: {Authorization: token,TaskId:this.state.TaskId,UserOrderId:this.state.UserOrderId, PayMoney:this.state.PayMoney,AddMoney:this.state.AddMoney,filesurl:this.state.filesurl,TaskState:this.state.TaskState,PlatFormOrderId:this.state.PlatFormOrderId}})
+                axios.post(TaskStateUrl, {headers: {Authorization: token,TaskId:this.state.taskId, PayMoney:this.state.PayMoney,AddMoney:this.state.AddMoney,filesurl:JSON.stringify(this.state.filesurl),TaskState:this.state.TaskState,PlatFormOrderId:this.state.PlatFormOrderId}})
                     .then(response => {
                         console.log(response.data)
                         this.setState({productDetail: response.data})
@@ -335,31 +362,13 @@ class taskScreen extends React.Component {
                             Alert.alert(
                                 this.state.productDetail.message,
                                 [
-                                    {text: '先不绑定', onPress: () => console.log('Cancel Pressed!')},
-                                    {text: '马上淘宝绑定', onPress: () => this.props.navigation.navigate('addTbAccount')},
-                                    {text: '马上京东绑定', onPress: () => this.props.navigation.navigate('addTbAccount')},
+                                    {text: '确定', onPress: () => console.log('Cancel Pressed!')},
+
                                 ],
                                 {cancelable: false}
                             )
                         } else if (this.state.productDetail.status === 2) {
-                            Alert.alert(
-                                '',
-                                '已有任务，请到任务中心操作',
-                                [
-                                    {text: '返回首页', onPress: () => this.props.navigation.navigate('TestMain')}
-                                ],
-                                {cancelable: false}
-                            )
-                        } else if (this.state.productDetail.status === 3) {
                             this.props.navigation.navigate('TaskDetails', {taskid: this.state.productDetail.taskid})
-                        } else if (this.state.productDetail.status === 4) {
-                            Alert.alert(
-                                this.state.productDetail.message,
-                                [
-                                    {text: '返回首页', onPress: () => this.props.navigation.navigate('TestMain')}
-                                ],
-                                {cancelable: false}
-                            )
                         }
                     })
                     .catch((error) => {
@@ -396,38 +405,39 @@ class taskScreen extends React.Component {
     }
     upload(uri) {//这里是核心上传的代码
         console.log(uri)
-            let randomName= Date.now()+getRandomInt(1000000)+'.jpg';
-            var putPolicy = new Auth.PutPolicy2(
-                {scope: "crysystem:"+randomName}
-            );
-            var uptoken = putPolicy.token();
-            // 创建form表单
-            let body = new FormData();
-            // token和key都是通过七牛返回的参数
-            body.append('token',uptoken);
-            body.append('key',randomName);
-            body.append('file',{
-                        // 设定上传的格式
-                        type : 'application/octet-stream',
-                        // 通过react-native-image-picker获取的图片地址
-                        uri : uri,
-                        name : randomName,
-                    });
-            //body = JSON.stringify(body)
-            let options = {};
-            options.body = body;
-            options.method = 'post';
-            fetch('https://upload-z2.qiniup.com', options)
-                    .then((response)=>{
-                            console.log(response)})
-                            let geturl = {url: 'http://img.zhess.com/'+randomName}
-                            console.log(geturl.url+Date.now())
-                            var filesurl = this.state.filesurl
-                            filesurl.push(geturl);
-                            this.setState({
-                                filesurl: filesurl
-                            });
-            }
+        let randomName= Date.now()+getRandomInt(1000000)+'.jpg';
+        var putPolicy = new Auth.PutPolicy2(
+            {scope: "crysystem:"+randomName}
+        );
+        //var uptoken = putPolicy.token();
+        var uptoken = this.state.uptoken
+        // 创建form表单
+        let body = new FormData();
+        // token和key都是通过七牛返回的参数
+        body.append('token',uptoken);
+        body.append('key',randomName);
+        body.append('file',{
+                    // 设定上传的格式
+                    type : 'application/octet-stream',
+                    // 通过react-native-image-picker获取的图片地址
+                    uri : uri,
+                    name : randomName,
+                });
+        //body = JSON.stringify(body)
+        let options = {};
+        options.body = body;
+        options.method = 'post';
+        fetch('https://upload-z2.qiniup.com', options)
+                .then((response)=>{
+                        console.log(response)})
+        let geturl = {url: 'http://img.zhess.com/'+randomName}
+        console.log(geturl.url+Date.now())
+        var filesurl = this.state.filesurl
+        filesurl.push(geturl);
+        this.setState({
+            filesurl: filesurl
+        })
+        }
     render() {
         let productView;
 /*
@@ -540,7 +550,7 @@ class taskScreen extends React.Component {
                             <Text>倒计时：</Text><Text style={{color: "red"}}>5分</Text></View>
                         <View style={[styles.bottomItem, {width: window.width * 0.5, backgroundColor: 'red'}]}>
                             <Text
-                                onPress={() => this.TaskStateUpdate()}
+                                onPress={() => this.AlertTaskStateUpdate()}
                             >提交保存</Text></View>
                     </View>
                 </View>)
@@ -554,7 +564,6 @@ class taskScreen extends React.Component {
                 productView=(<ActivityIndicator color="#0000ff" style={{marginTop:50}} />)
             }
         } else {
-            //productView=(<ActivityIndicator color="#0000ff" style={{marginTop:50}} />)
                 productView=(<ActivityIndicator color="#0000ff" style={{marginTop:50}} />)
         }
         return (
