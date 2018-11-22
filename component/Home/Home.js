@@ -15,6 +15,7 @@ const TopTabNav = createMaterialTopTabNavigator(
     {
         initialRouteName:'全部',
         tabBarPosition: 'top',
+        lazy:true,
         tabBarOptions:{
             activeTintColor:'red',
             inactiveTintColor:'#000000',
