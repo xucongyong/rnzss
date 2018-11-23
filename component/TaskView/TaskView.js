@@ -2,108 +2,36 @@ import React, { Component } from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import { createStackNavigator,createTabNavigator,createMaterialTopTabNavigator } from 'react-navigation';
 
-class Hometitle extends React.Component{
-    render(){
-        return(
-            <View style={styles.HeaderTitle}>
-                <Text style={{color:'white',fontSize:17}}>
-                    试用中心</Text>
-            </View>
-        )}}
+let TaskViewHome = require('./TaskViewHome');
 
 
-class HomeScreen extends React.Component{
-    static navigationOptions =({
-        headerTitle: <Hometitle/>, //<TextInput></TextInput>,
-        headerStyle: {
-            backgroundColor: '#DC3C78'}})
-    render(){
-        return(
-            <View style={styles.HeaderTitle}>
-                <Text style={{color:'white',fontSize:17}}>
-                    试用中心</Text>
-            </View>
-    )
-    }
-}
-
-class DeatilScreen extends React.Component{
-    render(){
-        return(
-            <View style={{flex:1}}>
-                <Text>Deatil</Text>
-            </View>
-        )}}
-
-class task1 extends React.Component{
-    render(){
-        console.log('task1')
-        return(
-            <View style={{flex:1}}>
-                <Text>task1</Text>
-            </View>
-        )}}
-
-class task2 extends React.Component{
-    render(){
-        console.log('task2')
-        return(
-            <View style={{flex:1}}>
-                <Text>task2</Text>
-            </View>
-        )}}
-
-class task3 extends React.Component{
-    render(){
-        console.log('task3')
-        return(
-            <View style={{flex:1}}>
-                <Text>task3</Text>
-            </View>
-        )}}
-
-class task4 extends React.Component{
-    render(){
-        console.log('task4')
-        return(
-            <View style={{flex:1}}>
-                <Text>task4</Text>
-            </View>
-        )}}
-
-const Screen = createTabNavigator(
+const Screen = createMaterialTopTabNavigator(
     {
-        Home: {
-            screen: HomeScreen
+        进行: {
+            screen: TaskViewHome
         },
-        Details: {
-            screen: DeatilScreen
+        操作: {
+            screen: TaskViewHome
         },
-        task1: {
-            screen: task1
+        申诉: {
+            screen: TaskViewHome
         },
-        task2: {
-            screen: task2
+        完成: {
+            screen: TaskViewHome
         },
-        task3: {
-            screen: task3
-        },
-        task4: {
-            screen: task4
+        关闭: {
+            screen: TaskViewHome
         }
 
     },
     {
-        initialRouteName: 'Home',
+        initialRouteName: '进行',
         tabBarPosition:'top',
         lazy:true,
         swipeEnabled:true,
         tabBarOptions: {
           labelStyle: {
             fontSize: 12,
-          },
-          tabStyle: {
-            width: 100,
           },
           activeTintColor:'#000000',
           inactiveTintColor:'#000000',

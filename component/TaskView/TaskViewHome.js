@@ -13,7 +13,7 @@ import Dimensions from 'Dimensions';
 const {width, height} = Dimensions.get('window');
 const dataUrl = 'https://api.douban.com/v2/movie/top250?count=350';
 var serverUrl = require("../websettings")
-const MyUrl = serverUrl+'/m/index';
+const GetBuyTaskUrl = serverUrl+'/m/getbuytask';
 
 const axios = require('axios');
 import deviceStorage from "../Login/jwt/services/deviceStorage";
@@ -49,8 +49,9 @@ export default class MyComponent extends React.Component {
         deviceStorage.get('token').then((GetToken) => {
             token = GetToken
             this.setState({token:GetToken})
-            axios.get(MyUrl, { headers: { Authorization: token, sort:0,version:'1.0'}})
+            axios.get(GetBuyTaskUrl, { headers: { Authorization: token, sort:0,version:'1.0'}})
                 .then(response => {
+                    console.log('response.data')
                     console.log(response.data)
                     this.setState({
                         dataSource: this.state.dataSource.cloneWithRows(response.data),
@@ -62,26 +63,15 @@ export default class MyComponent extends React.Component {
                     console.log('error 3 ' + error);
                 });
         });
+
     }
     //listview数据加工成页面
     _renderRow(data){
-        var testV  = JSON.parse(data['Details'])
         return (
             <TouchableOpacity onPress={()=> {
-                this.props.navigation.navigate('ProductScreen',{taskId:data['SellOrderId']})}}>
+                this.props.navigation.navigate('TaskDetails',{taskId:data['BuyTaskId']})}}>
             <View style={styles.cellBoxStyle}>
-                <View>
-                        <Image
-                          style={{width: 80, height: 80}}
-                          source={{uri: testV['mainImage'][0]}}
-                        />
-                </View>
-                <View>
-                    <Text>{testV['name']}</Text>
-                <Text>付：{data['buyNum'] * data['buyPrice']}：返：{data['BuyGetPrice']},红包：{data['BuyGetPrice'] -(data['buyNum'] * data['buyPrice'])}，剩：{data['orderNumber']}</Text>
-                    <Text>时间：{data['MinTime']} - {data['MaxTime']},开始：{data['startDate']} </Text>
-                    <Text>{data['ShopSort']}，任务类型：{data['event']}，用户要求：{data['huabeiId']}</Text>
-                </View>
+                <Text>{'orderSort:'+data['orderSort']+'taskId:'+data['BuyTaskId']}</Text>
             </View>
             </TouchableOpacity>
         )

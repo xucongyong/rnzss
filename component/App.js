@@ -72,32 +72,6 @@ const TabView = createBottomTabNavigator({
     },
 )
 
-//AppRegistry.registerComponent('TabView', () => TabView);
-
-// navigationOptions: ({ navigation }) => ({
-//     tabBarIcon: ({ focused, tintColor }) => {
-//         const { routeName } = navigation.state;
-//         let iconName;
-//         if (routeName === '试用') {
-//             iconName = `ios-home${focused ? '' : '-outline'}`;
-//         }
-//         else if (routeName === '分享') {
-//             iconName = `ios-aperture${focused ? '' : '-outline'}`;
-//         }
-//         else if (routeName === '订单') {
-//             iconName = `ios-cart${focused ? '' : '-outline'}`;
-//         }
-//         else if (routeName === '我的') {
-//             iconName = `ios-person${focused ? '' : '-outline'}`;
-//         }
-//         else if (routeName === '登陆') {
-//             iconName = `ios-more${focused ? '' : '-outline'}`;
-//         }
-
-//         return <Ionicons name={iconName} size={25} color={tintColor} />;
-//     },
-// }),
-
 const RootStack = createStackNavigator(
     {
         TestMain: {

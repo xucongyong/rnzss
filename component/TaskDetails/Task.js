@@ -122,7 +122,7 @@ class taskScreen extends React.Component {
         console.log(posttaskid)
         deviceStorage.get('token').then((GetToken) => {
             token = GetToken
-            console.log(this.props.navigation.getParam('taskId', 'NO-ID'))
+            console.log('getParamtaskId:'+this.props.navigation.getParam('taskId', 'NO-ID'))
             axios.get(taskUrl, {headers: {Authorization: token, sort: 0, version: '1.0', taskId: this.state.taskId}})
                 .then(response => {
                     this.setState({productDetail:response.data})
