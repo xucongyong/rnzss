@@ -13,7 +13,6 @@ var ProductNav = StackNavigator(
         Reg: { screen: doubanComponent },
         buy: { screen: doubanComponent }
     },
-
     {
         navigationOptions: ({ navigation }) => ({
         }),
