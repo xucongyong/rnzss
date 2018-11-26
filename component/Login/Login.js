@@ -5,7 +5,7 @@ import deviceStorage from "./jwt/services/deviceStorage";
 import {NavigationActions,StackActions} from 'react-navigation';
 import DeviceInfo from 'react-native-device-info';
 var serverUrl = require("../websettings")
-
+var loginUrl = serverUrl+"/login"
 // const xxxIP = DeviceInfo.getIPAddress()
 // console.log(xxxIP)
 // const getDeviceId = DeviceInfo.getDeviceId()
@@ -52,8 +52,9 @@ class LoginScreen extends React.Component{
         };
     //django restframework API
     loginUser() {
+        console.log('loginUser:'+loginUrl)
         this.setState({error:'', loading:true});
-        axios.post(serverUrl+"/login",{
+        axios.post(loginUrl,{
         username: username,
         password: password
         })
@@ -62,7 +63,6 @@ class LoginScreen extends React.Component{
             deviceStorage.save('token', response.data.token);
             this.props.newJWT(response.data.token);
             } else {
-               co
                console.log('response.data');
 
             }
@@ -73,8 +73,9 @@ class LoginScreen extends React.Component{
             }
     //NodeJS API
     loginUserNode() {
+        console.log('loginUser:'+loginUrl)
         const{ username, password, error} = this.state;
-        axios.post(serverUrl+"/login",{
+        axios.post(loginUrl,{
             username: username,
             password: password
         })
@@ -90,10 +91,11 @@ class LoginScreen extends React.Component{
           //this.props.newJWT(response.data.token);
           //this.setState(token:response.data)
         })
-        .catch((error) => {
-          this.setState({message: '网络问题，重新提交'});
-          this.onLoginFail();
-        });        }
+        .catch(function (error) {
+            console.log(error);
+          });
+
+     }
 
     loginVerify() {
         if(this.state.username.length !== 11) {

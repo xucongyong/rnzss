@@ -6,6 +6,7 @@ import axios from 'axios';
 import CountDownButton from 'react-native-smscode-count-down'
 import AsyncStorage from './AsyncStorage'
 var serverUrl = require("../websettings")
+var mobileLoginUrl = serverUrl+'mobilelogin'
 
 // const xxxIP = DeviceInfo.getIPAddress()
 // console.log(xxxIP)
@@ -63,7 +64,7 @@ class RegScreen extends React.Component{
                     password: this.state.password,
                     VerifyCode: this.state.VerifyCode,
                    }
-        axios.post(serverUrl+'/mobilelogin', LoginData)
+        axios.post(mobileLoginUrl, LoginData)
           .then((response) => {
             if (response.data.message==='no') {
               this.setState({message: '验证码错误'});
