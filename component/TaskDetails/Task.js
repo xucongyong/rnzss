@@ -281,10 +281,10 @@ class taskScreen extends React.Component {
                     taskId: this.state.taskId
                 }
             })
-                .then(response => {
-                    this.props.navigation.navigate('TestMain')
+            .then(response => {
+                    this.props.navigation.navigate('TaskRemind',{taskId: this.state.taskId})
                 })
-                .catch((error) => {
+            .catch((error) => {
                     console.log('error 3 ' + error);
                 });
         });
@@ -361,6 +361,7 @@ class taskScreen extends React.Component {
                             this.props.navigation.navigate('Login')
                         } else if (this.state.productDetail.status === 1) {
                             Alert.alert(
+                                '',
                                 this.state.productDetail.message,
                                 [
                                     {text: '确定', onPress: () => console.log('Cancel Pressed!')},
@@ -368,7 +369,7 @@ class taskScreen extends React.Component {
                                 {cancelable: false}
                             )
                         } else if (this.state.productDetail.status === 2) {
-                            this.props.navigation.navigate('TaskDetails', {taskid: this.state.productDetail.taskid})
+                            this.props.navigation.navigate('TaskRemind', {taskId: this.state.taskId})
                         }
                     })
                     .catch((error) => {
@@ -546,7 +547,7 @@ class taskScreen extends React.Component {
                                 onPress={() => this.cancelTask()}
                             >取消试用</Text></View>
                         <View style={[styles.bottomItem, {width: window.width * 0.3}]}>
-                            <Text>倒计时：</Text><Text style={{color: "red"}}>5分</Text></View>
+                            <Text>倒计时：</Text><Text style={{color: "red"}}>3分</Text></View>
                         <View style={[styles.bottomItem, {width: window.width * 0.5, backgroundColor: 'red'}]}>
                             <Text
                                 onPress={() => this.AlertTaskStateUpdate()}

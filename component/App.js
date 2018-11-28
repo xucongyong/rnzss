@@ -12,6 +12,7 @@ let Home = require('./Home/Home');
 let Share = require('./Share/Share');
 let TaskView = require('./TaskView/TaskView');
 let TaskDetailsScreen = require('./TaskDetails/Task');
+let TaskRemindScreen = require('./TaskDetails/TaskRemind');
 let MeScreen = require('./Me/Me');
 let addTbAccountScreen = require('./Me/AddTbAccount');
 let ProductScreen = require('./Product/Product')
@@ -74,7 +75,7 @@ const TabView = createBottomTabNavigator({
 
 const RootStack = createStackNavigator(
     {
-        TestMain: {
+        index: {
             screen: TabView,
             navigationOptions: {
                 headerTransparent: true,
@@ -100,7 +101,12 @@ const RootStack = createStackNavigator(
             navigationOptions: {
                 headerTransparent: true,
             }
-
+        },
+        TaskRemind: {
+            screen: TaskRemindScreen,
+            navigationOptions: {
+                headerTransparent: true,
+            }
         },
         //手机号登录
         MobileLogin: {
@@ -125,7 +131,7 @@ const RootStack = createStackNavigator(
         },
      },
     {
-        initialRouteName: 'TestMain',
+        initialRouteName: 'index',
     }
 )
 

@@ -17,7 +17,7 @@ var mobileLoginUrl = serverUrl+'mobilelogin'
 // console.log(isEmulator)
 const resetAction = StackActions.reset({
         index: 0,
-        actions: [NavigationActions.navigate({ routeName: 'TestMain' })],
+        actions: [NavigationActions.navigate({ routeName: 'index' })],
     });
 const querystring = require('querystring');
 

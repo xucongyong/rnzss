@@ -109,7 +109,7 @@ class ProductScreen extends React.Component{
                               'Alert Title',
                               'My Alert Msg',
                             [
-                                {text: '返回首页', onPress: () => this.props.navigation.navigate('TestMain')}
+                                {text: '返回首页', onPress: () => this.props.navigation.navigate('index')}
                             ],
                             { cancelable: false }
                             )
@@ -120,7 +120,7 @@ class ProductScreen extends React.Component{
                         Alert.alert(
                             this.state.productDetail.message,
                             [
-                                {text: '返回首页', onPress: () => this.props.navigation.navigate('TestMain')}
+                                {text: '返回首页', onPress: () => this.props.navigation.navigate('index')}
                             ],
                             { cancelable: false }
                             )

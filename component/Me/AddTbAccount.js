@@ -48,7 +48,7 @@ class tbScreen extends React.Component{
 				            '绑定成功',
 				            'alertMessage',
 				            [
-				                {text: '返回首页', onPress: () => this.props.navigation.navigate('TestMain')}
+				                {text: '返回首页', onPress: () => this.props.navigation.navigate('index')}
 				            ],
 				            { cancelable: false }
 				            )

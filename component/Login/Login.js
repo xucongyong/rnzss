@@ -15,7 +15,7 @@ var loginUrl = serverUrl+"/login"
 // console.log(isEmulator)
 const resetAction = StackActions.reset({
         index: 0,
-        actions: [NavigationActions.navigate({ routeName: 'TestMain' })],
+        actions: [NavigationActions.navigate({ routeName: 'index' })],
     });
 
 class LoginTitle extends React.Component{
