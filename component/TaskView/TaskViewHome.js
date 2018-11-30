@@ -17,6 +17,10 @@ const GetBuyTaskUrl = serverUrl+'/m/getbuytask';
 
 const axios = require('axios');
 import deviceStorage from "../Login/jwt/services/deviceStorage";
+import { withNavigationFocus } from 'react-navigation';
+
+
+
 let token = ''
 //
 
@@ -40,6 +44,7 @@ export default class MyComponent extends React.Component {
         })
         this.fetchData(); //启动的时候载入数据
     }
+
     fetchData(refresh){
         if(refresh){
             this.setState({

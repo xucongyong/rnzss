@@ -617,7 +617,7 @@ class taskScreen extends React.Component {
                                 onPress={() => this.cancelTask()}
                             >取消试用</Text></View>
                         <View style={[styles.bottomItem, {width: window.width * 0.3}]}>
-                            <Text>倒计时：</Text><Text style={{color: "red"}}>5分</Text></View>
+                            <Text>倒计时：</Text><Text style={{color: "red"}}>{this.state.TaskState}分</Text></View>
                         <View style={[styles.bottomItem, {width: window.width * 0.5, backgroundColor: 'red'}]}>
                             <Text
                                 onPress={() => this.AlertTaskStateUpdate()}
@@ -711,7 +711,7 @@ class taskScreen extends React.Component {
                                 onPress={() => this.cancelTask()}
                             >取消试用</Text></View>
                         <View style={[styles.bottomItem, {width: window.width * 0.3}]}>
-                            <Text>倒计时：</Text><Text style={{color: "red"}}>5分</Text></View>
+                            <Text>倒计时：</Text><Text style={{color: "red"}}>{this.state.TaskState}分</Text></View>
                         <View style={[styles.bottomItem, {width: window.width * 0.5, backgroundColor: 'red'}]}>
                             <Text
                                 onPress={() => this.AlertTaskStateUpdate()}
@@ -801,7 +801,7 @@ class taskScreen extends React.Component {
                                 onPress={() => this.cancelTask()}
                             >取消试用</Text></View>
                         <View style={[styles.bottomItem, {width: window.width * 0.3}]}>
-                            <Text>倒计时：</Text><Text style={{color: "red"}}>5分</Text></View>
+                            <Text>倒计时：</Text><Text style={{color: "red"}}>{this.state.TaskState}分</Text></View>
                         <View style={[styles.bottomItem, {width: window.width * 0.5, backgroundColor: 'red'}]}>
                             <Text
                                 onPress={() => this.AlertTaskStateUpdate()}
@@ -894,7 +894,7 @@ class taskScreen extends React.Component {
                                 onPress={() => this.cancelTask()}
                             >取消试用</Text></View>
                         <View style={[styles.bottomItem, {width: window.width * 0.3}]}>
-                            <Text>倒计时：</Text><Text style={{color: "red"}}>5分</Text></View>
+                            <Text>倒计时：</Text><Text style={{color: "red"}}>{this.state.TaskState}分</Text></View>
                         <View style={[styles.bottomItem, {width: window.width * 0.5, backgroundColor: 'red'}]}>
                             <Text
                                 onPress={() => this.AlertTaskStateUpdate6()}
@@ -988,7 +988,7 @@ class taskScreen extends React.Component {
                                 onPress={() => this.cancelTask()}
                             >取消试用</Text></View>
                         <View style={[styles.bottomItem, {width: window.width * 0.3}]}>
-                            <Text>倒计时：</Text><Text style={{color: "red"}}>5分</Text></View>
+                            <Text>倒计时：</Text><Text style={{color: "red"}}>{this.state.TaskState}分</Text></View>
                         <View style={[styles.bottomItem, {width: window.width * 0.5, backgroundColor: 'red'}]}>
                             <Text
                                 onPress={() => this.AlertTaskStateUpdate6()}
@@ -1082,7 +1082,7 @@ class taskScreen extends React.Component {
                                 onPress={() => this.cancelTask()}
                             >取消试用</Text></View>
                         <View style={[styles.bottomItem, {width: window.width * 0.3}]}>
-                            <Text>倒计时：</Text><Text style={{color: "red"}}>5分</Text></View>
+                            <Text>倒计时：</Text><Text style={{color: "red"}}>{this.state.TaskState}分</Text></View>
                         <View style={[styles.bottomItem, {width: window.width * 0.5, backgroundColor: 'red'}]}>
                             <Text
                                 onPress={() => this.AlertTaskStateUpdate6()}

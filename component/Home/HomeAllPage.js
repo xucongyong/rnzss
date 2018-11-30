@@ -8,6 +8,7 @@ import {
     ActivityIndicator,
     Image,
     TouchableOpacity,
+    withNavigationFocus,
 } from 'react-native';
 import Dimensions from 'Dimensions';
 const {width, height} = Dimensions.get('window');
@@ -33,7 +34,9 @@ export default class MyComponent extends React.Component {
             token:'',
         }
     }
+
     componentDidMount(){
+        
         // 加载图片
         this.setState({
             isLoading:true,

@@ -6,6 +6,7 @@ import weburl from "../websettings";
 import HttpGetPost from '../HttpGetPost';
 //import ImagePicker from 'react-native-image-picker';
 var ImagePicker = require("react-native-image-picker")
+
 // More info on all the options is below in the API Reference... just some common use cases shown here
 const options = {
   title: 'Select Avatar',
