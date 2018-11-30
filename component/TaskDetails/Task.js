@@ -1,5 +1,5 @@
 import React from "react";
-import {StyleSheet,TextInput,Dimensions,Text, View, ScrollView,Image,ActivityIndicator,TouchableOpacity,Alert} from "react-native";
+import {DeviceEventEmitter,StyleSheet,TextInput,Dimensions,Text, View, ScrollView,Image,ActivityIndicator,TouchableOpacity,Alert} from "react-native";
 const window = Dimensions.get('window');
 const imageWidth = (window.width/3)+30;
 const imageHeight = window.height;
@@ -90,7 +90,6 @@ class taskScreen extends React.Component {
             TaskState: 10,
             uptoken:'',
         }
-        this.TaskStateUpdate = this.TaskStateUpdate.bind(this)
         this.cancelTask = this.cancelTask.bind(this)
         this.closeTask = this.closeTask.bind(this)
         this.choosePicker = this.choosePicker.bind(this)
@@ -98,10 +97,14 @@ class taskScreen extends React.Component {
         this.onChange = this.onChange.bind(this)
         this.clearPayMoney = this.clearPayMoney.bind(this)
         this.ClearPlatFormOrderId = this.ClearPlatFormOrderId.bind(this)
+        this.TaskStateUpdate = this.TaskStateUpdate.bind(this)
         this.AlertTaskStateUpdate = this.AlertTaskStateUpdate.bind(this)
+        this.TaskStateUpdate6 = this.TaskStateUpdate6.bind(this)
+        this.AlertTaskStateUpdate6 = this.AlertTaskStateUpdate6.bind(this)
     }
 
     componentWillMount() {
+
         deviceStorage.get('token').then((GetToken) => {
             token = GetToken
             axios.post(GetTokenUrl, {headers: {Authorization: token}})
@@ -113,6 +116,9 @@ class taskScreen extends React.Component {
         this.fetchData(this.state.taskId); //启动的时候载入数据
         
         // this.startTimer();
+    }
+    componentDidMount(){
+        this.subscription = DeviceEventEmitter.addListener('key',this.refreshData)
     }
     // componentWillUnmount(){
     //     clearInterval(this.timer);
@@ -378,6 +384,70 @@ class taskScreen extends React.Component {
             });
         }
     }
+    //保存订单为6
+    AlertTaskStateUpdate6() {
+        console.log('cancelTask')
+        Alert.alert(
+            '订单保存',
+            '确定试用保存吗？',
+            [
+                {text: '提交保存', onPress: () => this.TaskStateUpdate6()},
+                {text: '不保存', onPress: () => console.log('Cancel Pressed')},
+            ],
+            {cancelable: false}
+        )
+    }
+    //state567->6
+    TaskStateUpdate6() {
+        //上传图片
+        let files = this.state.files
+        for(var x=0;files.length>x;x++){
+                this.upload(files[x].url);
+            }
+        //console.log('uploadDone_'+Date.now())
+        var rePayMoney = /^([1-5]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/
+        var reOrderId = /^([1-9]\d{1,30})/
+        var reAddMoney = /^([1-9]\d{0,1})$/
+        if(reOrderId.test(this.state.PlatFormOrderId) ===false||rePayMoney.test(this.state.PayMoney) ===false ||reAddMoney.test(this.state.AddMoney) ===false){
+            Alert.alert(
+                '',
+                '请填写正确的订单号、交易订单号、交易费 ',
+                [
+                    {text: '马上填写', onPress: () => console.log('Cancel Pressed')},
+                ],
+                {cancelable: false}
+            )
+        }else{
+            deviceStorage.get('token').then((GetToken) => {
+                token = GetToken
+                axios.post(TaskStateUrl, {headers: {Authorization: token,TaskId:this.state.taskId, PayMoney:this.state.PayMoney,AddMoney:this.state.AddMoney,filesurl:JSON.stringify(this.state.filesurl),TaskState:this.state.TaskState,PlatFormOrderId:this.state.PlatFormOrderId}})
+                    .then(response => {
+                        console.log(response.data)
+                        this.setState({productDetail: response.data})
+                        //state 1：没有账号
+                        //state 2: 不能下单
+                        //state 3: 生成订单
+                        if (this.state.productDetail.status === 0) {
+                            this.props.navigation.navigate('Login')
+                        } else if (this.state.productDetail.status === 1) {
+                            Alert.alert(
+                                '',
+                                this.state.productDetail.message,
+                                [
+                                    {text: '确定', onPress: () => console.log('Cancel Pressed!')},
+                                ],
+                                {cancelable: false}
+                            )
+                        } else if (this.state.productDetail.status === 2) {
+                            this.props.navigation.navigate('TaskRemind', {taskId: this.state.taskId})
+                        }
+                    })
+                    .catch((error) => {
+                        console.log('error 3 ' + error);
+                    });
+            });
+        }
+    }
 
     //关键词
     //获取照片
@@ -440,6 +510,7 @@ class taskScreen extends React.Component {
         }
     render() {
         let productView;
+        let textview = '<Text>试用附加任务：{this.state.AddMoney}</Text>'
 /*
 * 信息
      1. 所有行为的截图
@@ -458,12 +529,11 @@ class taskScreen extends React.Component {
    * 申诉:任务等待\买家没拍任务、价格不对、威胁[在后台管理中加申诉中心]
 */        
       if (this.state.loading) {
+            files = this.state.files
             if (this.state.TaskState === 2) {
                 console.log(this.state.TaskState)
-                files = this.state.files
                 productView = (<View style={{flex: 1}}>
                     <View style={styles.container}>
-
                         <ScrollView>
                         <ScrollView
                             horizontal={true}
@@ -488,7 +558,6 @@ class taskScreen extends React.Component {
                                 <Text>账号要求：{this.state.huabeiId}</Text>{'\n'}
                                 <Text>礼物：{this.state.gift} - {this.state.gifturl}</Text>{'\n'}
                                 <Text>备注：{this.state.Node}</Text>{'\n'}
-                                <Text>FILES：{this.state.files}</Text>{'\n'}
                                 {'\n'}
                                 <Text>支付：不允许用「
                                 {this.state.PayCard} {' '}
@@ -519,7 +588,8 @@ class taskScreen extends React.Component {
                                     onChangeText={(xx)=>this.clearPayMoney(xx)}
                                     value={this.state.PayMoney}
                                     />
-                                <Text>试用附加任务：{this.state.AddMoney}</Text>
+
+                                <Text>试用附加{textview}任务：{this.state.AddMoney}</Text>
                                 <TextInput style = {styles.input}
                                     name='AddMoney'
                                     onChangeText={(xx)=>this.clearAddMoney(xx)}
@@ -547,7 +617,7 @@ class taskScreen extends React.Component {
                                 onPress={() => this.cancelTask()}
                             >取消试用</Text></View>
                         <View style={[styles.bottomItem, {width: window.width * 0.3}]}>
-                            <Text>倒计时：</Text><Text style={{color: "red"}}>3分</Text></View>
+                            <Text>倒计时：</Text><Text style={{color: "red"}}>5分</Text></View>
                         <View style={[styles.bottomItem, {width: window.width * 0.5, backgroundColor: 'red'}]}>
                             <Text
                                 onPress={() => this.AlertTaskStateUpdate()}
@@ -556,12 +626,472 @@ class taskScreen extends React.Component {
                 </View>)
             } else if (this.state.TaskState === 3) {
                 console.log(this.state.TaskState)
+                productView = (<View style={{flex: 1}}>
+                    <View style={styles.container}>
+                        <ScrollView>
+                        <ScrollView
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                            pagingEnabled={true}>
+                            {this.renderChilds()}
+                        </ScrollView>
+                            <View style={{
+                              flexDirection: 'row',
+                            }}><Text>
+                                <Text>任务：{this.state.event}</Text>{'\n'}
+                                <Text>试用账号：{this.state.PlatFormUserName}</Text>{'\n'}
+                                <Text>手机打开：「<Text style={{color: "red"}}>{this.state.ShopSort}</Text>」应用</Text>{'\n'}
+                                <Text>关键词：「<Text style={{color: "red"}}>{this.state.keyWord}</Text>」</Text>{'     '}
+                                <Text>城市：{this.state.city}</Text>{'     '}
+                                <Text>价格区间：{this.state.priceMin} - {this.state.priceMax}</Text>{'\n'}
+                                <Text>店铺：{this.state.ShopUserName}\{this.state.ShopNickName}</Text>{'\n'}
+                                <Text>产品id：{this.state.productId}</Text>{'\n'}
+                                <Text>页面价格：{this.state.showPrice}</Text>{'\n'}
+                                <Text>付款金额：{this.state.buyPrice}元 x {this.state.buyNum}件 =  <Text style={{color: "red"}}>{this.state.buyPrice*this.state.buyNum}</Text>元，返现：<Text style={{color: "red"}}>{this.state.BuyGetPrice}</Text>元</Text>{'\n'}
+                                <Text>购买规格：{this.state.buyRules}</Text>{'\n'}
+                                <Text>账号要求：{this.state.huabeiId}</Text>{'\n'}
+                                <Text>礼物：{this.state.gift} - {this.state.gifturl}</Text>{'\n'}
+                                <Text>备注：{this.state.Node}</Text>{'\n'}
+                                {'\n'}
+                                <Text>支付：不允许用「
+                                {this.state.PayCard} {' '}
+                                {this.state.PayCoupons} {' '}
+                                {this.state.Payhuabei}{' '}淘宝客」支付
+                                </Text>{'\n\n'}
+                                <Text><Text style={{color: "red"}}>试用截图</Text>：「搜索图{' '}{this.state.AddCoupons}{' '}
+                                {this.state.AddOpenOtherProduct}{' '}
+                                {this.state.AddSaveShop}{' '}
+                                {this.state.AddOpenProduct}{' '}
+                                {this.state.AddShoppingCar}{' '}
+                                {this.state.AddChat}{' '}
+                                {this.state.AddCommandsLike}」
+                                </Text>
+                                </Text></View>
+
+                                <Text>购物订单号：{this.state.PlatFormOrderId}</Text><TextInput style = {styles.input}
+                                    name='UserOrderId'
+                                    type="number"
+                                    onChangeText={(xx)=>this.ClearPlatFormOrderId(xx)}
+                                    value= {this.state.PlatFormOrderId}
+                                    />
+                                <Text>付款：{this.state.PayMoney}</Text>
+                                <TextInput style = {styles.input}
+                                    name='PayMoney'
+                                    value= {this.state.PayMoney}
+                                    type="number"
+                                    onChangeText={(xx)=>this.clearPayMoney(xx)}
+                                    value={this.state.PayMoney}
+                                    />
+
+                                <Text>试用附加{textview}任务：{this.state.AddMoney}</Text>
+                                <TextInput style = {styles.input}
+                                    name='AddMoney'
+                                    onChangeText={(xx)=>this.clearAddMoney(xx)}
+                                    value={this.state.AddMoney}
+                                    type="number"
+                                />
+                                <ImagePicker
+                                    files={this.state.files}
+                                    selectable={files.length < this.state.ImageNumber}
+                                    onChange={this.onChange}
+                                    onImageClick={(index, files) => {
+                                        console.log(files[index].url)
+                                    }}
+                                    onAddImageClick={this.choosePicker}
+                                />
+                                <Button 
+                                    onPress={() => console.log('files :'+this.state.files)}
+                                >保存图片</Button>
+                            
+                    </ScrollView>
+                    </View>
+                    <View style={styles.shopcart}>
+                        <View style={[styles.bottomItem, {width: window.width * 0.2}]}>
+                            <Text
+                                onPress={() => this.cancelTask()}
+                            >取消试用</Text></View>
+                        <View style={[styles.bottomItem, {width: window.width * 0.3}]}>
+                            <Text>倒计时：</Text><Text style={{color: "red"}}>5分</Text></View>
+                        <View style={[styles.bottomItem, {width: window.width * 0.5, backgroundColor: 'red'}]}>
+                            <Text
+                                onPress={() => this.AlertTaskStateUpdate()}
+                            >提交保存</Text></View>
+                    </View>
+                </View>)
             } else if (this.state.TaskState === 4) {
                 console.log(this.state.TaskState)
+                productView = (<View style={{flex: 1}}>
+                    <View style={styles.container}>
+                        <ScrollView>
+                        <ScrollView
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                            pagingEnabled={true}>
+                            {this.renderChilds()}
+                        </ScrollView>
+                            <View style={{
+                              flexDirection: 'row',
+                            }}><Text>
+                                <Text>任务：{this.state.event}</Text>{'\n'}
+                                <Text>试用账号：{this.state.PlatFormUserName}</Text>{'\n'}
+                                <Text>手机打开：「<Text style={{color: "red"}}>{this.state.ShopSort}</Text>」应用</Text>{'\n'}
+                                <Text>关键词：「<Text style={{color: "red"}}>{this.state.keyWord}</Text>」</Text>{'     '}
+                                <Text>城市：{this.state.city}</Text>{'     '}
+                                <Text>价格区间：{this.state.priceMin} - {this.state.priceMax}</Text>{'\n'}
+                                <Text>店铺：{this.state.ShopUserName}\{this.state.ShopNickName}</Text>{'\n'}
+                                <Text>产品id：{this.state.productId}</Text>{'\n'}
+                                <Text>页面价格：{this.state.showPrice}</Text>{'\n'}
+                                <Text>付款金额：{this.state.buyPrice}元 x {this.state.buyNum}件 =  <Text style={{color: "red"}}>{this.state.buyPrice*this.state.buyNum}</Text>元，返现：<Text style={{color: "red"}}>{this.state.BuyGetPrice}</Text>元</Text>{'\n'}
+                                <Text>购买规格：{this.state.buyRules}</Text>{'\n'}
+                                <Text>账号要求：{this.state.huabeiId}</Text>{'\n'}
+                                <Text>礼物：{this.state.gift} - {this.state.gifturl}</Text>{'\n'}
+                                <Text>备注：{this.state.Node}</Text>{'\n'}
+                                {'\n'}
+                                <Text>支付：不允许用「
+                                {this.state.PayCard} {' '}
+                                {this.state.PayCoupons} {' '}
+                                {this.state.Payhuabei}{' '}淘宝客」支付
+                                </Text>{'\n\n'}
+                                <Text><Text style={{color: "red"}}>试用截图</Text>：「搜索图{' '}{this.state.AddCoupons}{' '}
+                                {this.state.AddOpenOtherProduct}{' '}
+                                {this.state.AddSaveShop}{' '}
+                                {this.state.AddOpenProduct}{' '}
+                                {this.state.AddShoppingCar}{' '}
+                                {this.state.AddChat}{' '}
+                                {this.state.AddCommandsLike}」
+                                </Text>
+                                </Text></View>
+
+                                <Text>购物订单号：{this.state.PlatFormOrderId}</Text><TextInput style = {styles.input}
+                                    name='UserOrderId'
+                                    type="number"
+                                    onChangeText={(xx)=>this.ClearPlatFormOrderId(xx)}
+                                    value= {this.state.PlatFormOrderId}
+                                    />
+                                <Text>付款：{this.state.PayMoney}</Text>
+                                <TextInput style = {styles.input}
+                                    name='PayMoney'
+                                    value= {this.state.PayMoney}
+                                    type="number"
+                                    onChangeText={(xx)=>this.clearPayMoney(xx)}
+                                    value={this.state.PayMoney}
+                                    />
+
+                                <Text>试用附加{textview}任务：{this.state.AddMoney}</Text>
+                                <TextInput style = {styles.input}
+                                    name='AddMoney'
+                                    onChangeText={(xx)=>this.clearAddMoney(xx)}
+                                    value={this.state.AddMoney}
+                                    type="number"
+                                />
+                                <ImagePicker
+                                    files={this.state.files}
+                                    selectable={files.length < this.state.ImageNumber}
+                                    onChange={this.onChange}
+                                    onImageClick={(index, files) => {
+                                        console.log(files[index].url)
+                                    }}
+                                    onAddImageClick={this.choosePicker}
+                                />
+                    </ScrollView>
+                    </View>
+                    <View style={styles.shopcart}>
+                        <View style={[styles.bottomItem, {width: window.width * 0.2}]}>
+                            <Text
+                                onPress={() => this.cancelTask()}
+                            >取消试用</Text></View>
+                        <View style={[styles.bottomItem, {width: window.width * 0.3}]}>
+                            <Text>倒计时：</Text><Text style={{color: "red"}}>5分</Text></View>
+                        <View style={[styles.bottomItem, {width: window.width * 0.5, backgroundColor: 'red'}]}>
+                            <Text
+                                onPress={() => this.AlertTaskStateUpdate()}
+                            >提交保存</Text></View>
+                    </View>
+                </View>)
             } else if (this.state.TaskState === 5) {
                 console.log(this.state.TaskState)
-            } else {
-                productView=(<ActivityIndicator color="#0000ff" style={{marginTop:50}} />)
+                productView = (<View style={{flex: 1}}>
+                    <View style={styles.container}>
+                        <ScrollView>
+                        <ScrollView
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                            pagingEnabled={true}>
+                            {this.renderChilds()}
+                        </ScrollView>
+                            <View style={{
+                              flexDirection: 'row',
+                            }}><Text>
+                                <Text>任务：{this.state.event}</Text>{'\n'}
+                                <Text>试用账号：{this.state.PlatFormUserName}</Text>{'\n'}
+                                <Text>手机打开：「<Text style={{color: "red"}}>{this.state.ShopSort}</Text>」应用</Text>{'\n'}
+                                <Text>关键词：「<Text style={{color: "red"}}>{this.state.keyWord}</Text>」</Text>{'     '}
+                                <Text>城市：{this.state.city}</Text>{'     '}
+                                <Text>价格区间：{this.state.priceMin} - {this.state.priceMax}</Text>{'\n'}
+                                <Text>店铺：{this.state.ShopUserName}\{this.state.ShopNickName}</Text>{'\n'}
+                                <Text>产品id：{this.state.productId}</Text>{'\n'}
+                                <Text>页面价格：{this.state.showPrice}</Text>{'\n'}
+                                <Text>付款金额：{this.state.buyPrice}元 x {this.state.buyNum}件 =  <Text style={{color: "red"}}>{this.state.buyPrice*this.state.buyNum}</Text>元，返现：<Text style={{color: "red"}}>{this.state.BuyGetPrice}</Text>元</Text>{'\n'}
+                                <Text>购买规格：{this.state.buyRules}</Text>{'\n'}
+                                <Text>账号要求：{this.state.huabeiId}</Text>{'\n'}
+                                <Text>礼物：{this.state.gift} - {this.state.gifturl}</Text>{'\n'}
+                                <Text>备注：{this.state.Node}</Text>{'\n'}
+                                {'\n'}
+                                <Text>支付：不允许用「
+                                {this.state.PayCard} {' '}
+                                {this.state.PayCoupons} {' '}
+                                {this.state.Payhuabei}{' '}淘宝客」支付
+                                </Text>{'\n\n'}
+                                <Text><Text style={{color: "red"}}>试用截图</Text>：「搜索图{' '}{this.state.AddCoupons}{' '}
+                                {this.state.AddOpenOtherProduct}{' '}
+                                {this.state.AddSaveShop}{' '}
+                                {this.state.AddOpenProduct}{' '}
+                                {this.state.AddShoppingCar}{' '}
+                                {this.state.AddChat}{' '}
+                                {this.state.AddCommandsLike}」
+                                </Text>
+                                </Text></View>
+
+                                <Text>购物订单号：{this.state.PlatFormOrderId}</Text><TextInput style = {styles.input}
+                                    name='UserOrderId'
+                                    type="number"
+                                    onChangeText={(xx)=>this.ClearPlatFormOrderId(xx)}
+                                    value= {this.state.PlatFormOrderId}
+                                    />
+                                <Text>付款：{this.state.PayMoney}</Text>
+                                <TextInput style = {styles.input}
+                                    name='PayMoney'
+                                    value= {this.state.PayMoney}
+                                    type="number"
+                                    onChangeText={(xx)=>this.clearPayMoney(xx)}
+                                    value={this.state.PayMoney}
+                                    />
+
+                                <Text>试用附加{textview}任务：{this.state.AddMoney}</Text>
+                                <TextInput style = {styles.input}
+                                    name='AddMoney'
+                                    onChangeText={(xx)=>this.clearAddMoney(xx)}
+                                    value={this.state.AddMoney}
+                                    type="number"
+                                />
+                                <ImagePicker
+                                    files={this.state.files}
+                                    selectable={files.length < this.state.ImageNumber}
+                                    onChange={this.onChange}
+                                    onImageClick={(index, files) => {
+                                        console.log(files[index].url)
+                                    }}
+                                    onAddImageClick={this.choosePicker}
+                                />
+                                <Button 
+                                    onPress={() => console.log('files :'+this.state.files)}
+                                >保存图片</Button>
+                    </ScrollView>
+                    </View>
+                    <View style={styles.shopcart}>
+                        <View style={[styles.bottomItem, {width: window.width * 0.2}]}>
+                            <Text
+                                onPress={() => this.cancelTask()}
+                            >取消试用</Text></View>
+                        <View style={[styles.bottomItem, {width: window.width * 0.3}]}>
+                            <Text>倒计时：</Text><Text style={{color: "red"}}>5分</Text></View>
+                        <View style={[styles.bottomItem, {width: window.width * 0.5, backgroundColor: 'red'}]}>
+                            <Text
+                                onPress={() => this.AlertTaskStateUpdate6()}
+                            >保存试用报告</Text>
+                            </View>
+                    </View>
+                </View>)
+            } else if (this.state.TaskState === 6) {
+                console.log(this.state.TaskState)
+                productView = (<View style={{flex: 1}}>
+                    <View style={styles.container}>
+                        <ScrollView>
+                        <ScrollView
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                            pagingEnabled={true}>
+                            {this.renderChilds()}
+                        </ScrollView>
+                            <View style={{
+                              flexDirection: 'row',
+                            }}><Text>
+                                <Text>任务：{this.state.event}</Text>{'\n'}
+                                <Text>试用账号：{this.state.PlatFormUserName}</Text>{'\n'}
+                                <Text>手机打开：「<Text style={{color: "red"}}>{this.state.ShopSort}</Text>」应用</Text>{'\n'}
+                                <Text>关键词：「<Text style={{color: "red"}}>{this.state.keyWord}</Text>」</Text>{'     '}
+                                <Text>城市：{this.state.city}</Text>{'     '}
+                                <Text>价格区间：{this.state.priceMin} - {this.state.priceMax}</Text>{'\n'}
+                                <Text>店铺：{this.state.ShopUserName}\{this.state.ShopNickName}</Text>{'\n'}
+                                <Text>产品id：{this.state.productId}</Text>{'\n'}
+                                <Text>页面价格：{this.state.showPrice}</Text>{'\n'}
+                                <Text>付款金额：{this.state.buyPrice}元 x {this.state.buyNum}件 =  <Text style={{color: "red"}}>{this.state.buyPrice*this.state.buyNum}</Text>元，返现：<Text style={{color: "red"}}>{this.state.BuyGetPrice}</Text>元</Text>{'\n'}
+                                <Text>购买规格：{this.state.buyRules}</Text>{'\n'}
+                                <Text>账号要求：{this.state.huabeiId}</Text>{'\n'}
+                                <Text>礼物：{this.state.gift} - {this.state.gifturl}</Text>{'\n'}
+                                <Text>备注：{this.state.Node}</Text>{'\n'}
+                                {'\n'}
+                                <Text>支付：不允许用「
+                                {this.state.PayCard} {' '}
+                                {this.state.PayCoupons} {' '}
+                                {this.state.Payhuabei}{' '}淘宝客」支付
+                                </Text>{'\n\n'}
+                                <Text><Text style={{color: "red"}}>试用截图</Text>：「搜索图{' '}{this.state.AddCoupons}{' '}
+                                {this.state.AddOpenOtherProduct}{' '}
+                                {this.state.AddSaveShop}{' '}
+                                {this.state.AddOpenProduct}{' '}
+                                {this.state.AddShoppingCar}{' '}
+                                {this.state.AddChat}{' '}
+                                {this.state.AddCommandsLike}」
+                                </Text>
+                                </Text></View>
+
+                                <Text>购物订单号：{this.state.PlatFormOrderId}</Text><TextInput style = {styles.input}
+                                    name='UserOrderId'
+                                    type="number"
+                                    onChangeText={(xx)=>this.ClearPlatFormOrderId(xx)}
+                                    value= {this.state.PlatFormOrderId}
+                                    />
+                                <Text>付款：{this.state.PayMoney}</Text>
+                                <TextInput style = {styles.input}
+                                    name='PayMoney'
+                                    value= {this.state.PayMoney}
+                                    type="number"
+                                    onChangeText={(xx)=>this.clearPayMoney(xx)}
+                                    value={this.state.PayMoney}
+                                    />
+
+                                <Text>试用附加{textview}任务：{this.state.AddMoney}</Text>
+                                <TextInput style = {styles.input}
+                                    name='AddMoney'
+                                    onChangeText={(xx)=>this.clearAddMoney(xx)}
+                                    value={this.state.AddMoney}
+                                    type="number"
+                                />
+                                <ImagePicker
+                                    files={this.state.files}
+                                    selectable={files.length < this.state.ImageNumber}
+                                    onChange={this.onChange}
+                                    onImageClick={(index, files) => {
+                                        console.log(files[index].url)
+                                    }}
+                                    onAddImageClick={this.choosePicker}
+                                />
+                                <Button 
+                                    onPress={() => console.log('files :'+this.state.files)}
+                                >保存图片</Button>
+                    </ScrollView>
+                    </View>
+                    <View style={styles.shopcart}>
+                        <View style={[styles.bottomItem, {width: window.width * 0.2}]}>
+                            <Text
+                                onPress={() => this.cancelTask()}
+                            >取消试用</Text></View>
+                        <View style={[styles.bottomItem, {width: window.width * 0.3}]}>
+                            <Text>倒计时：</Text><Text style={{color: "red"}}>5分</Text></View>
+                        <View style={[styles.bottomItem, {width: window.width * 0.5, backgroundColor: 'red'}]}>
+                            <Text
+                                onPress={() => this.AlertTaskStateUpdate6()}
+                            >保存试用报告</Text>
+                            </View>
+                    </View>
+                </View>)
+            } else if (this.state.TaskState === 7) {
+                console.log(this.state.TaskState)
+                productView = (<View style={{flex: 1}}>
+                    <View style={styles.container}>
+                        <ScrollView>
+                        <ScrollView
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                            pagingEnabled={true}>
+                            {this.renderChilds()}
+                        </ScrollView>
+                            <View style={{
+                              flexDirection: 'row',
+                            }}><Text>
+                                <Text>任务：{this.state.event}</Text>{'\n'}
+                                <Text>试用账号：{this.state.PlatFormUserName}</Text>{'\n'}
+                                <Text>手机打开：「<Text style={{color: "red"}}>{this.state.ShopSort}</Text>」应用</Text>{'\n'}
+                                <Text>关键词：「<Text style={{color: "red"}}>{this.state.keyWord}</Text>」</Text>{'     '}
+                                <Text>城市：{this.state.city}</Text>{'     '}
+                                <Text>价格区间：{this.state.priceMin} - {this.state.priceMax}</Text>{'\n'}
+                                <Text>店铺：{this.state.ShopUserName}\{this.state.ShopNickName}</Text>{'\n'}
+                                <Text>产品id：{this.state.productId}</Text>{'\n'}
+                                <Text>页面价格：{this.state.showPrice}</Text>{'\n'}
+                                <Text>付款金额：{this.state.buyPrice}元 x {this.state.buyNum}件 =  <Text style={{color: "red"}}>{this.state.buyPrice*this.state.buyNum}</Text>元，返现：<Text style={{color: "red"}}>{this.state.BuyGetPrice}</Text>元</Text>{'\n'}
+                                <Text>购买规格：{this.state.buyRules}</Text>{'\n'}
+                                <Text>账号要求：{this.state.huabeiId}</Text>{'\n'}
+                                <Text>礼物：{this.state.gift} - {this.state.gifturl}</Text>{'\n'}
+                                <Text>备注：{this.state.Node}</Text>{'\n'}
+                                {'\n'}
+                                <Text>支付：不允许用「
+                                {this.state.PayCard} {' '}
+                                {this.state.PayCoupons} {' '}
+                                {this.state.Payhuabei}{' '}淘宝客」支付
+                                </Text>{'\n\n'}
+                                <Text><Text style={{color: "red"}}>试用截图</Text>：「搜索图{' '}{this.state.AddCoupons}{' '}
+                                {this.state.AddOpenOtherProduct}{' '}
+                                {this.state.AddSaveShop}{' '}
+                                {this.state.AddOpenProduct}{' '}
+                                {this.state.AddShoppingCar}{' '}
+                                {this.state.AddChat}{' '}
+                                {this.state.AddCommandsLike}」
+                                </Text>
+                                </Text></View>
+
+                                <Text>购物订单号：{this.state.PlatFormOrderId}</Text><TextInput style = {styles.input}
+                                    name='UserOrderId'
+                                    type="number"
+                                    onChangeText={(xx)=>this.ClearPlatFormOrderId(xx)}
+                                    value= {this.state.PlatFormOrderId}
+                                    />
+                                <Text>付款：{this.state.PayMoney}</Text>
+                                <TextInput style = {styles.input}
+                                    name='PayMoney'
+                                    value= {this.state.PayMoney}
+                                    type="number"
+                                    onChangeText={(xx)=>this.clearPayMoney(xx)}
+                                    value={this.state.PayMoney}
+                                    />
+
+                                <Text>试用附加{textview}任务：{this.state.AddMoney}</Text>
+                                <TextInput style = {styles.input}
+                                    name='AddMoney'
+                                    onChangeText={(xx)=>this.clearAddMoney(xx)}
+                                    value={this.state.AddMoney}
+                                    type="number"
+                                />
+                                <ImagePicker
+                                    files={this.state.files}
+                                    selectable={files.length < this.state.ImageNumber}
+                                    onChange={this.onChange}
+                                    onImageClick={(index, files) => {
+                                        console.log(files[index].url)
+                                    }}
+                                    onAddImageClick={this.choosePicker}
+                                />
+                                <Button 
+                                    onPress={() => console.log('files :'+this.state.files)}
+                                >保存图片</Button>
+                    </ScrollView>
+                    </View>
+                    <View style={styles.shopcart}>
+                        <View style={[styles.bottomItem, {width: window.width * 0.2}]}>
+                            <Text
+                                onPress={() => this.cancelTask()}
+                            >取消试用</Text></View>
+                        <View style={[styles.bottomItem, {width: window.width * 0.3}]}>
+                            <Text>倒计时：</Text><Text style={{color: "red"}}>5分</Text></View>
+                        <View style={[styles.bottomItem, {width: window.width * 0.5, backgroundColor: 'red'}]}>
+                            <Text
+                                onPress={() => this.AlertTaskStateUpdate6()}
+                            >保存试用报告</Text>
+                            </View>
+                    </View>
+                </View>)
+                } else {
+                    productView=(<ActivityIndicator color="#0000ff" style={{marginTop:50}} />)
             }
         } else {
                 productView=(<ActivityIndicator color="#0000ff" style={{marginTop:50}} />)
