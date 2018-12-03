@@ -18,7 +18,6 @@ public class MainActivity extends ReactActivity {
         MobclickAgent.onPause(this);
     }
 
-
     @Override
     protected String getMainComponentName() {
         return "shop";

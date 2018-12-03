@@ -1,4 +1,6 @@
 platform :ios, '7.0'
 target 'shop' do
 pod 'UMengAnalytics'
+  pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
+
 end
