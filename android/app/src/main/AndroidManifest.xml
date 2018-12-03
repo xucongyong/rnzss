@@ -3,7 +3,10 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <application
       android:name=".MainApplication"
       android:label="@string/app_name"
@@ -21,6 +24,8 @@
         </intent-filter>
       </activity>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+        <meta-data android:value="5bc017abb465f516bc00003f" android:name="UMENG_APPKEY"/>
+        <meta-data android:value="test" android:name="UMENG_CHANNEL"/>
     </application>
 
 </manifest>
