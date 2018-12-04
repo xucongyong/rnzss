@@ -3,55 +3,9 @@ import {StyleSheet, View, Button, TextInput,Text} from 'react-native';
 import axios from 'axios';
 import deviceStorage from "./jwt/services/deviceStorage";
 import {NavigationActions,StackActions} from 'react-navigation';
-import DeviceInfo from 'react-native-device-info';
 var serverUrl = require("../websettings")
 var loginUrl = serverUrl+"/login"
-const xxxIP = DeviceInfo.getIPAddress()
-console.log(xxxIP)
-const getDeviceId = DeviceInfo.getDeviceId()
-const getUniqueID = DeviceInfo.getUniqueID()
-const isEmulator = DeviceInfo.isEmulator()
-console.log(getUniqueID)
-console.log(isEmulator)
-
-console.log("Device Unique ID", DeviceInfo.getUniqueID());  // e.g. FCDBD8EF-62FC-4ECB-B2F5-92C9E79AC7F9
-// * note this is IDFV on iOS so it will change if all apps from the current apps vendor have been previously uninstalled
- 
-console.log("Device Manufacturer", DeviceInfo.getManufacturer());  // e.g. Apple
- 
-console.log("Device Brand", DeviceInfo.getBrand());  // e.g. Apple / htc / Xiaomi
- 
-console.log("Device Model", DeviceInfo.getModel());  // e.g. iPhone 6
- 
-console.log("Device ID", DeviceInfo.getDeviceId());  // e.g. iPhone7,2 / or the board on Android e.g. goldfish
- 
-console.log("System Name", DeviceInfo.getSystemName());  // e.g. iPhone OS
- 
-console.log("System Version", DeviceInfo.getSystemVersion());  // e.g. 9.0
- 
-console.log("Bundle ID", DeviceInfo.getBundleId());  // e.g. com.learnium.mobile
- 
-console.log("Build Number", DeviceInfo.getBuildNumber());  // e.g. 89
- 
-console.log("App Version", DeviceInfo.getVersion());  // e.g. 1.1.0
- 
-console.log("App Version (Readable)", DeviceInfo.getReadableVersion());  // e.g. 1.1.0.89
- 
-console.log("Device Name", DeviceInfo.getDeviceName());  // e.g. Becca's iPhone 6
- 
-console.log("User Agent", DeviceInfo.getUserAgent()); // e.g. Dalvik/2.1.0 (Linux; U; Android 5.1; Google Nexus 4 - 5.1.0 - API 22 - 768x1280 Build/LMY47D)
- 
-console.log("Device Locale", DeviceInfo.getDeviceLocale()); // e.g en-US
- 
-console.log("Device Country", DeviceInfo.getDeviceCountry()); // e.g US
- 
-console.log("Timezone", DeviceInfo.getTimezone()); // e.g America/Mexico_City
- 
-console.log("App Instance ID", DeviceInfo.getInstanceID()); // ANDROID ONLY - see https://developers.google.com/instance-id/
- 
-console.log("App is running in emulator", DeviceInfo.isEmulator()); // if app is running in emulator return true
- 
-console.log("App is running on a tablet", DeviceInfo.isTablet()); // if app is running on a tablet return true
+import DeviceInfo from 'react-native-device-info';
 
 const resetAction = StackActions.reset({
         index: 0,
@@ -113,11 +67,63 @@ class LoginScreen extends React.Component{
             }
     //NodeJS API
     loginUserNode() {
+        console.log("IP", deviceinfo.getIPAddress())
+        console.log("Device Unique ID", DeviceInfo.getUniqueID());  // e.g. FCDBD8EF-62FC-4ECB-B2F5-92C9E79AC7F9
+        // * note this is IDFV on iOS so it will change if all apps from the current apps vendor have been previously uninstalled
+        console.log("Device Manufacturer", DeviceInfo.getManufacturer());  // e.g. Apple
+        console.log("Device Brand", DeviceInfo.getBrand());  // e.g. Apple / htc / Xiaomi
+        console.log("Device Model", DeviceInfo.getModel());  // e.g. iPhone 6
+        console.log("Device ID", DeviceInfo.getDeviceId());  // e.g. iPhone7,2 / or the board on Android e.g. goldfish
+        console.log("System Name", DeviceInfo.getSystemName());  // e.g. iPhone OS
+         
+        console.log("System Version", DeviceInfo.getSystemVersion());  // e.g. 9.0
+         
+        console.log("Bundle ID", DeviceInfo.getBundleId());  // e.g. com.learnium.mobile
+         
+        console.log("Build Number", DeviceInfo.getBuildNumber());  // e.g. 89
+         
+        console.log("App Version", DeviceInfo.getVersion());  // e.g. 1.1.0
+         
+        console.log("App Version (Readable)", DeviceInfo.getReadableVersion());  // e.g. 1.1.0.89
+         
+        console.log("Device Name", DeviceInfo.getDeviceName());  // e.g. Becca's iPhone 6
+         
+        console.log("User Agent", DeviceInfo.getUserAgent()); // e.g. Dalvik/2.1.0 (Linux; U; Android 5.1; Google Nexus 4 - 5.1.0 - API 22 - 768x1280 Build/LMY47D)
+         
+        console.log("Device Locale", DeviceInfo.getDeviceLocale()); // e.g en-US
+         
+        console.log("Device Country", DeviceInfo.getDeviceCountry()); // e.g US
+         
+        console.log("Timezone", DeviceInfo.getTimezone()); // e.g America/Mexico_City
+         
+        console.log("App Instance ID", DeviceInfo.getInstanceID()); // ANDROID ONLY - see https://developers.google.com/instance-id/
+         
+        console.log("App is running in emulator", DeviceInfo.isEmulator()); // if app is running in emulator return true
+         
+        console.log("App is running on a tablet", DeviceInfo.isTablet()); // if app is running on a tablet return true
+
         console.log('loginUser:'+loginUrl)
         const{ username, password, error} = this.state;
         axios.post(loginUrl,{
             username: username,
-            password: password
+            password: password,
+            ip:DeviceInfo.getIPAddress(),
+            UniqueID:DeviceInfo.getUniqueID(),// e.g. FCDBD8EF-62FC-4ECB-B2F5-92C9E79AC7F9
+            Manufacturer:DeviceInfo.getManufacturer(),  // e.g. Apple
+            Brand:DeviceInfo.getBrand(),  // e.g. Apple / htc / Xiaomi
+            Model:DeviceInfo.getModel(),  // e.g. iPhone 6
+            DeviceID:DeviceInfo.getDeviceId(),  // e.g. iPhone7,2 / or the board on Android e.g. goldfish
+            SystemName:DeviceInfo.getSystemName(),  // e.g. iPhone OS
+            SystemVersion:DeviceInfo.getSystemVersion(),  // e.g. 9.0
+            BundleID:DeviceInfo.getBundleId(), // e.g. com.learnium.mobile
+            BuildNumber:DeviceInfo.getBuildNumber(),  // e.g. 89
+            AppVersion:DeviceInfo.getVersion(),  // e.g. 1.1.0
+            DeviceName:DeviceInfo.getDeviceName(),  // e.g. Becca's iPhone 6
+            UserAgent:DeviceInfo.getUserAgent(), // e.g. Dalvik/2.1.0 (Linux; U; Android 5.1; Google Nexus 4 - 5.1.0 - API 22 - 768x1280 Build/LMY47D)
+            DeviceLocale:DeviceInfo.getDeviceLocale(), // e.g en-US
+            DeviceCountry:DeviceInfo.getDeviceCountry(), // e.g US
+            Timezone:DeviceInfo.getTimezone(), // e.g America/Mexico_City
+            emulator:DeviceInfo.isEmulator(), // if app is running in emulator return true
         })
         .then((response) => {
           if (response.data.message==='no') {

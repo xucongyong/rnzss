@@ -11,5 +11,9 @@
 	<date>2018-11-26T05:22:49Z</date>
 	<key>WorkspacePath</key>
 	<string>/Users/vanxv/Downloads/120Work-CrySystem/code/shop/ios/shop.xcodeproj</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>允许访问位置</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+    <string>允许访问位置</string>
 </dict>
 </plist>

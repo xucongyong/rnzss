@@ -7,11 +7,7 @@ import CountDownButton from 'react-native-smscode-count-down'
 import AsyncStorage from './AsyncStorage'
 var serverUrl = require("../websettings")
 var mobileLoginUrl = serverUrl+'mobilelogin'
-const getDeviceId = DeviceInfo.getDeviceId()
-const getUniqueID = DeviceInfo.getUniqueID()
-const isEmulator = DeviceInfo.isEmulator()
-console.log(getUniqueID)
-console.log(isEmulator)
+
 
 console.log("Device Unique ID", DeviceInfo.getUniqueID());  // e.g. FCDBD8EF-62FC-4ECB-B2F5-92C9E79AC7F9
 // * note this is IDFV on iOS so it will change if all apps from the current apps vendor have been previously uninstalled
@@ -69,7 +65,24 @@ class RegScreen extends React.Component{
             password1: '',
             message: '',
             token: '',
-            VerifyCode:''
+            VerifyCode:'',
+            ip:DeviceInfo.getIPAddress(),
+            UniqueID:DeviceInfo.getUniqueID(),// e.g. FCDBD8EF-62FC-4ECB-B2F5-92C9E79AC7F9
+            Manufacturer:DeviceInfo.getManufacturer(),  // e.g. Apple
+            Brand:DeviceInfo.getBrand(),  // e.g. Apple / htc / Xiaomi
+            Model:DeviceInfo.getModel(),  // e.g. iPhone 6
+            DeviceID:DeviceInfo.getDeviceId(),  // e.g. iPhone7,2 / or the board on Android e.g. goldfish
+            SystemName:DeviceInfo.getSystemName(),  // e.g. iPhone OS
+            SystemVersion:DeviceInfo.getSystemVersion(),  // e.g. 9.0
+            BundleID:DeviceInfo.getBundleId(), // e.g. com.learnium.mobile
+            BuildNumber:DeviceInfo.getBuildNumber(),  // e.g. 89
+            AppVersion:DeviceInfo.getVersion(),  // e.g. 1.1.0
+            DeviceName:DeviceInfo.getDeviceName(),  // e.g. Becca's iPhone 6
+            UserAgent:DeviceInfo.getUserAgent(), // e.g. Dalvik/2.1.0 (Linux; U; Android 5.1; Google Nexus 4 - 5.1.0 - API 22 - 768x1280 Build/LMY47D)
+            DeviceLocale:DeviceInfo.getDeviceLocale(), // e.g en-US
+            DeviceCountry:DeviceInfo.getDeviceCountry(), // e.g US
+            Timezone:DeviceInfo.getTimezone(), // e.g America/Mexico_City
+            emulator:DeviceInfo.isEmulator(), // if app is running in emulator return true
         }
         this.loginUserNode = this.loginUserNode.bind(this);
         this.SendSms=this.SendSms.bind(this)
