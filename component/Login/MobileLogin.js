@@ -3,6 +3,7 @@ import {StyleSheet, View, Button, TextInput,Text, } from 'react-native';
 import {NavigationActions,StackActions} from 'react-navigation';
 import DeviceInfo from 'react-native-device-info';
 import axios from 'axios';
+import deviceStorage from "./jwt/services/deviceStorage";
 import CountDownButton from 'react-native-smscode-count-down'
 import AsyncStorage from './AsyncStorage'
 var serverUrl = require("../websettings")
