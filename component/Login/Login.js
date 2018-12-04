@@ -67,7 +67,7 @@ class LoginScreen extends React.Component{
             }
     //NodeJS API
     loginUserNode() {
-        console.log("IP", deviceinfo.getIPAddress())
+        console.log("IP", DeviceInfo.getIPAddress())
         console.log("Device Unique ID", DeviceInfo.getUniqueID());  // e.g. FCDBD8EF-62FC-4ECB-B2F5-92C9E79AC7F9
         // * note this is IDFV on iOS so it will change if all apps from the current apps vendor have been previously uninstalled
         console.log("Device Manufacturer", DeviceInfo.getManufacturer());  // e.g. Apple

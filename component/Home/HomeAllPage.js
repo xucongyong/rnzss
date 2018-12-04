@@ -11,13 +11,13 @@ import {
     withNavigationFocus,
 } from 'react-native';
 import Dimensions from 'Dimensions';
+import deviceStorage from "../Login/jwt/services/deviceStorage";
+import codePush from 'react-native-code-push'
 const {width, height} = Dimensions.get('window');
 const dataUrl = 'https://api.douban.com/v2/movie/top250?count=350';
 var serverUrl = require("../websettings")
 const MyUrl = serverUrl+'/m/index';
-
 const axios = require('axios');
-import deviceStorage from "../Login/jwt/services/deviceStorage";
 let token = ''
 //
 
@@ -36,13 +36,40 @@ export default class MyComponent extends React.Component {
     }
 
     componentDidMount(){
-        
         // 加载图片
+        this.update()
         this.setState({
             isLoading:true,
         })
         this.fetchData(); //启动的时候载入数据
     }
+    update(){
+        codePush.sync({
+          //安装模式
+          //ON_NEXT_RESUME 下次恢复到前台时
+          //ON_NEXT_RESTART 下一次重启时
+          //IMMEDIATE 马上更新
+          installMode:codePush.InstallMode.IMMEDIATE ,
+          //对话框
+          updateDialog: {
+            //是否显示更新描述
+            appendReleaseDescription : true ,
+            //更新描述的前缀。 默认为"Description"
+            descriptionPrefix : "更新内容：" ,
+            //强制更新按钮文字，默认为continue
+            mandatoryContinueButtonLabel : "立即更新" ,
+            //强制更新时的信息. 默认为"An update is available that must be installed."
+            mandatoryUpdateMessage : "必须更新后才能使用" ,
+            //非强制更新时，按钮文字,默认为"ignore"
+            optionalIgnoreButtonLabel : '稍后' ,
+            //非强制更新时，确认按钮文字. 默认为"Install"
+            optionalInstallButtonLabel : '后台更新' ,
+            //非强制更新时，检查到更新的消息文本
+            optionalUpdateMessage : '有新版本了，是否更新？' ,
+            //Alert窗口的标题
+            title : '更新提示'
+          }})
+        }
     fetchData(refresh){
         if(refresh){
             this.setState({
@@ -81,7 +108,7 @@ export default class MyComponent extends React.Component {
                 </View>
                 <View>
                     <Text>{testV['name']}</Text>
-                <Text>付：{data['buyNum'] * data['buyPrice']}：返：{data['BuyGetPrice']},红包：{data['BuyGetPrice'] -(data['buyNum'] * data['buyPrice'])}，剩：{data['orderNumber']}</Text>
+                <Text>付款：{data['buyNum'] * data['buyPrice']}：返：{data['BuyGetPrice']},红包：{data['BuyGetPrice'] -(data['buyNum'] * data['buyPrice'])}，剩：{data['orderNumber']}</Text>
                     <Text>时间：{data['MinTime']} - {data['MaxTime']},开始：{data['startDate']} </Text>
                     <Text>{data['ShopSort']}，任务类型：{data['event']}，用户要求：{data['huabeiId']}</Text>
                 </View>
@@ -91,6 +118,7 @@ export default class MyComponent extends React.Component {
     }
     // 刷新操作
     reloadNewData(){
+        this.update()
         this.fetchData(true)
     }
 
