@@ -35,11 +35,17 @@ class LoginScreen extends React.Component{
             username: '',
             password: '',
             message: '',
-            token: ''
+            token: '',
+            ip:'',
         }
         // this.loginUser = this.loginUser.bind(this);
         this.loginUserNode = this.loginUserNode.bind(this);
         this.loginVerify=this.loginVerify.bind(this)
+        DeviceInfo.getIPAddress()
+         .then(ip => {
+                 this.setState({ip:ip})
+                 console.log(this.state.ip)
+                });
     };
     static navigationOptions={
         HeaderTitle:'注册页面',
@@ -103,11 +109,12 @@ class LoginScreen extends React.Component{
         console.log("App is running on a tablet", DeviceInfo.isTablet()); // if app is running on a tablet return true
 
         console.log('loginUser:'+loginUrl)
+
         const{ username, password, error} = this.state;
         axios.post(loginUrl,{
             username: username,
             password: password,
-            ip:DeviceInfo.getIPAddress(),
+            ip:this.state.ip,
             UniqueID:DeviceInfo.getUniqueID(),// e.g. FCDBD8EF-62FC-4ECB-B2F5-92C9E79AC7F9
             Manufacturer:DeviceInfo.getManufacturer(),  // e.g. Apple
             Brand:DeviceInfo.getBrand(),  // e.g. Apple / htc / Xiaomi
