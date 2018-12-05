@@ -81,7 +81,7 @@ class LoginScreen extends React.Component{
             UniqueID:DeviceInfo.getUniqueID(),// e.g. FCDBD8EF-62FC-4ECB-B2F5-92C9E79AC7F9
             Manufacturer:DeviceInfo.getManufacturer(),  // e.g. Apple
             Brand:DeviceInfo.getBrand(),  // e.g. Apple / htc / Xiaomi
-            Model:DeviceInfo.getModel、(),  // e.g. iPhone 6
+            Model:DeviceInfo.getModel(),  // e.g. iPhone 6
             DeviceID:DeviceInfo.getDeviceId(),  // e.g. iPhone7,2 / or the board on Android e.g. goldfish
             SystemName:DeviceInfo.getSystemName(),  // e.g. iPhone OS
             SystemVersion:DeviceInfo.getSystemVersion(),  // e.g. 9.0
