@@ -96,8 +96,8 @@ export default class MyComponent extends React.Component {
     //listview数据加工成页面
     _renderRow(data){
         var testV  = JSON.parse(data['Details'])
-        return (
-            <TouchableOpacity onPress={()=> {
+        let returnDataView;
+        returnDataView=(<TouchableOpacity onPress={()=> {
                 this.props.navigation.navigate('ProductScreen',{taskId:data['SellOrderId']})}}>
             <View style={styles.cellBoxStyle}>
                 <View>
@@ -113,7 +113,10 @@ export default class MyComponent extends React.Component {
                     <Text>{data['ShopSort']}，任务类型：{data['event']}，用户要求：{data['huabeiId']}</Text>
                 </View>
             </View>
-            </TouchableOpacity>
+            </TouchableOpacity>)
+
+        return (
+            <View>{returnDataView}</View>
         )
     }
     // 刷新操作
@@ -198,7 +201,7 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         backgroundColor: 'white',
         padding: 10,
-        height: 95,
+        height: 110,
         marginLeft: 5,
         marginRight: 5,
         marginVertical: 3,
