@@ -69,7 +69,7 @@ const TabView = createBottomTabNavigator({
         },
     
     {
-        initialRouteName: '订单',
+        initialRouteName: '红包试用',
         lazy:true,
     },
 )

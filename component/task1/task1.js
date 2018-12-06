@@ -16,6 +16,7 @@ import codePush from 'react-native-code-push'
 const {width, height} = Dimensions.get('window');
 const dataUrl = 'https://api.douban.com/v2/movie/top250?count=350';
 var serverUrl = require("../websettings")
+var MoneyAlgorithm = require("../MoneyAlgorithm")
 const MyUrl = serverUrl+'/m/index';
 const axios = require('axios');
 let token = ''
@@ -95,7 +96,9 @@ export default class MyComponent extends React.Component {
     }
     //listview数据加工成页面
     _renderRow(data){
-        var testV  = JSON.parse(data['Details'])
+        let testV  = JSON.parse(data['Details'])
+        let money_algorithm_value = MoneyAlgorithm(data['event'],(data['buyNum'] * data['buyPrice']),0,0)
+        let buy_money= money_algorithm_value[1]
         let returnDataView;
         if(data['event']==1){
             returnDataView=(<TouchableOpacity onPress={()=> {
@@ -103,36 +106,50 @@ export default class MyComponent extends React.Component {
                 <View style={styles.cellBoxStyle}>
                     <View>
                         <Image
-                          style={{width: 80, height: 80}}
+                          style={{width: 100, height: 100}}
                           source={{uri: testV['mainImage'][0]}}
                         />
                     </View>
                     <View>
-                        <Text>{testV['name']}</Text>
-                    <Text>付款：{data['buyNum'] * data['buyPrice']}：红包：{data['buyNum']},{data['buyPrice']}，剩：{data['orderNumber']}</Text>
-                        <Text>开始：{data['startDate']} </Text>
-                        <Text>类型：红包试用，店铺：{data['ShopSort']}时间：{data['MinTime']} - {data['MaxTime']}</Text>
+                    <View style={{flexDirection: 'row'}}>
+                    <Text style={{fontSize:13}}><Text style={{fontSize:11, backgroundColor:'#dc3232', color:'white'}}>{data['ShopSort']}</Text>
+                    {testV['name']}</Text>
+                    </View>
+                    <Text> </Text>
+                    <Text style={{fontSize:11, color:'#dc3232'}}>￥<Text style={{fontSize:23}}>{buy_money-(data['buyNum']*data['buyPrice'])}</Text></Text>
+                    <View>
+                    <Text>
+                    <Text style={{fontSize:11, color:'gray'}} >付款：{data['buyNum'] * data['buyPrice']} 剩：{data['orderNumber']}</Text>
+                        </Text>
+                     </View>
                     </View>
                 </View>
                 </TouchableOpacity>)
             }else if(data['event']==2){
-            returnDataView=(<TouchableOpacity onPress={()=> {
-                    this.props.navigation.navigate('ProductScreen',{taskId:data['SellOrderId']})}}>
-                <View style={styles.cellBoxStyle}>
-                    <View>
-                            <Image
-                              style={{width: 80, height: 80}}
-                              source={{uri: testV['mainImage'][0]}}
-                            />
-                    </View>
-                    <View>
-                        <Text>{testV['name']}</Text>
-                    <Text>付款：{data['buyNum'] * data['buyPrice']}：返：{data['BuyGetPrice']},红包：{data['BuyGetPrice'] -(data['buyNum'] * data['buyPrice'])}，剩：{data['orderNumber']}</Text>
-                        <Text>类型：返现试用，店铺：{data['ShopSort']}</Text>
-                        <Text>时间：{data['MinTime']} - {data['MaxTime']},开始：{data['startDate']} </Text>
-                    </View>
-                </View>
-                </TouchableOpacity>)
+                returnDataView=(<TouchableOpacity onPress={()=> {
+                        this.props.navigation.navigate('ProductScreen',{taskId:data['SellOrderId']})}}>
+                        <View style={styles.cellBoxStyle}>
+                            <View>
+                                <Image
+                                  style={{width: 100, height: 100}}
+                                  source={{uri: testV['mainImage'][0]}}
+                                />
+                            </View>
+                            <View>
+                            <View style={{flexDirection: 'row'}}>
+                            <Text style={{fontSize:13}}><Text style={{fontSize:11, backgroundColor:'#dc3232', color:'white'}}>{data['ShopSort']}</Text>
+                            {testV['name']}</Text>
+                            </View>
+                            <Text> </Text>
+                            <Text style={{fontSize:11, color:'#dc3232'}}>￥<Text style={{fontSize:23}}>{(data['buyNum']*data['buyPrice'])-data['ReturnBuyPrice']}</Text></Text>
+                            <View>
+                            <Text>
+                            <Text style={{fontSize:11, color:'gray'}} >付款：{data['buyNum'] * data['buyPrice']} 剩：{data['orderNumber']}</Text>
+                                </Text>
+                             </View>
+                            </View>
+                        </View>
+                        </TouchableOpacity>)
                 }
         return (
             <View>{returnDataView}</View>
@@ -177,7 +194,6 @@ export default class MyComponent extends React.Component {
             viewList = (
                 <View>
                 <ActivityIndicator color="#0000ff" style={{marginTop:100}}/>
-                <Text>token:{this.state.token}</Text>
                 </View>
                 
             )
@@ -220,19 +236,19 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         backgroundColor: 'white',
         padding: 10,
-        height: 110,
-        marginLeft: 5,
-        marginRight: 5,
-        marginVertical: 3,
+        height: 100,
         borderColor: '#ffffff',
-        borderStyle: null,
-        borderWidth: 0.5,
-        borderRadius: 2,
-        shadowColor: 'gray',    // 设置阴影
-        shadowOffset: {width:0.5, height: 0.5},
-        shadowOpacity: 0.4,   // 透明度
-        shadowRadius: 1,
-        elevation:2   //   高度，设置Z轴，可以产生立体效果
+        //borderStyle: null,
+        //borderWidth: 0.5,
+        //borderRadius: 2,
+        //marginLeft: 5,
+        //marginRight: 5,
+        //marginVertical: 3,
+        // shadowColor: 'red',    // 设置阴影
+        // shadowOffset: {width:0.5, height: 0.5},
+        // shadowOpacity: 0.4,   // 透明度
+        // shadowRadius: 1,
+        // elevation:2   //   高度，设置Z轴，可以产生立体效果
     },
     cellTxt:{
         flex: 1,
