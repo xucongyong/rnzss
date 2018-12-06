@@ -11,6 +11,7 @@ const axios = require('axios');
 import deviceStorage from "../Login/jwt/services/deviceStorage";
 var ScreenWidth = Dimensions.get('window').width;
 var boxWidth = Dimensions.get('window').height/2;
+var MoneyAlgorithm = require("../MoneyAlgorithm")
 let token = ''
 // 如果你想读取子项，
 
@@ -49,6 +50,7 @@ class ProductScreen extends React.Component{
                     this.setState({ImageMain:JSON.parse(this.state.productDetail['Details'])['mainImage']})
                     this.setState({ImageDetails:JSON.parse(this.state.productDetail['Details'])['DetailsImage']})
                     this.setState({loading:true})
+                    console.log(response.data)
                 })
                 .catch((error) => {
                     console.log('error 3 ' + error);
@@ -71,27 +73,20 @@ class ProductScreen extends React.Component{
         var Y = 10
         return this.state.ImageDetails.map((x)=>{
             Y +=1
-            console.log(x)
             return <Image key={Y} source={{uri:x}} style={styles.DeatlsImageStyle} />;
         })}
     //购物按钮
     genrateTask(){
         this.setState({loading:false})
-        console.log(this.state.taskId)
         deviceStorage.get('token').then((GetToken) => {
             token = GetToken
             console.log(this.state.taskId)
             axios.post(OrderUrl, { headers: { Authorization: token, version:'1.0',orderid:this.state.taskId}})
                 .then(response => {
+                    console.log('data')
                     this.setState({productDetail:response.data})
                     this.setState({loading:true})
-                    //this.setState({ImageMain:JSON.parse(this.state.productDetail['Details'])['mainImage']})
-                    //this.setState({ImageDetails:JSON.parse(this.state.productDetail['Details'])['DetailsImage']})
-                    //this.setState({loading:true})
-                    //state 1：没有账号
-                    //state 2: 不能下单
-                    //state 3: 生成订单
-                    console.log('status:'+this.state.productDetail.status)
+
                     if(this.state.productDetail.status === 0){
                         this.props.navigation.navigate('Login')
                     }else if(this.state.productDetail.status === 1){
@@ -135,57 +130,130 @@ class ProductScreen extends React.Component{
 
     render(){
         let productView;
-        const taskId = this.props.navigation.getParam('taskid','NO-ID')
+        let taskId = this.props.navigation.getParam('taskid','NO-ID')
+        let data = this.state.productDetail 
+        let addmoney = data['AddChat']+data['AddCommandsLike']+data['AddCoupons']+data['AddOpenOtherProduct']+data['AddOpenProduct']+data['AddSaveShop']+data['AddShoppingCar']
+        let money_algorithm_value = MoneyAlgorithm(data['event'],(data['buyNum'] * data['buyPrice']),addmoney,data['huabeiId'])
+        let buy_money= money_algorithm_value[1]
         if(this.state.loading){
-            productView = (
-                <View style={{flex:1}}>
-                <View style={styles.container}>
-                <ScrollView
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                    pagingEnabled={true}>
-                    {this.renderChilds()}
-                </ScrollView>
+            if(this.state.productDetail['event']==1){
+                productView = (
+                    <View style={{flex:1}}>
+                    <View style={{flex:0.5}}>
+                    <ScrollView
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                        pagingEnabled={true}>
+                        {this.renderChilds()}
+                    </ScrollView>
+                    </View>
+                    <View>
+
+                    </View>
+                    <View style={{flex:0.43}}>
                     <ScrollView>
-                        <Button
-                            title="Delete Record"
-                            onPress={() => Alert.alert(
-                                '还没捆绑账号哦，请绑定账号，',
-                                'alertMessage',
-                                [
-                        
-                                    {text: '先不绑定', onPress: () => console.log('Cancel Pressed!')},
-                                    {text: '马上绑定', onPress: this.onDeleteBTN},
+                        <View>
+                        <Text></Text>
+                        <Text style={{fontSize:11, color:'#dc3232'}}>￥<Text style={{fontSize:23}}>{buy_money-(data['buyNum']*data['buyPrice'])}</Text></Text>
+                        <View>
+                        <View style={{flexDirection: 'row'}}>
+                        <Text style={{fontSize:13}}><Text style={{fontSize:11, backgroundColor:'#dc3232', color:'white'}}>{data['ShopSort']}</Text>
+                        类型：红包试用</Text>
+                        </View>
+                        <Text>
+                        <Text style={{fontSize:15, color:'gray'}} >付：{data['buyNum'] * data['buyPrice']} 剩：{data['orderNumber']}</Text>
+                            </Text>
+                         </View>
+                        </View>
+                        <Text></Text>
+                        <View>
+                        <Text style={{textAlignVertical: "center",textAlign: "center",fontSize:11, color:'gray'}} >---</Text>
+                        </View>
+                        <Text></Text>
+                        {this.renderDeatlsImage()}
+                    </ScrollView>
+                    </View>
+
+                    <View style={styles.shopcart}>
+                        <View style={[styles.bottomItem,{width:window.width*0.7}]}></View>
+                        <View style={[styles.bottomItem,{width:window.width*0.3,backgroundColor: 'red',color:'white'} ]}>
+                        <Text
+                        style={{color:'white'}}
+                        onPress={() => Alert.alert(
+                                        '马上开始试用？',
+                                        '开始试用吗？请在40分钟内完成噢',
+                                [ 
+                                    {text: '马上试用', onPress: () => this.genrateTask()},
+                                    {text: '先不开始', onPress: () => console.log('close')},
                                 ],
                                 { cancelable: false }
-                            )}
-                        />
-                        <Text>xxxx</Text>
-                        {this.renderDeatlsImage()}
-                        <Text>x</Text>
-                        <Text>123213</Text>
-                    </ScrollView>
-                </View>
-
-                <View style={styles.shopcart}>
-                    <View style={[styles.bottomItem,{width:window.width*0.7}]}>
-                    <Text>红包试用：</Text><Text style={{ color : "red"}}>5.51元</Text></View>
-                    <View style={[styles.bottomItem,{width:window.width*0.3,backgroundColor: 'red'} ]}>
-                    <Text
-                    onPress={() => Alert.alert(
-                                    '马上开始试用？',
-                                    '开始试用吗？请在40分钟内完成噢',
-                            [ 
-                                {text: '马上试用', onPress: () => this.genrateTask()},
-                                {text: '先不开始', onPress: () => console.log('close')},
-                            ],
-                            { cancelable: false }
-                            )
-                            }
-                    >下单试用</Text></View>
+                                )
+                                }
+                        >下单试用</Text></View>
+                        </View>
                     </View>
-                </View>
-            )
+                )
+            }else if(this.state.productDetail['event']==2){
+                productView = (
+                    <View style={{flex:1}}>
+                    <View style={{flex:0.5}}>
+                    <ScrollView
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                        pagingEnabled={true}>
+                        {this.renderChilds()}
+                    </ScrollView>
+                    </View>
+                    <View>
+
+                    </View>
+                    <View style={{flex:0.43}}>
+                    <ScrollView>
+                        <View>
+                        <Text></Text>
+                        <Text style={{fontSize:11, color:'#dc3232'}}>￥
+                        <Text style={{fontSize:23}}>{data['ReturnBuyPrice']-(data['buyNum']*data['buyPrice'])}</Text>
+                        </Text>
+                        <View>
+                        <View style={{flexDirection: 'row'}}>
+                        <Text style={{fontSize:13}}><Text style={{fontSize:11, backgroundColor:'#dc3232', color:'white'}}>{data['ShopSort']}</Text>
+                        类型：免费折扣</Text>
+                        </View>
+                        <Text>
+                            <Text style={{fontSize:11}} >付：{data['buyNum'] * data['buyPrice']} 返：{data['ReturnBuyPrice']}</Text>
+                        </Text>
+                         </View>
+                        </View>
+                        <Text></Text>
+                        <View>
+                        <Text style={{textAlignVertical: "center",textAlign: "center",fontSize:11, color:'gray'}} >---</Text>
+                        </View>
+                        <Text></Text>
+                        {this.renderDeatlsImage()}
+                    </ScrollView>
+                    </View>
+
+                    <View style={styles.shopcart}>
+                        <View style={[styles.bottomItem,{width:window.width*0.7}]}></View>
+                        <View style={[styles.bottomItem,{width:window.width*0.3,backgroundColor: 'red',color:'white'} ]}>
+                        <Text
+                        style={{color:'white'}}
+                        onPress={() => Alert.alert(
+                                        '马上开始试用？',
+                                        '开始试用吗？请在40分钟内完成噢',
+                                [ 
+                                    {text: '马上试用', onPress: () => this.genrateTask()},
+                                    {text: '先不开始', onPress: () => console.log('close')},
+                                ],
+                                { cancelable: false }
+                                )
+                                }
+                        >下单试用</Text></View>
+                        </View>
+                    </View>
+                )
+            }
+
         }else{
             productView=(
             <View><Text>this.state.taskId</Text></View>

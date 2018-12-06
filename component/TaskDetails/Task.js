@@ -16,6 +16,7 @@ import * as picker  from "react-native-image-picker";
 import {TextareaItem,ImagePicker,WhiteSpace,Button} from 'antd-mobile-rn';
 import CurrencyInput from 'react-currency-input';
 import Qiniu,{Auth,ImgOps,Conf,Rs,Rpc} from 'react-native-qiniu';
+var MoneyAlgorithm = require("../MoneyAlgorithm")
 
 let token = ''
 const photoOptions = {
@@ -511,6 +512,10 @@ class taskScreen extends React.Component {
     render() {
         let productView;
         let textview = '<Text>试用附加任务：{this.state.AddMoney}</Text>'
+        // let data = this.state.productDetail 
+        // let addmoney = data['AddChat']+data['AddCommandsLike']+data['AddCoupons']+data['AddOpenOtherProduct']+data['AddOpenProduct']+data['AddSaveShop']+data['AddShoppingCar']
+        // let money_algorithm_value = MoneyAlgorithm(data['event'],(data['buyNum'] * data['buyPrice']),addmoney,data['huabeiId'])
+        // let buy_money= money_algorithm_value[1]
 /*
 * 信息
      1. 所有行为的截图

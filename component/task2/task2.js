@@ -97,7 +97,8 @@ export default class MyComponent extends React.Component {
     //listview数据加工成页面
     _renderRow(data){
         let testV  = JSON.parse(data['Details'])
-        let money_algorithm_value = MoneyAlgorithm(data['event'],(data['buyNum'] * data['buyPrice']),0,0)
+        let addmoney = data['AddChat']+data['AddCommandsLike']+data['AddCoupons']+data['AddOpenOtherProduct']+data['AddOpenProduct']+data['AddSaveShop']+data['AddShoppingCar']
+        let money_algorithm_value = MoneyAlgorithm(data['event'],(data['buyNum'] * data['buyPrice']),addmoney,data['huabeiId'])
         let buy_money= money_algorithm_value[1]
         let returnDataView;
         if(data['event']==1){
