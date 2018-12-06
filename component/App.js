@@ -8,7 +8,8 @@ import deviceStorage from "./Login/jwt/services/deviceStorage";
 // device.DeviceID = DeviceInfo.getUniqueID();
 
 //** --- input class --- **//
-let Home = require('./Home/Home');
+let task1 = require('./task1/task1_nav');
+let task2 = require('./task2/task2_nav');
 let Share = require('./Share/Share');
 let TaskView = require('./TaskView/TaskView');
 let TaskDetailsScreen = require('./TaskDetails/Task');
@@ -25,7 +26,7 @@ deviceStorage.get('token').then((GetToken) => {
         });
 
 const TabView = createBottomTabNavigator({
-    试用: { screen: Home,
+    红包试用: { screen: task1,
         navigationOptions: ({ navigation }) => ({
                 tabBarOnPress: ({ navigation, defaultHandler }) => {
                     deviceStorage.get('token').then((GetToken) => {
@@ -35,7 +36,7 @@ const TabView = createBottomTabNavigator({
                         }else {defaultHandler(); }}
                     })
     },
-    分享: { screen: Share,
+    免费折扣: { screen: task2,
         navigationOptions: ({ navigation }) => ({
                 tabBarOnPress: ({ navigation, defaultHandler }) => {
                     deviceStorage.get('token').then((GetToken) => {

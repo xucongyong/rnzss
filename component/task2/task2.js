@@ -79,7 +79,7 @@ export default class MyComponent extends React.Component {
         deviceStorage.get('token').then((GetToken) => {
             token = GetToken
             this.setState({token:GetToken})
-            axios.get(MyUrl, { headers: { Authorization: token, sort:0,version:'1.0'}})
+            axios.get(MyUrl, { headers: { Authorization: token, event:'2'}})
                 .then(response => {
                     console.log(response.data)
                     this.setState({
@@ -97,24 +97,43 @@ export default class MyComponent extends React.Component {
     _renderRow(data){
         var testV  = JSON.parse(data['Details'])
         let returnDataView;
-        returnDataView=(<TouchableOpacity onPress={()=> {
-                this.props.navigation.navigate('ProductScreen',{taskId:data['SellOrderId']})}}>
-            <View style={styles.cellBoxStyle}>
-                <View>
+        if(data['event']==1){
+            returnDataView=(<TouchableOpacity onPress={()=> {
+                    this.props.navigation.navigate('ProductScreen',{taskId:data['SellOrderId']})}}>
+                <View style={styles.cellBoxStyle}>
+                    <View>
                         <Image
                           style={{width: 80, height: 80}}
                           source={{uri: testV['mainImage'][0]}}
                         />
+                    </View>
+                    <View>
+                        <Text>{testV['name']}</Text>
+                    <Text>付款：{data['buyNum'] * data['buyPrice']}：红包：{data['buyNum']},{data['buyPrice']}，剩：{data['orderNumber']}</Text>
+                        <Text>开始：{data['startDate']} </Text>
+                        <Text>类型：红包试用，店铺：{data['ShopSort']}时间：{data['MinTime']} - {data['MaxTime']}</Text>
+                    </View>
                 </View>
-                <View>
-                    <Text>{testV['name']}</Text>
-                <Text>付款：{data['buyNum'] * data['buyPrice']}：返：{data['BuyGetPrice']},红包：{data['BuyGetPrice'] -(data['buyNum'] * data['buyPrice'])}，剩：{data['orderNumber']}</Text>
-                    <Text>时间：{data['MinTime']} - {data['MaxTime']},开始：{data['startDate']} </Text>
-                    <Text>{data['ShopSort']}，任务类型：{data['event']}，用户要求：{data['huabeiId']}</Text>
+                </TouchableOpacity>)
+            }else if(data['event']==2){
+            returnDataView=(<TouchableOpacity onPress={()=> {
+                    this.props.navigation.navigate('ProductScreen',{taskId:data['SellOrderId']})}}>
+                <View style={styles.cellBoxStyle}>
+                    <View>
+                            <Image
+                              style={{width: 80, height: 80}}
+                              source={{uri: testV['mainImage'][0]}}
+                            />
+                    </View>
+                    <View>
+                        <Text>{testV['name']}</Text>
+                    <Text>付款：{data['buyNum'] * data['buyPrice']}：返：{data['BuyGetPrice']},红包：{data['BuyGetPrice'] -(data['buyNum'] * data['buyPrice'])}，剩：{data['orderNumber']}</Text>
+                        <Text>类型：返现试用，店铺：{data['ShopSort']}</Text>
+                        <Text>时间：{data['MinTime']} - {data['MaxTime']},开始：{data['startDate']} </Text>
+                    </View>
                 </View>
-            </View>
-            </TouchableOpacity>)
-
+                </TouchableOpacity>)
+                }
         return (
             <View>{returnDataView}</View>
         )
@@ -179,7 +198,8 @@ export default class MyComponent extends React.Component {
                         />}
                     renderFooter={()=>this.renderFooter()}
                     onEndReached={ ()=>this._toEnd() }
-                /><Text>{this.state.token}</Text></View>
+                />
+                </View>
             )
         }
 
@@ -205,7 +225,7 @@ const styles = StyleSheet.create({
         marginLeft: 5,
         marginRight: 5,
         marginVertical: 3,
-        borderColor: '#dddddd',
+        borderColor: '#ffffff',
         borderStyle: null,
         borderWidth: 0.5,
         borderRadius: 2,
