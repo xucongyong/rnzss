@@ -175,8 +175,8 @@ class ProductScreen extends React.Component{
                     </View>
 
                     <View style={styles.shopcart}>
-                        <View style={[styles.bottomItem,{width:window.width*0.7}]}></View>
-                        <View style={[styles.bottomItem,{width:window.width*0.3,backgroundColor: 'red',color:'white'} ]}>
+                        <View style={[styles.bottomItem,{width:window.width*0.3}]}></View>
+                        <View style={[styles.bottomItem,{width:window.width*0.7,backgroundColor: 'red',color:'white'} ]}>
                         <Text
                         style={{color:'white'}}
                         onPress={() => Alert.alert(
@@ -234,8 +234,8 @@ class ProductScreen extends React.Component{
                     </View>
 
                     <View style={styles.shopcart}>
-                        <View style={[styles.bottomItem,{width:window.width*0.7}]}></View>
-                        <View style={[styles.bottomItem,{width:window.width*0.3,backgroundColor: 'red',color:'white'} ]}>
+                        <View style={[styles.bottomItem,{width:window.width*0.3}]}></View>
+                        <View style={[styles.bottomItem,{width:window.width*0.7,backgroundColor: 'red',color:'white'} ]}>
                         <Text
                         style={{color:'white'}}
                         onPress={() => Alert.alert(

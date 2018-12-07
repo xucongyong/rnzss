@@ -215,7 +215,7 @@ export default class MyComponent extends React.Component {
                         />}
                     renderFooter={()=>this.renderFooter()}
                     onEndReached={ ()=>this._toEnd() }
-                /><Text>{this.state.token}</Text></View>
+                /></View>
             )
         }
 
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         backgroundColor: 'white',
         padding: 10,
-        height: 100,
+        height: 110,
         borderColor: '#ffffff',
         //borderStyle: null,
         //borderWidth: 0.5,
