@@ -2,30 +2,26 @@ import React, { Component } from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import { createStackNavigator,createTabNavigator,createMaterialTopTabNavigator } from 'react-navigation';
 
-let TaskViewHome = require('./TaskViewHome');
+let TaskViewProcess = require('./TaskViewProcess');
+let TaskViewClose = require('./TaskViewClose');
+let TaskViewDone = require('./TaskViewDone');
 
 
 const Screen = createMaterialTopTabNavigator(
     {
-        进行: {
-            screen: TaskViewHome
-        },
-        操作: {
-            screen: TaskViewHome
-        },
-        申诉: {
-            screen: TaskViewHome
+        进行中: {
+            screen: TaskViewProcess
         },
         完成: {
-            screen: TaskViewHome
+            screen: TaskViewDone
         },
         关闭: {
-            screen: TaskViewHome
+            screen: TaskViewClose
         }
 
     },
     {
-        initialRouteName: '进行',
+        initialRouteName: '进行中',
         tabBarPosition:'top',
         lazy:true,
         swipeEnabled:true,

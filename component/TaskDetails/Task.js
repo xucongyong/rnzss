@@ -113,7 +113,7 @@ class taskScreen extends React.Component {
             BuyTaskCommentEvent:0,
             BuyTaskCommentImg:[],
             BuyTaskCommentText:' ',
-            imgURL:"http://www.hangge.com/blog/images/logo.png",
+            imgURL:"http://imgs.zhess.com/154269024063980266.jpg",
 
         }
         this.cancelTask = this.cancelTask.bind(this)

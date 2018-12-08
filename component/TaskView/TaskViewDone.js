@@ -13,7 +13,7 @@ import Dimensions from 'Dimensions';
 const {width, height} = Dimensions.get('window');
 const dataUrl = 'https://api.douban.com/v2/movie/top250?count=350';
 var serverUrl = require("../websettings")
-const GetBuyTaskUrl = serverUrl+'/m/getbuytask';
+const GetBuyTaskUrl = serverUrl+'/m/getbuytaskdone';
 
 const axios = require('axios');
 import deviceStorage from "../Login/jwt/services/deviceStorage";
@@ -54,7 +54,7 @@ export default class MyComponent extends React.Component {
         deviceStorage.get('token').then((GetToken) => {
             token = GetToken
             this.setState({token:GetToken})
-            axios.get(GetBuyTaskUrl, { headers: { Authorization: token, sort:0,version:'1.0'}})
+            axios.get(GetBuyTaskUrl, { headers: { Authorization: token, sort:0}})
                 .then(response => {
                     console.log('response.data')
                     console.log(response.data)
@@ -76,7 +76,8 @@ export default class MyComponent extends React.Component {
             <TouchableOpacity onPress={()=> {
                 this.props.navigation.navigate('TaskDetails',{taskId:data['BuyTaskId']})}}>
             <View style={styles.cellBoxStyle}>
-                <Text>{'orderSort:'+data['orderSort']+'taskId:'+data['BuyTaskId']}</Text>
+                <Text>{'试用分类:'+data['event']+'订单状态：'+data['BuyTaskState']}</Text>
+                <Text>{'关键词:'+data['KeyWord']+'平台订单号：'+data['PlatFormOrderId']}</Text>
             </View>
             </TouchableOpacity>
         )
@@ -94,13 +95,11 @@ export default class MyComponent extends React.Component {
                 //     <ActivityIndicator color="red"/>
                 // </View>
                 <View style={{marginVertical: 10,justifyContent:'center',alignItems:'center'}}>
-                    <Text>end</Text>
                 </View>
             )
         }else{
             return(
                 <View style={{marginVertical: 10,justifyContent:'center',alignItems:'center'}}>
-                    <Text>end</Text>
                 </View>
             )
         }
@@ -119,7 +118,7 @@ export default class MyComponent extends React.Component {
             viewList = (
                 <View>
                 <ActivityIndicator color="#0000ff" style={{marginTop:100}}/>
-                <Text>token:{this.state.token}</Text>
+                <Text>end下拉刷新</Text>
                 </View>
                 
             )
@@ -159,7 +158,7 @@ const styles = StyleSheet.create({
     },
     cellBoxStyle:{
         flex: 1,
-        flexDirection:'row',
+        flexDirection:'column',
         backgroundColor: 'white',
         padding: 10,
         height: 95,
