@@ -37,43 +37,21 @@ class taskScreen extends React.Component {
     }
     render() {
     	let ViewDetails
+
         if(this.state.loading){
-            if(this.state.task_state===0||this.state.task_state===1||this.state.task_state===2||this.state.task_state===3||this.state.task_state===4){
+            if(this.state.task_state){
                 ViewDetails=(
                         <View style={{flex:1}}>
                         <View style={{flex:1}}></View>
                         <View style={{flex:1}}>
-                        <Text onPress={() => this.props.navigation.navigate('TaskDetails',{taskId: this.state.taskId})}>查看试用任务</Text>
                         <Text onPress={() => this.props.navigation.navigate('index',{taskId: this.state.taskId})}>回到首页</Text>
                         </View>
                         <View style={{flex:1}}></View>
                         </View>
                         )
-            }else if(this.state.task_state===5){
-                ViewDetails=(
-                        <View style={{flex:1}}>
-                        <View style={{flex:1}}></View>
-                        <View style={{flex:1}}>
-                        <Text onPress={() => this.props.navigation.navigate('TaskDetails',{taskId: this.state.taskId})}>查看试用任务</Text>
-                        <Text onPress={() => this.props.navigation.navigate('index',{taskId: this.state.taskId})}>回到首页</Text>
-                        </View>
-                        <View style={{flex:1}}></View>
-                        </View>
-                        )
-            }else if(this.state.task_state===6){
-                ViewDetails=(
-                        <View style={{flex:1}}>
-                        <View style={{flex:1}}></View>
-                        <View style={{flex:1}}>
-                        <Text onPress={() => this.props.navigation.navigate('TaskDetails',{taskId: this.state.taskId})}>查看试用任务</Text>
-                        <Text onPress={() => this.props.navigation.navigate('index',{taskId: this.state.taskId})}>回到首页</Text>
-                        </View>
-                        <View style={{flex:1}}></View>
-                        </View>
-                        )
-                }
+            }
         }else{
-                ViewDetails=(<ActivityIndicator color="#0000ff" style={{marginTop:50}} />)
+                ViewDetails=(<ActivityIndicator color="#0000ff" style={{marginTop:100}} />)
         }
         return (
             <View style={{flex:1}}>

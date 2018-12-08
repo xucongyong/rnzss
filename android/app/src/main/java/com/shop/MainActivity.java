@@ -2,7 +2,7 @@ package com.shop;
 
 import com.facebook.react.ReactActivity;
 import com.umeng.analytics.MobclickAgent;
-
+import com.rnfs.RNFSPackage;
 public class MainActivity extends ReactActivity {
 
     /**
@@ -21,5 +21,13 @@ public class MainActivity extends ReactActivity {
     @Override
     protected String getMainComponentName() {
         return "shop";
+    }
+
+    @Override
+    protected List<ReactPackage> getPackages() {
+        return Arrays.<ReactPackage>asList(
+                new MainReactPackage(), // <---- add comma
+                new RNFSPackage() // <---------- add package
+        );
     }
 }

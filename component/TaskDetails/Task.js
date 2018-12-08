@@ -1,5 +1,21 @@
 import React from "react";
-import {DeviceEventEmitter,StyleSheet,TextInput,Dimensions,Text, View, ScrollView,Image,ActivityIndicator,TouchableOpacity,Alert} from "react-native";
+import {Platform,
+        CameraRoll,
+        DeviceEventEmitter,
+        StyleSheet,
+        TextInput,
+        Dimensions,
+        Text, 
+        View, 
+        ScrollView,
+        Image,
+        ActivityIndicator,
+        TouchableOpacity,
+        Alert,
+        Modal
+        } from "react-native";
+import ImageViewer from 'react-native-image-zoom-viewer'
+import RNFS from 'react-native-fs';
 const window = Dimensions.get('window');
 const imageWidth = (window.width/3)+30;
 const imageHeight = window.height;
@@ -94,6 +110,11 @@ class taskScreen extends React.Component {
             add_money:0,
             buyer_money:0,
             seller_money:0,
+            BuyTaskCommentEvent:0,
+            BuyTaskCommentImg:[],
+            BuyTaskCommentText:' ',
+            imgURL:"http://www.hangge.com/blog/images/logo.png",
+
         }
         this.cancelTask = this.cancelTask.bind(this)
         this.closeTask = this.closeTask.bind(this)
@@ -106,9 +127,9 @@ class taskScreen extends React.Component {
         this.AlertTaskStateUpdate = this.AlertTaskStateUpdate.bind(this)
         this.TaskStateUpdate6 = this.TaskStateUpdate6.bind(this)
         this.AlertTaskStateUpdate6 = this.AlertTaskStateUpdate6.bind(this)
+        this.DownloadImage = this.DownloadImage.bind(this)
     }
     componentWillMount() {
-
         deviceStorage.get('token').then((GetToken) => {
             token = GetToken
             axios.post(GetTokenUrl, {headers: {Authorization: token}})
@@ -121,9 +142,7 @@ class taskScreen extends React.Component {
         
         // this.startTimer();
     }
-    componentDidMount(){
-        this.subscription = DeviceEventEmitter.addListener('key',this.refreshData)
-    }
+
     // componentWillUnmount(){
     //     clearInterval(this.timer);
     // }
@@ -135,6 +154,16 @@ class taskScreen extends React.Component {
             axios.get(taskUrl, {headers: {Authorization: token, sort: 0, version: '1.0', taskId: this.state.taskId}})
                 .then(response => {
                     this.setState({productDetail:response.data})
+                    this.setState({BuyTaskCommentEvent:response.data.BuyTaskCommentEvent})
+                    this.setState({BuyTaskCommentText:response.data.BuyTaskCommentText})
+                    if(response.data.BuyTaskCommentEvent){
+                        try{
+                            this.setState({BuyTaskCommentImg:JSON.parse(response.data.BuyTaskCommentImg)})
+                        }catch(Error){
+                            this.setState({BuyTaskCommentImg:[]})
+
+                        }
+                    }
                     this.setState({ImageMain:JSON.parse(this.state.productDetail['Details'])['mainImage']})
                     this.setState({ImageDetails:JSON.parse(this.state.productDetail['Details'])['DetailsImage']})
                     this.setState({ImageNumber: response.data.AddMoney+1})
@@ -232,7 +261,6 @@ class taskScreen extends React.Component {
                     let MoneyAlgorithm_temp = MoneyAlgorithm(response.data.event,total_money_temp,add_money_temp,response.data.huabeiId)
                     this.setState({buyer_money:MoneyAlgorithm_temp[1]})
                     this.setState({seller_money:MoneyAlgorithm_temp[0]})
-
                     this.setState({loading: true})
                 })
                 .catch((error) => {
@@ -515,11 +543,65 @@ class taskScreen extends React.Component {
             filesurl: filesurl,
         });
         }
+
+     DownloadImage(uri) {
+      if (!uri) return null;
+         return new Promise((resolve, reject) => {
+             let timestamp = (new Date()).getTime();//获取当前时间错
+             let random = String(((Math.random() * 1000000) | 0))//六位随机数
+             let dirs = Platform.OS === 'ios' ? RNFS.LibraryDirectoryPath : RNFS.ExternalDirectoryPath; //外部文件，共享目录的绝对路径（仅限android）
+             const downloadDest = `${dirs}/${timestamp+random}.jpg`;
+             const formUrl = uri;
+             const options = {
+                 fromUrl: formUrl,
+                 toFile: downloadDest,
+                 background: true,
+                 begin: (res) => {
+                     // console.log('begin', res);
+                     // console.log('contentLength:', res.contentLength / 1024 / 1024, 'M');
+                 },
+                };
+             try {
+                 const ret = RNFS.downloadFile(options);
+                 ret.promise.then(res => {
+                     // console.log('success', res);
+                     // console.log('file://' + downloadDest)
+                     var promise = CameraRoll.saveToCameraRoll(downloadDest);
+                     promise.then(function(result) {
+                        // alert('保存成功！地址如下：\n' + result);
+                     }).catch(function(error) {
+                          console.log('error', error);
+                         // alert('保存失败！\n' + error);
+                     });
+                     resolve(res);
+                 }).catch(err => {
+                     reject(new Error(err))
+                 });
+             } catch (e) {
+                 reject(new Error(e))
+             } 
+         })
+     
+    }
     render() {
+        const imagesUrl = [{
+                // Simplest usage.
+                url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460',
+             
+                // width: number
+                // height: number
+                // Optional, if you know the image size, you can set the optimization performance
+             
+                // You can pass props to <Image />.
+                props: {
+                    // headers: ...
+                }
+                }]
         let name;
         let productView;
         let FootButton;
         let show_money_code;
+        let task_comment;
         let progress;
         files = this.state.files
         //view money
@@ -770,6 +852,21 @@ class taskScreen extends React.Component {
                                     </View>
                                     </View>
                                     )
+                task_comment= (
+                    <View>
+                    <Text
+                        onPress={() => this.DownloadImage(this.state.imgURL)}
+                        >
+                    评价：
+                    </Text>
+                    <TextInput style = {styles.input}
+                        name='BuyTaskCommentText'
+                        type="number"
+                        numberOfLines = {3}
+                        value={this.state.BuyTaskCommentText}
+                        />
+                    </View>
+                    )  
                 productView = (<View>
                                 <Text>附加任务:
                         <Text style={{color: "red"}}>好评截图:
@@ -849,6 +946,7 @@ class taskScreen extends React.Component {
                 {MainPrice}
                 {show_money_code}
                 {progress}
+                {task_comment}
                 {productView}
                 </ScrollView>
                 </View>
