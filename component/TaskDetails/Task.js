@@ -281,7 +281,7 @@ class taskScreen extends React.Component {
         let nn = 1
         return this.state.BuyTaskCommentImg.map((x) => {
             nn +=1
-            return <View><Text>评论图片{nn}</Text><Image source={{uri: x}} style={styles.imageStyle} /></View>;
+            return <View><Text>试用「追评」图片{nn}</Text><Image source={{uri: x}} style={styles.imageStyle} /></View>;
         })
     }
     clearPayMoney(xx){
@@ -760,15 +760,12 @@ class taskScreen extends React.Component {
             }
             if(this.state.TaskState == 2 || this.state.TaskState == 3 || this.state.TaskState == 4) {
                 FootButton =(<View style={styles.shopcart}>
-                    <View style={[styles.bottomItem, {width: window.width * 0.1}]}>
+                    <View style={[styles.bottomItem, {width: window.width * 0.2}]}>
                         <Text
                             onPress={() => this.cancelTask()}
                         >取消</Text>
                             </View>
-                            <View style={[styles.bottomItem, {width: window.width * 0.2}]}>
-                        <Text>倒计时</Text><Text style={{color: "red"}}>{this.state.TaskState}分</Text>
-                            </View>
-                            <View style={[styles.bottomItem, {width: window.width * 0.7, backgroundColor: 'red'}]}>
+                            <View style={[styles.bottomItem, {width: window.width * 0.8, backgroundColor: 'red'}]}>
                         <Text
                             onPress={() => this.AlertTaskStateUpdate()}
                         >提交保存</Text>
@@ -849,15 +846,11 @@ class taskScreen extends React.Component {
                         )
             } else if (this.state.TaskState === 5||this.state.TaskState === 6||this.state.TaskState === 7) {
                 FootButton =(<View style={styles.shopcart}>
-                                    <View style={[styles.bottomItem, {width: window.width * 0.1}]}>
+                                    <View style={[styles.bottomItem, {width: window.width * 0.2}]}>
                                         <Text
                                             onPress={() => this.cancelTask()}
                                         >取消</Text></View>
-                                    <View style={[styles.bottomItem, {width: window.width * 0.2}]}>
-                                            <Text>倒计时:</Text>
-                                            <Text style={{color: "red"}}>{this.state.TaskState}分</Text>
-                                    </View>
-                                    <View style={[styles.bottomItem, {width: window.width * 0.7, backgroundColor: 'red'}]}>
+                                    <View style={[styles.bottomItem, {width: window.width * 0.8, backgroundColor: 'red'}]}>
                                         <Text
                                             onPress={() => this.AlertTaskStateUpdate6()}
                                         >保存试用报告</Text>
@@ -869,7 +862,7 @@ class taskScreen extends React.Component {
                     <Text
                         onPress={() => this.DownloadImage(this.state.imgURL)}
                         >
-                    评价：
+                    试用「追评」：
                     </Text>
                     <TextInput style = {styles.input}
                         name='BuyTaskCommentText'
@@ -881,7 +874,7 @@ class taskScreen extends React.Component {
                     )  
                 productView = (<View>
                                 <Text>附加任务:
-                        <Text style={{color: "red"}}>好评截图:
+                        <Text style={{color: "red"}}>评价截图
                          </Text>
                             </Text>
                             <ImagePicker
@@ -900,45 +893,15 @@ class taskScreen extends React.Component {
                             onChangeText={(xx)=>this.ClearPlatFormOrderId(xx)}
                             value= {this.state.PlatFormOrderId}
                             />
-                            <Text style={{color: "red"}}>付款:</Text>
+                            <Text style={{color: "red"}}>试用体验报告：</Text>
                             <TextInput style = {styles.input}
-                            name='PayMoney'
-                            value= {this.state.PayMoney}
+                            name='xxx'
                             type="number"
-                            onChangeText={(xx)=>this.clearPayMoney(xx)}
-                            value={this.state.PayMoney}
                             />
-                            <Text style={{color: "red"}}>试用任务：</Text>
-                            <TextInput style = {styles.input}
-                            name='AddMoney'
-                            onChangeText={(xx)=>this.clearAddMoney(xx)}
-                            value={this.state.AddMoney}
-                            type="number"
-                                />
+                        <View style={{flexDirection: 'row'}}>
 
-                                <View style={{flexDirection: 'row'}}>
-                        <Text>店铺类别:
-                        <Text><Text style={{color: "red"}}>{this.state.ShopSort}</Text>
                             <Text>账号:
-                        <Text style={{color: "red"}}>{this.state.PlatFormUserName}</Text>
-                            </Text></Text>{'\n'}
-                            <Text>
-                            搜索:<Text style={{color: "red"}}>{this.state.keyWord}</Text>{'  '}
-                            城市:<Text style={{color: "red"}}>{this.state.city}</Text>{'  '}
-                            <Text>价格:{this.state.priceMin}-{this.state.priceMax}</Text>{'  '}
-                            </Text>
-                            {'\n'}
-                        <Text>店铺：{this.state.ShopUserName}\{this.state.ShopNickName}</Text>{'\n'}
-                            <Text>页面价格：{this.state.showPrice}</Text>{'\n'}
-                            <Text>购买规格：{this.state.buyRules}</Text>{'\n'}
-                            <Text>账号要求：{this.state.huabeiId}</Text>{'\n'}
-                            <Text>礼物：{this.state.gift} - {this.state.gifturl}</Text>{'\n'}
-                            <Text>备注：{this.state.Node}</Text>{'\n'}
-                            <Text>支付：不允许「
-                                                {this.state.PayCard} {' '}
-                            {this.state.PayCoupons} {' '}
-                            {this.state.Payhuabei}{' '}淘宝客]
-                        </Text>{'\n'}
+                        <Text style={{color: "red"}}>{this.state.PlatFormUserName}</Text>{'\n'}
                             </Text>
                             </View>
                             </View>
