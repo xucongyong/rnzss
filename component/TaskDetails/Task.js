@@ -277,7 +277,13 @@ class taskScreen extends React.Component {
             return <Image key={N} source={{uri: x}} style={styles.imageStyle}/>;
         })
     }
-    // }
+    commentsPrice(){
+        let nn = 1
+        return this.state.BuyTaskCommentImg.map((x) => {
+            nn +=1
+            return <View><Text>评论图片{nn}</Text><Image source={{uri: x}} style={styles.imageStyle} /></View>;
+        })
+    }
     clearPayMoney(xx){
         var re = /^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/
         if(re.test(xx)===false){
@@ -603,7 +609,11 @@ class taskScreen extends React.Component {
         let show_money_code;
         let task_comment;
         let progress;
+        const comment_model = (<View>
+                            {this.commentsPrice()}
+                            </View>)
         files = this.state.files
+
         //view money
         const MainPrice = (<ScrollView
                         horizontal={true}
@@ -611,6 +621,8 @@ class taskScreen extends React.Component {
                         pagingEnabled={true}>
                             {this.renderChilds()}
                             </ScrollView>)
+
+
         if(this.state.loading) {
             if(this.state.TaskState==0){
                 progress=(
@@ -948,7 +960,9 @@ class taskScreen extends React.Component {
                 {progress}
                 {task_comment}
                 {productView}
+                {comment_model}
                 </ScrollView>
+                
                 </View>
             <View style={styles.shopcart}>
                     {FootButton}
