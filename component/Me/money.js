@@ -37,6 +37,7 @@ class verifyscreen extends React.Component{
         this.loginUserNode = this.loginUserNode.bind(this);
         this.clearMoney=this.clearMoney.bind(this)
         this.fetchData=this.fetchData.bind(this)
+        this.get_item=this.get_item.bind(this)
   }
     componentDidMount(){
         this.fetchData();
@@ -47,7 +48,6 @@ class verifyscreen extends React.Component{
             this.setState({token:GetToken})
             axios.get(getmoneyUrl,{headers:{authorization:token}})
                 .then(response=>{
-                    console.log(response.data)
                     this.setState({Balance:response.data.Balance})
                     this.setState({PerformMoney:response.data.PerformMoney})
                 })
@@ -56,13 +56,11 @@ class verifyscreen extends React.Component{
             //获取银行卡
             axios.get(cardUrl,{headers:{authorization:token}})
                 .then(response=>{
-                    console.log(response.data)
                   let card_dict = {}
                   let array_list_number = 0
                   while(response.data.length>array_list_number){
-                      //Object.assign(card_dict,{response.data[array_list_number.toString()],response.data[array_list_number.toString()]})
-                      Object.assign(card_dict,{'x':array_list_number})
-                      console.log(response.data[array_list_number.toString()])
+                      //Object.assign(card_dict,{response.data[array_list_number.toString()]['UserBankCardId'],response.data[array_list_number.toString()]['UserBankCard']})
+                      card_dict[response.data[array_list_number.toString()]['UserBankCardId']]=response.data[array_list_number.toString()]['UserBankCard']
                       array_list_number+=1
                     }
                     this.setState({cardIdoptions:card_dict})
@@ -121,9 +119,15 @@ class verifyscreen extends React.Component{
         }
         console.log(this.state.Money)
     }
-
+    get_item(){
+          return this.state.cardIdoptions.map(function(news){
+                return <Picker.Item label={news} value={news} key={news}/>
+            // return <Picker.Item label={this.state.cardIdoptions[testvalue]} value={testvalue} key={testvalue}/>
+          })
+        }
     render(){
         let ViewCode
+
         if(this.state.isLoading==true){
                 ViewCode = (
                        <View style={styles.LoginPage}>
@@ -133,20 +137,19 @@ class verifyscreen extends React.Component{
                             <View style={{flexDirection: 'row'}}>
                             <Text style={styles.loginSubTitle}>￥</Text>
                             <TextInput style = {styles.input}
-                                    name='Money'
+                                    keyboardType="numeric"
                                     value= {this.state.Money}
-                                    type="number"
                                     onChangeText={(xx)=>this.clearMoney(xx)}
-                                    value={this.state.Money}
                                     />
                             </View>
                             <Picker
                               selectedValue={this.state.select_value}
                               style={{ height: 50, width: 100 }}
                               onValueChange={(itemValue, itemIndex) => this.setState({select_value: itemValue})}>
-                              <Picker.Item label="Java" value="java" />
-                              {Object.keys(this.state.cardIdoptions).map((key,value) => {
-                                    return (<Picker.Item label={key} value={value} key={key}/>)})}
+                              {console.log(this.state.cardIdoptions)}
+                              {Object.keys(this.state.cardIdoptions).map((key) => {
+                                      return (<Picker.Item label={this.state.cardIdoptions[key]} value={key} key={key}/>) //if you have a bunch of keys value pair
+                                  })}
                             </Picker>
                             </View>
                         </View>
@@ -204,7 +207,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textinput:{
-    marginBottom: 15
+    marginBottom: 60
   },
     button: {
     flexDirection:'row',
