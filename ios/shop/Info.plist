@@ -50,6 +50,11 @@
 		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
+			<key>img.zhess.com</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
 			<key>zhess.com</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>

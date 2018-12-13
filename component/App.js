@@ -14,7 +14,11 @@ let Share = require('./Share/Share');
 let TaskView = require('./TaskView/TaskView');
 let TaskDetailsScreen = require('./TaskDetails/Task');
 let TaskRemindScreen = require('./TaskDetails/TaskRemind');
-let MeScreen = require('./Me/Me');
+let MeScreen = require('./Me/me_nav');
+let verify_screen = require('./Me/verify');
+let card_screen = require('./Me/card');
+let money_screen = require('./Me/money');
+
 let addTbAccountScreen = require('./Me/AddTbAccount');
 let ProductScreen = require('./Product/Product')
 let OrderScreen = require('./Order/Order')
@@ -69,7 +73,7 @@ const TabView = createBottomTabNavigator({
         },
     
     {
-        initialRouteName: '红包试用',
+        initialRouteName: '订单',
         lazy:true,
     },
 )
@@ -82,6 +86,24 @@ const RootStack = createStackNavigator(
                 headerTransparent: true,
             }
         },
+        //身份证验证银行卡验证
+        verify: { screen: verify_screen,
+            navigationOptions: {
+                headerTransparent: true,
+            }
+         },
+        //身份证验证银行卡验证
+        card: { screen: card_screen,
+            navigationOptions: {
+                headerTransparent: true,
+            }
+         },
+        //提现页面
+        money: { screen: money_screen,
+            navigationOptions: {
+                headerTransparent: true,
+            }
+         },
         //产品页
         ProductScreen: {
             screen: ProductScreen,
@@ -133,6 +155,7 @@ const RootStack = createStackNavigator(
      },
     {
         initialRouteName: 'index',
+        lazy:true,
     }
 )
 

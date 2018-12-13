@@ -1,11 +1,12 @@
 import React from "react";
-import {StyleSheet,Text, View, ScrollView, Button, AsyncStorage} from "react-native";
+import {StyleSheet,Text, View, ScrollView, Button, AsyncStorage,TouchableHighlight} from "react-native";
 import deviceStorage from "../Login/jwt/services/deviceStorage";
 import axios from 'axios';
 import weburl from "../websettings";
 import HttpGetPost from '../HttpGetPost';
 //import ImagePicker from 'react-native-image-picker';
 var ImagePicker = require("react-native-image-picker")
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 // More info on all the options is below in the API Reference... just some common use cases shown here
 const options = {
@@ -25,14 +26,6 @@ const options = {
 
 
 var CommonCell = require('./CommonCell');
-class Hometitle extends React.Component{
-    render(){
-        return(
-            <View>// style={styles.HeaderTitle}
-                <Text style={{color:'white',fontSize:17}}>
-                    个人中心</Text>
-            </View>
-        )}}
 class MeScreen extends React.Component{
         constructor(props){
         super(props);
@@ -46,62 +39,36 @@ class MeScreen extends React.Component{
     }
 
     static navigationOptions =({
-        headerTitle: <Hometitle/>,
         headerStyle: {
-        backgroundColor: '#DC3C78',}
+        backgroundColor: '#DC3C78'}
         })
         render(){
-            function testimage(){
-                console.log('ImagePicker')
-                console.log(ImagePicker)
-                ImagePicker.showImagePicker(options, (response) => {
-                  console.log('Response = ', response);
-                  if (response.didCancel) {
-                    console.log('User cancelled image picker');
-                  } else if (response.error) {
-                    console.log('ImagePicker Error: ', response.error);
-                  } else if (response.customButton) {
-                    console.log('User tapped custom button: ', response.customButton);
-                  } else {
-                    const source = { uri: response.uri };
-
-                    // You can also display the image using data:
-                    // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-
-                    this.setState({
-                      avatarSource: source,
-                    });
-                  }
-                });   
-            }
-
-
 
             return(
                 <View style={{flex:1}}>
-                    <ScrollView>
                         <View>
-                            <CommonCell
-                                title={'余额提现'}
-                            />
-                            <CommonCell
-                                title={'账号'}
-                            />
-                            <CommonCell
-                                title={'微信'}
-                            />
-                            <CommonCell
-                                title={'手机'}
-                            />
-                            <CommonCell
-                                title={'实名验证'}
-                            />
-                            <Text
-                                onPress={() => testimage()}
-                            >getimageurl</Text>
+                            <TouchableHighlight onPress={() => this.props.navigation.navigate('money')}>
+                            <View style={styles.container}>
+                                <Text style={styles.LeftText}>小金库</Text>
+                                <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/>
+                            </View>
+                            </TouchableHighlight>
+                            <TouchableHighlight onPress={() => this.props.navigation.navigate('card')}>
+                            <View style={styles.container}>
+                                <Text style={styles.LeftText}>银行卡</Text>
+                                <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/>
+                            </View>
+                            </TouchableHighlight>
+                            <View style={styles.container}>
+                                <Text style={styles.LeftText}
+                                >淘宝账号</Text>
+                                <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/>
+                            </View>
+                            <View style={styles.container}>
+                                <Text style={styles.LeftText}>京东账号</Text>
+                                <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/>
+                            </View>
                         </View>
-
-                    </ScrollView>
                 </View>
         )
     }
@@ -111,6 +78,20 @@ class MeScreen extends React.Component{
 
 
 const styles = StyleSheet.create({
+    container:{
+        height:44,
+        flexDirection:'row',
+        backgroundColor:'white',
+        borderBottomColor:'#dddddd',
+        borderBottomWidth:0.5,
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        borderRadius: 5,
+        marginBottom: 5,
+    },
+    LeftText:{
+        marginLeft: 15
+    },
     HeaderTitle: {
         width: 250,
         height: 30,

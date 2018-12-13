@@ -21,8 +21,6 @@ class CommonCell extends React.Component {
                 <Text>{this.props.title}</Text>
                 <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/>
             </View>
-
-            // <Image source={{url: <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/> }} style={{width:8, height:13}} />
         )
     }
 }

@@ -23,6 +23,7 @@ var serverUrl = require("../websettings")
 const taskUrl = serverUrl+'/m/task';
 const closeTaskUrl = serverUrl+'/m/closetask';
 const TaskStateUrl = serverUrl+'/m/taskstate';
+const taskstatetwoUrl = serverUrl+'/m/taskstatetwo';
 const GetTokenUrl = serverUrl+'/m/qntoken';
 const axios = require('axios');
 import deviceStorage from "../Login/jwt/services/deviceStorage";
@@ -450,10 +451,10 @@ class taskScreen extends React.Component {
         var rePayMoney = /^([1-5]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/
         var reOrderId = /^([1-9]\d{1,30})/
         var reAddMoney = /^([1-9]\d{0,1})$/
-        if(reOrderId.test(this.state.PlatFormOrderId) ===false||rePayMoney.test(this.state.PayMoney) ===false ||reAddMoney.test(this.state.AddMoney) ===false){
+        if(files.length<0){
             Alert.alert(
                 '',
-                '请填写正确的订单号、交易订单号、交易费 ',
+                '请上传截图 ',
                 [
                     {text: '马上填写', onPress: () => console.log('Cancel Pressed')},
                 ],
@@ -462,7 +463,7 @@ class taskScreen extends React.Component {
         }else{
             deviceStorage.get('token').then((GetToken) => {
                 token = GetToken
-                axios.post(TaskStateUrl, {headers: {Authorization: token,TaskId:this.state.taskId, PayMoney:this.state.PayMoney,AddMoney:this.state.AddMoney,filesurl:JSON.stringify(this.state.filesurl),TaskState:this.state.TaskState,PlatFormOrderId:this.state.PlatFormOrderId}})
+                axios.post(taskstatetwoUrl, {headers: {Authorization: token,TaskId:this.state.taskId,filesurl:JSON.stringify(this.state.filesurl),TaskState:this.state.TaskState,PlatFormOrderId:this.state.PlatFormOrderId}})
                     .then(response => {
                         console.log(response.data)
                         this.setState({productDetail: response.data})
@@ -765,12 +766,12 @@ class taskScreen extends React.Component {
                             onPress={() => this.cancelTask()}
                         >取消</Text>
                             </View>
-                            <View style={[styles.bottomItem, {width: window.width * 0.8, backgroundColor: 'red'}]}>
+                        <View style={[styles.bottomItem, {width: window.width * 0.8, backgroundColor: 'red'}]}>
                         <Text
                             onPress={() => this.AlertTaskStateUpdate()}
-                        >提交保存</Text>
-                            </View>
-                            </View>
+                            >提交保存</Text>
+                        </View>
+                        </View>
                     )
                 productView = (
                             <View>
