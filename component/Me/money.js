@@ -59,6 +59,9 @@ class verifyscreen extends React.Component{
                   let card_dict = {}
                   let array_list_number = 0
                   while(response.data.length>array_list_number){
+                      if(array_list_number==0){
+                          this.setState({select_value:response.data[array_list_number.toString()]['UserBankCardId']})
+                      }
                       //Object.assign(card_dict,{response.data[array_list_number.toString()]['UserBankCardId'],response.data[array_list_number.toString()]['UserBankCard']})
                       card_dict[response.data[array_list_number.toString()]['UserBankCardId']]=response.data[array_list_number.toString()]['UserBankCard']
                       array_list_number+=1
@@ -86,20 +89,22 @@ class verifyscreen extends React.Component{
           }
         deviceStorage.get('token').then((GetToken) => {
             token = GetToken
+            console.log(this.state.select_value)
+            console.log(this.state.Money)
             this.setState({token:GetToken})
             var LoginData =  {
                         Money: this.state.Money,
                         UserBankCardId: this.state.select_value,
+                        authorization:token,
                        }
             console.log(LoginData)
             axios.post(withdrawUrl, LoginData)
                   .then(response=>{
                       console.log(response.data)
-                      console.log(response.data)
                       if (response.data.state==0||response.data.state==1) {
                       this.setState({message: response.data.message});
                     }  else if (response.data.state==2) {
-                      this.setState({message: response.data.message});
+                          this.props.navigation.navigate('index')
                       }
                     })
             .catch((error) => {
@@ -133,7 +138,7 @@ class verifyscreen extends React.Component{
                        <View style={styles.LoginPage}>
                         <View style={styles.loginSection}>
                             <Text style={styles.loginTitle}> 提现小金库 </Text>
-                            <Text style={styles.loginSubTitle}> 可用￥{this.state.Balance},进行中：￥{this.state.PerformMoney}</Text>
+                            <Text> 可用￥{this.state.Balance},进行中：￥{this.state.PerformMoney}</Text>
                             <View style={{flexDirection: 'row'}}>
                             <Text style={styles.loginSubTitle}>￥</Text>
                             <TextInput style = {styles.input}
@@ -144,13 +149,21 @@ class verifyscreen extends React.Component{
                             </View>
                             <Picker
                               selectedValue={this.state.select_value}
-                              style={{ height: 50, width: 100 }}
+                              style={{width: 250 }}
                               onValueChange={(itemValue, itemIndex) => this.setState({select_value: itemValue})}>
                               {console.log(this.state.cardIdoptions)}
                               {Object.keys(this.state.cardIdoptions).map((key) => {
                                       return (<Picker.Item label={this.state.cardIdoptions[key]} value={key} key={key}/>) //if you have a bunch of keys value pair
                                   })}
                             </Picker>
+                              <Button 
+                                style={{width: 150, height: 100, backgroundColor: 'red'}}
+                                onPress={() => this.loginUserNode()}
+                                title="提现"
+                                color="blue"
+                                accessibilityLabel="Learn more about this purple button"
+                              />
+                            <Text>{this.state.message}</Text>
                             </View>
                         </View>
 			            )

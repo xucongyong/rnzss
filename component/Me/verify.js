@@ -89,7 +89,7 @@ class verifyscreen extends React.Component{
                       if (response.data.state==0||response.data.state==1) {
                       this.setState({message: response.data.message});
                     }  else if (response.data.state==2) {
-                      this.setState({message: response.data.message});
+                      this.props.navigation.navigate('index')
                       }
                     })
             .catch((error) => {
