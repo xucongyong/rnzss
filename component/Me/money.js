@@ -1,12 +1,15 @@
 import React from 'react';
-import {StyleSheet, View, Button, TextInput,Text,ActivityIndicator } from 'react-native';
+import {Picker,StyleSheet, View, Button, TextInput,Text,ActivityIndicator } from 'react-native';
 import {NavigationActions,StackActions} from 'react-navigation';
 import axios from 'axios';
 import deviceStorage from "../Login/jwt/services/deviceStorage";
 import CountDownButton from 'react-native-smscode-count-down'
 import AsyncStorage from '../Login/AsyncStorage'
 let serverUrl = require("../websettings")
-let usernameUrl = serverUrl+'/m/username'
+let getmoneyUrl = serverUrl+'/m/getmoney'
+let cardUrl = serverUrl+'/card'
+let withdrawUrl = serverUrl+'/m/withdraw'
+
 
 const resetAction = StackActions.reset({
         index: 0,
@@ -17,18 +20,22 @@ class verifyscreen extends React.Component{
     constructor(props){
         super(props);
         this.state = {
+            cardIdoptions:{},
+            Balance:0,
+            PerformMoney:0,
             name: '',
-            mobile: '',
+            Money: 0,
             identitynumber: '',
             card: '',
             message: '',
             token: '',
             VerifyCode:'',
+            select_value:'',
             isLoading:false,
             isVerify:false,
         }
         this.loginUserNode = this.loginUserNode.bind(this);
-        this.SendSms=this.SendSms.bind(this)
+        this.clearMoney=this.clearMoney.bind(this)
         this.fetchData=this.fetchData.bind(this)
   }
     componentDidMount(){
@@ -38,48 +45,56 @@ class verifyscreen extends React.Component{
         deviceStorage.get('token').then((GetToken) => {
             token = GetToken
             this.setState({token:GetToken})
-            axios.get(usernameUrl,{headers:{authorization:token}})
+            axios.get(getmoneyUrl,{headers:{authorization:token}})
                 .then(response=>{
                     console.log(response.data)
-                    if(response.data.identity_number){
-                        this.setState({identitynumber:response.data.identity_number})
-                        this.setState({name:response.data.Name})
-                        this.setState({isVerify:true})
+                    this.setState({Balance:response.data.Balance})
+                    this.setState({PerformMoney:response.data.PerformMoney})
+                })
+                .catch((error) => {
+                  console.log('error:'+error)})
+            //获取银行卡
+            axios.get(cardUrl,{headers:{authorization:token}})
+                .then(response=>{
+                    console.log(response.data)
+                  let card_dict = {}
+                  let array_list_number = 0
+                  while(response.data.length>array_list_number){
+                      //Object.assign(card_dict,{response.data[array_list_number.toString()],response.data[array_list_number.toString()]})
+                      Object.assign(card_dict,{'x':array_list_number})
+                      console.log(response.data[array_list_number.toString()])
+                      array_list_number+=1
                     }
+                    this.setState({cardIdoptions:card_dict})
                     this.setState({isLoading:true})
                 })
                 .catch((error) => {
                   console.log('error:'+error)})
+
         })
     }
+
     //NodeJS API
     loginUserNode() {
         console.log('loginUserNode')
-        if(/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/.test(this.state.identitynumber)==false) {
-                this.setState({message:'身份证号不正确'});
+        let rePayMoney = /^([1-5]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/
+        if(rePayMoney.test(this.state.Money)==false) {
+                this.setState({message:'请输入正确的金额'});
                 return;
             }
-        if (/^\d{5,6}$/.test(this.state.VerifyCode) === false) {
-                this.setState({message:'验证码不正确'})
-                return
-          }
-        if (/^1\d{10}$/.test(this.state.mobile) === false) {
-                this.setState({message:'请输入正确的手机号。'})
+        if (this.state.Money>this.state.Balance) {
+                this.setState({message:'提现不可大于可用资金'})
                 return
           }
         deviceStorage.get('token').then((GetToken) => {
             token = GetToken
             this.setState({token:GetToken})
             var LoginData =  {
-                        mobile: this.state.mobile,
-                        identitynumber: this.state.identitynumber,
-                        VerifyCode: this.state.VerifyCode,
-                        card: this.state.card,
-                        name: this.state.name,
-                        authorization:this.state.token,
+                        Money: this.state.Money,
+                        UserBankCardId: this.state.select_value,
                        }
             console.log(LoginData)
-            axios.post(mobileLoginUrl, LoginData)
+            axios.post(withdrawUrl, LoginData)
                   .then(response=>{
                       console.log(response.data)
                       console.log(response.data)
@@ -97,49 +112,14 @@ class verifyscreen extends React.Component{
           })
     }
       
-    //send sms  
-    SendSms() {
-
-        // if(this.state.username.length !== 11) {
-        //     this.setState({message:'请输入正确的手机号'});
-        //     return;
-        // }
-        // if(this.state.password.length < 6) {
-        //         this.setState({message:'密码大于5位'});
-        //         return;
-        //     }
-        // if(this.state.password !==this.state.password1 ) {
-        //         this.setState({message:'请输入2个相同的密码'});
-        //         return;
-        //     }
-        if (/^1\d{10}$/.test(this.state.mobile) === false) {
-                this.setState({message:'请输入正确的手机号。'})
-                return
-          }
-        console.log('this.state.mobile:'+this.state.mobile)
-        axios({ method: 'POST', 
-          url: serverUrl+'/sms', 
-          data: { 
-            mobile: this.state.mobile
-           }})
- 
-        .then((response) => {
-          console.log(response)
-          if (response.data.message==='no') {
-            this.setState({message: '重试一次'});
-          }  else if (response.data.message==='yes') {
-            this.setState({message: '验证码发送'});
-              //this.props.navigation.dispatch(resetAction);
-            }
-
-          //AsyncStorage.saveKey("token", response.data.token);
-          //this.props.newJWT(response.data.token);
-          //this.setState(token:response.data)
-        })
-        .catch((error) => {
-          this.setState({message: '网络问题，重新提交'});
-          this.onLoginFail();
-        });
+    clearMoney(xx){
+        var re = /^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/
+        if(re.test(xx)===false){
+            this.setState({Money:''})
+        }else{
+            this.setState({Money:xx})
+        }
+        console.log(this.state.Money)
     }
 
     render(){
@@ -148,8 +128,26 @@ class verifyscreen extends React.Component{
                 ViewCode = (
                        <View style={styles.LoginPage}>
                         <View style={styles.loginSection}>
-                            <Text style={styles.loginTitle}> 钱包 </Text>
-                            <Text style={styles.loginSubTitle}>账号、银行卡、身份必须一致。</Text>
+                            <Text style={styles.loginTitle}> 提现小金库 </Text>
+                            <Text style={styles.loginSubTitle}> 可用￥{this.state.Balance},进行中：￥{this.state.PerformMoney}</Text>
+                            <View style={{flexDirection: 'row'}}>
+                            <Text style={styles.loginSubTitle}>￥</Text>
+                            <TextInput style = {styles.input}
+                                    name='Money'
+                                    value= {this.state.Money}
+                                    type="number"
+                                    onChangeText={(xx)=>this.clearMoney(xx)}
+                                    value={this.state.Money}
+                                    />
+                            </View>
+                            <Picker
+                              selectedValue={this.state.select_value}
+                              style={{ height: 50, width: 100 }}
+                              onValueChange={(itemValue, itemIndex) => this.setState({select_value: itemValue})}>
+                              <Picker.Item label="Java" value="java" />
+                              {Object.keys(this.state.cardIdoptions).map((key,value) => {
+                                    return (<Picker.Item label={key} value={value} key={key}/>)})}
+                            </Picker>
                             </View>
                         </View>
 			            )
@@ -189,7 +187,7 @@ const styles = StyleSheet.create({
   },
   loginSubTitle: {
     color: '#DC3C78',
-    fontSize: 11,
+    fontSize: 40,
     textAlign: 'center',
     marginBottom: 5,
   },
@@ -213,6 +211,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+   input: {
+      height: 40, 
+      borderColor: 'gray', 
+      borderBottomWidth: 1
+   },
     message:{
     marginTop: 16,
     color: '#56688a',
