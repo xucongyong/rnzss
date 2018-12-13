@@ -154,7 +154,7 @@ const RootStack = createStackNavigator(
         },
      },
     {
-        initialRouteName: 'money',
+        initialRouteName: 'index',
         lazy:true,
     }
 )

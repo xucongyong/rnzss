@@ -86,7 +86,7 @@ class tbScreen extends React.Component{
 			      <Text>{this.state.text}</Text>
                 	<Button
 			            onPress={() =>this.verify()}
-			            title="Press Me"
+			            title="绑定账号"
 			            color="#841584"
 			          />
 			      </View>

@@ -59,15 +59,20 @@ class MeScreen extends React.Component{
                                 <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/>
                             </View>
                             </TouchableHighlight>
+                            <TouchableHighlight onPress={() => this.props.navigation.navigate('addTbAccount')}>
                             <View style={styles.container}>
                                 <Text style={styles.LeftText}
                                 >淘宝账号</Text>
                                 <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/>
                             </View>
+                            </TouchableHighlight>
+                            <TouchableHighlight onPress={() => this.props.navigation.navigate('addTbAccount')}>
                             <View style={styles.container}>
                                 <Text style={styles.LeftText}>京东账号</Text>
                                 <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/>
                             </View>
+                            </TouchableHighlight>
+
                         </View>
                 </View>
         )
