@@ -32,36 +32,35 @@ class tbScreen extends React.Component{
         this.verify = this.verify.bind(this)
     }
     verify(){
-    	console.log(addTbAccountUrl)
         console.log(this.state.text)
         deviceStorage.get('token').then((GetToken) => {
             this.setState({token:GetToken})
             console.log(this.state.text)
-            axios.post(addTbAccountUrl,{headers:{Authorization:this.state.token,version:'1.0',account:this.state.text,platform:'tb'}})
+            axios.post(addTbAccountUrl,{headers:{Authorization:this.state.token,version:'1.0',account:this.state.text,platform:'jd'}})
                 .then(response => {
-                	console.log(response.data)
+                    console.log(response.data)
                     this.setState({tbdata:response.data})
                     //this.setState({ImageMain:JSON.parse(this.state.productDetail['Details'])['mainImage']})
                     //this.setState({ImageDetails:JSON.parse(this.state.productDetail['Details'])['DetailsImage']})
                     console.log(this.state.tbdata)
                     if(this.state.tbdata.status === 2){
-				        Alert.alert(
-				            '绑定成功',
-				            'alertMessage',
-				            [
-				                {text: '返回首页', onPress: () => this.props.navigation.navigate('index')}
-				            ],
-				            { cancelable: false }
-				            )
-				        }else{
-				        Alert.alert(
-				            '账号还没入库，请从新扫描二维码',
-				            'alertMessage',
-				            [
+                        Alert.alert(
+                            '绑定成功',
+                            'alertMessage',
+                            [
+                                {text: '返回首页', onPress: () => this.props.navigation.navigate('index')}
+                            ],
+                            { cancelable: false }
+                            )
+                        }else{
+                        Alert.alert(
+                            '账号还没入库，请从新扫描二维码',
+                            'alertMessage',
+                            [
                                     {text: '确定', onPress: () => console.log('Cancel Pressed!')},
-				            ],
-				            { cancelable: false }
-				            )				        }
+                            ],
+                            { cancelable: false }
+                            )                       }
                 })
                 .catch((error) => {
                     console.log('error 3 ' + error);
@@ -73,28 +72,28 @@ class tbScreen extends React.Component{
         return(
             <View style={{flex:1,flexDirection: 'column',justifyContent:'center',alignItems: 'center'}}>
                 <Image
-		          style={{width: 150, height: 150}}
-		          source={{uri: 'https://shiyong-1251434521.cos.ap-shanghai.myqcloud.com/alipay.png'}}
-		        />
-                <Text>请打开支付宝app，打开扫码二维码</Text>
+                  style={{width: 150, height: 150}}
+                  source={{uri: 'https://shiyong-1251434521.cos.ap-shanghai.myqcloud.com/jd.png'}}
+                />
+                <Text>请打开京东app，打开扫码二维码</Text>
                 <Text>或打开{twoCodeUrl}</Text>
               <View style={{padding: 10}}>
-			      <TextInput
-			        placeholder="请输入支付宝绑定的淘宝账号"
-			        style={{height:40}}
-			        onChangeText={(text) => this.setState({text})}
-			        value={this.state.text}
-			      />
-			      <Text>{this.state.text}</Text>
-                	<Button
-			            onPress={() =>this.verify()}
-			            title="绑定账号"
-			            color="#841584"
-			          />
-			      </View>
+                  <TextInput
+                    placeholder="请输入绑定的京东账号"
+                    style={{height:40}}
+                    onChangeText={(text) => this.setState({text})}
+                    value={this.state.text}
+                  />
+                  <Text>{this.state.text}</Text>
+                    <Button
+                        onPress={() =>this.verify()}
+                        title="绑定账号"
+                        color="#841584"
+                      />
+                  </View>
             </View>
         )
-		}
+        }
     }
 
 const styles = StyleSheet.create({

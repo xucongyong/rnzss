@@ -20,6 +20,7 @@ let card_screen = require('./Me/card');
 let money_screen = require('./Me/money');
 
 let addTbAccountScreen = require('./Me/AddTbAccount');
+let AddJdAccountScreen = require('./Me/AddJdAccount');
 let ProductScreen = require('./Product/Product')
 let OrderScreen = require('./Order/Order')
 let MobileLoginScreen = require('./Login/MobileLogin')
@@ -152,6 +153,12 @@ const RootStack = createStackNavigator(
                 headerTransparent: true,
             }
         },
+        addJdAccount:{        
+            screen: AddJdAccountScreen,
+            navigationOptions: {
+                headerTransparent: true,
+            }
+        }
      },
     {
         initialRouteName: 'index',

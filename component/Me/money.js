@@ -144,9 +144,17 @@ class verifyscreen extends React.Component{
                             <TextInput style = {styles.input}
                                     keyboardType="numeric"
                                     value= {this.state.Money}
+                                    placeholder="请输入提现金额"
                                     onChangeText={(xx)=>this.clearMoney(xx)}
                                     />
                             </View>
+                            <Button 
+                                style={{width: 150, height: 100, backgroundColor: 'red'}}
+                                onPress={() => this.props.navigation.navigate('verify')}
+                                title="增加银行卡"
+                                color="blue"
+                                accessibilityLabel="Learn more about this purple button"
+                              />
                             <Picker
                               selectedValue={this.state.select_value}
                               style={{width: 250 }}
@@ -203,7 +211,7 @@ const styles = StyleSheet.create({
   },
   loginSubTitle: {
     color: '#DC3C78',
-    fontSize: 40,
+    fontSize: 18,
     textAlign: 'center',
     marginBottom: 5,
   },
@@ -228,9 +236,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
    input: {
-      height: 40, 
+      height:40,
+      marginTop: 8,
+      fontSize: 13,
+      padding: 15,
       borderColor: 'gray', 
-      borderBottomWidth: 1
    },
     message:{
     marginTop: 16,
