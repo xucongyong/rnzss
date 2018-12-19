@@ -107,6 +107,14 @@ android {
             abiFilters "armeabi-v7a", "x86"
         }
     }
+    signingConfigs {
+        release {
+            storeFile file("/Users/vanxv/Downloads/120Work-CrySystem/code/shop/android/app/my-release-key.keystore")//这里换成你自己的
+            storePassword "1121hotsren"//这里换成你自己的
+            keyAlias "my-key-alias"//这里换成你自己的
+            keyPassword "1121hotsren"//这里换成你自己的
+        }
+    }
     splits {
         abi {
             reset()
@@ -120,6 +128,7 @@ android {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             buildConfigField "String", "CODEPUSH_KEY", '"LpBdacsJZXHCRbWRV47UTDvg-gf085787792-c31e-4137-8bc2-899b67525a31"'
+            signingConfig signingConfigs.release
         }
         debug {
             buildConfigField "String", "CODEPUSH_KEY", '"MKcRc_pPO5dvJR3JdaGDGh6AxorI85787792-c31e-4137-8bc2-899b67525a31"'
