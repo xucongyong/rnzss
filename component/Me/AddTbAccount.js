@@ -76,8 +76,11 @@ class tbScreen extends React.Component{
 		          style={{width: 150, height: 150}}
 		          source={{uri: 'https://shiyong-1251434521.cos.ap-shanghai.myqcloud.com/alipay.png'}}
 		        />
-                <Text>请打开支付宝app，打开扫码二维码</Text>
-                <Text>或打开{twoCodeUrl}</Text>
+                <Text>支付宝app，扫二维码,或打开网址</Text>
+                  <TextInput
+                    style={{height:40}}
+                    value={twoCodeUrl}
+                  />
               <View style={{padding: 10}}>
 			      <TextInput
 			        placeholder="请输入支付宝绑定的淘宝账号"

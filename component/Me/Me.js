@@ -72,14 +72,19 @@ class MeScreen extends React.Component{
                                 <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/>
                             </View>
                             </TouchableHighlight>
+                            <TouchableHighlight 
+                                onPress={() => deviceStorage.delete('token').then((GetToken) => {
+                                                console.log(GetToken)})}>
+                            <View style={styles.container}>
+                                <Text style={styles.LeftText}>deletetoken</Text>
+                                <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/>
+                            </View>
+                            </TouchableHighlight>
                         </View>
                 </View>
         )
     }
 }
-
-
-
 
 const styles = StyleSheet.create({
     container:{

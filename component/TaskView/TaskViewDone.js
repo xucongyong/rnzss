@@ -128,7 +128,7 @@ export default class MyComponent extends React.Component {
                 <ListView
                     dataSource={this.state.dataSource}
                     renderRow={(data) => this._renderRow(data)}
-
+                    enableEmptySections={true}
                     pageSize = {5}
                     initialListSize={5}
                     refreshControl={

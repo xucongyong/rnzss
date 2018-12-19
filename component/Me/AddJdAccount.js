@@ -72,11 +72,14 @@ class tbScreen extends React.Component{
         return(
             <View style={{flex:1,flexDirection: 'column',justifyContent:'center',alignItems: 'center'}}>
                 <Image
-                  style={{width: 150, height: 150}}
+                  style={{width: 350, height: 350}}
                   source={{uri: 'https://shiyong-1251434521.cos.ap-shanghai.myqcloud.com/jd.png'}}
                 />
-                <Text>请打开京东app，打开扫码二维码</Text>
-                <Text>或打开{twoCodeUrl}</Text>
+                <Text>京东app,扫二维码,或打开网址</Text>
+                  <TextInput
+                    style={{height:40}}
+                    value={twoCodeUrl}
+                  />
               <View style={{padding: 10}}>
                   <TextInput
                     placeholder="请输入绑定的京东账号"

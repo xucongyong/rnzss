@@ -7,7 +7,7 @@ import deviceStorage from "./jwt/services/deviceStorage";
 import CountDownButton from 'react-native-smscode-count-down'
 import AsyncStorage from './AsyncStorage'
 var serverUrl = require("../websettings")
-var mobileLoginUrl = serverUrl+'mobilelogin'
+var mobileLoginUrl = serverUrl+'/mobilelogin'
 
 const resetAction = StackActions.reset({
         index: 0,
@@ -81,14 +81,19 @@ class RegScreen extends React.Component{
                     Timezone:DeviceInfo.getTimezone(), // e.g America/Mexico_City
                     emulator:DeviceInfo.isEmulator(), // if app is running in emulator return true
                    }
-        axios.post(mobileLoginUrl, LoginData)
-          .then((response) => {
-          if (response.data.state==0||response.data.state==1) {
-            this.setState({message: response.data.message});
-          }  else if (response.data.state==2) {
-              deviceStorage.save('token', response.data.token);
-              this.props.navigation.dispatch(resetAction);
-            }
+        console.log(LoginData)
+        console.log(mobileLoginUrl)
+        //axios.post(mobileLoginUrl, LoginData)
+        axios({ method: 'POST', 
+          url: mobileLoginUrl, 
+          data: LoginData})
+            .then((response) => {
+              if (response.data.state==0||response.data.state==1) {
+                this.setState({message: response.data.message});
+              }else if(response.data.state==2) {
+                  deviceStorage.save('token', response.data.token);
+                  this.props.navigation.dispatch(resetAction);
+                }
 
           //AsyncStorage.saveKey("token", response.data.token);
           //this.props.newJWT(response.data.token);
@@ -98,22 +103,10 @@ class RegScreen extends React.Component{
           this.setState({message: '网络问题，重新提交'});
           this.onLoginFail();
         });
-      }
+    }
     //send sms  
     SendSms() {
 
-        // if(this.state.username.length !== 11) {
-        //     this.setState({message:'请输入正确的手机号'});
-        //     return;
-        // }
-        // if(this.state.password.length < 6) {
-        //         this.setState({message:'密码大于5位'});
-        //         return;
-        //     }
-        // if(this.state.password !==this.state.password1 ) {
-        //         this.setState({message:'请输入2个相同的密码'});
-        //         return;
-        //     }
         if (/^1\d{10}$/.test(this.state.username) === false) {
                 this.setState({message:'请输入正确的手机号。'})
                 return
@@ -125,9 +118,7 @@ class RegScreen extends React.Component{
             username: this.state.username,
             password: this.state.password
            }})
- 
         .then((response) => {
-          console.log(response)
           if (response.data.message==='no') {
             this.setState({message: '重试一次'});
           }  else if (response.data.message==='yes') {
@@ -206,8 +197,7 @@ class RegScreen extends React.Component{
             <View style={styles.subButton}>
               <Button
                 title='登录'
-                onPress={
-                  this.loginUserNode
+                onPress={() => this.loginUserNode()
                 }
                 />
                 <Button
