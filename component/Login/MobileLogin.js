@@ -231,11 +231,11 @@ const styles = StyleSheet.create({
   },
   loginTitle: {
     color: '#DC3C78',
-    fontSize: 38,
+    fontSize: 20,
     fontWeight: '500',
-    marginTop: 80,
+    marginTop: 20,
     textAlign: 'center',
-    marginBottom: 80,
+    marginBottom: 20,
   },
   subButton: {
     color: '#56688a',
