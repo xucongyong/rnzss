@@ -91,6 +91,7 @@ class ProductScreen extends React.Component{
                         this.props.navigation.navigate('Login')
                     }else if(this.state.productDetail.status === 1){
                         Alert.alert(
+                              '请绑定账号',
                             this.state.productDetail.message,
                             [
                                 {text: '先不绑定', onPress: () => console.log('Cancel Pressed!')},

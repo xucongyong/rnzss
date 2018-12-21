@@ -7,6 +7,7 @@ import HttpGetPost from '../HttpGetPost';
 //import ImagePicker from 'react-native-image-picker';
 var ImagePicker = require("react-native-image-picker")
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import codePush from 'react-native-code-push'
 
 // More info on all the options is below in the API Reference... just some common use cases shown here
 const options = {
@@ -37,6 +38,34 @@ class MeScreen extends React.Component{
             avatarSource: ''
         }
     }
+
+    update(){
+        codePush.sync({
+          //安装模式
+          //ON_NEXT_RESUME 下次恢复到前台时
+          //ON_NEXT_RESTART 下一次重启时
+          //IMMEDIATE 马上更新
+          installMode:codePush.InstallMode.IMMEDIATE ,
+          //对话框
+          updateDialog: {
+            //是否显示更新描述
+            appendReleaseDescription : true ,
+            //更新描述的前缀。 默认为"Description"
+            descriptionPrefix : "更新内容：" ,
+            //强制更新按钮文字，默认为continue
+            mandatoryContinueButtonLabel : "立即更新" ,
+            //强制更新时的信息. 默认为"An update is available that must be installed."
+            mandatoryUpdateMessage : "必须更新后才能使用" ,
+            //非强制更新时，按钮文字,默认为"ignore"
+            optionalIgnoreButtonLabel : '稍后' ,
+            //非强制更新时，确认按钮文字. 默认为"Install"
+            optionalInstallButtonLabel : '后台更新' ,
+            //非强制更新时，检查到更新的消息文本
+            optionalUpdateMessage : '有新版本了，是否更新？' ,
+            //Alert窗口的标题
+            title : '更新提示'
+          }})
+        }
 
     static navigationOptions =({
         headerStyle: {
@@ -73,10 +102,17 @@ class MeScreen extends React.Component{
                             </View>
                             </TouchableHighlight>
                             <TouchableHighlight 
+                                onPress={() => this.update()}>
+                            <View style={styles.container}>
+                                <Text style={styles.LeftText}>更新系统</Text>
+                                <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/>
+                            </View>
+                            </TouchableHighlight>
+                            <TouchableHighlight 
                                 onPress={() => deviceStorage.delete('token').then((GetToken) => {
                                                 console.log(GetToken)})}>
                             <View style={styles.container}>
-                                <Text style={styles.LeftText}>deletetoken</Text>
+                                <Text style={styles.LeftText}>注销账户</Text>
                                 <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/>
                             </View>
                             </TouchableHighlight>

@@ -13,7 +13,7 @@ let withdrawUrl = serverUrl+'/m/withdraw'
 
 const resetAction = StackActions.reset({
         index: 0,
-        actions: [NavigationActions.navigate({ routeName: 'index' })],
+        actions: [NavigationActions.navigate({ routeName: '我的' })],
     });
 
 class verifyscreen extends React.Component{
@@ -134,6 +134,7 @@ class verifyscreen extends React.Component{
         let ViewCode
 
         if(this.state.isLoading==true){
+          if(Object.keys(this.state.cardIdoptions).length>0){
                 ViewCode = (
                        <View style={styles.LoginPage}>
                         <View style={styles.loginSection}>
@@ -142,8 +143,7 @@ class verifyscreen extends React.Component{
                             <View style={{flexDirection: 'row'}}>
                             <Text style={styles.loginSubTitle}>￥</Text>
                             <TextInput style = {styles.input}
-                                    keyboardType="numeric"
-                                    value= {this.state.Money}
+                                    value={this.state.Money ? String(this.state.Money) : null}
                                     placeholder="请输入提现金额"
                                     onChangeText={(xx)=>this.clearMoney(xx)}
                                     />
@@ -173,8 +173,23 @@ class verifyscreen extends React.Component{
                               />
                             <Text>{this.state.message}</Text>
                             </View>
-                        </View>
-			            )
+                        </View>)
+          }else if(Object.keys(this.state.cardIdoptions).length==0){
+              ViewCode = (
+                      <View style={styles.loginSection}>
+                            <Text style={styles.loginTitle}> 提现小金库 </Text>
+                            <Text> 可用￥{this.state.Balance},进行中：￥{this.state.PerformMoney}</Text>
+                            <Button 
+                                style={{width: 150, height: 100, backgroundColor: 'red'}}
+                                onPress={() => this.props.navigation.navigate('verify')}
+                                title="增加银行卡"
+                                color="blue"
+                                accessibilityLabel="Learn more about this purple button"
+                              />
+                          <Text>{this.state.message}</Text>
+                      </View>
+                      )
+               }
         }else{
             ViewCode = (
                 <ActivityIndicator color="#DC3C78" style={{marginTop:100}}/>
@@ -197,6 +212,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   loginSection: {
+    flex:1,
     flexDirection: 'column',
     justifyContent: 'flex-start',
     padding: 20
