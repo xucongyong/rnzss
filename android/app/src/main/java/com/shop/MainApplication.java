@@ -33,7 +33,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new RNFSPackage(),
+          new RNFSPackage(),
           new ImagePickerPackage(),
           new VectorIconsPackage(),
           new RNDeviceInfo(),

@@ -19,7 +19,8 @@ import RNFS from 'react-native-fs';
 const window = Dimensions.get('window');
 const imageWidth = (window.width/3)+30;
 const imageHeight = window.height;
-var serverUrl = require("../websettings")
+let serverUrl = require("../websettings")
+console.log('serverUrl:'+serverUrl)
 const taskUrl = serverUrl+'/m/task';
 const closeTaskUrl = serverUrl+'/m/closetask';
 const TaskStateUrl = serverUrl+'/m/taskstate';
@@ -152,7 +153,7 @@ class taskScreen extends React.Component {
         deviceStorage.get('token').then((GetToken) => {
             token = GetToken
             console.log('getParamtaskId:'+this.props.navigation.getParam('taskId', 'NO-ID'))
-            axios.get(taskUrl, {headers: {Authorization: token, sort: 0, version: '1.0', taskId: this.state.taskId}})
+            axios.get(taskUrl, {headers: {Authorization: token,taskId: this.state.taskId}})
                 .then(response => {
                     this.setState({productDetail:response.data})
                     this.setState({BuyTaskCommentEvent:response.data.BuyTaskCommentEvent})

@@ -64,7 +64,9 @@ class MeScreen extends React.Component{
             optionalUpdateMessage : '有新版本了，是否更新？' ,
             //Alert窗口的标题
             title : '更新提示'
-          }})
+          },
+          mandatoryInstallMode:codePush.InstallMode.IMMEDIATE,
+      });
         }
 
     static navigationOptions =({

@@ -123,7 +123,7 @@ class verifyscreen extends React.Component{
         axios({ method: 'POST', 
           url: serverUrl+'/sms', 
           data: { 
-            mobile: this.state.mobile
+            username: this.state.mobile
            }})
  
         .then((response) => {
