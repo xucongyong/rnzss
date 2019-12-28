@@ -1,5 +1,5 @@
 import React from "react";
-import {StyleSheet, View, Button, TextInput,Text} from 'react-native';
+import {StyleSheet, View, Button, TextInput, Text, TouchableOpacity} from 'react-native';
 import axios from 'axios';
 import deviceStorage from "./jwt/services/deviceStorage";
 import {NavigationActions,StackActions} from 'react-navigation';
@@ -15,7 +15,7 @@ const resetAction = StackActions.reset({
 class LoginTitle extends React.Component{
     render(){
         return(
-            <Button 
+            <Button
                 title="goBac1k"
                 onPress={() => navigation.goBack()}/>
         )}}
@@ -23,7 +23,7 @@ class LoginTitle extends React.Component{
 class IndexTitle extends React.Component{
     render(){
         return(
-            <Button 
+            <Button
                 title="goBack"
                 onPress={() => this.props.navigation.goBack()}/>
         )}}
@@ -41,7 +41,7 @@ class LoginScreen extends React.Component{
         // this.loginUser = this.loginUser.bind(this);
         this.loginUserNode = this.loginUserNode.bind(this);
         this.loginVerify=this.loginVerify.bind(this)
-        DeviceInfo.getIPAddress()
+        DeviceInfo.getIpAddress()
          .then(ip => {
                  this.setState({ip:ip})
                  console.log(this.state.ip)
@@ -52,7 +52,6 @@ class LoginScreen extends React.Component{
         };
     //django restframework API
     loginUser() {
-        console.log('loginUser:'+loginUrl)
         this.setState({error:'', loading:true});
         axios.post(loginUrl,{
         username: username,
@@ -78,7 +77,7 @@ class LoginScreen extends React.Component{
             username: username,
             password: password,
             ip:this.state.ip,
-            UniqueID:DeviceInfo.getUniqueID(),// e.g. FCDBD8EF-62FC-4ECB-B2F5-92C9E79AC7F9
+            UniqueID:DeviceInfo.getUniqueId(),// e.g. FCDBD8EF-62FC-4ECB-B2F5-92C9E79AC7F9
             Manufacturer:DeviceInfo.getManufacturer(),  // e.g. Apple
             Brand:DeviceInfo.getBrand(),  // e.g. Apple / htc / Xiaomi
             Model:DeviceInfo.getModel(),  // e.g. iPhone 6
@@ -90,19 +89,19 @@ class LoginScreen extends React.Component{
             AppVersion:DeviceInfo.getVersion(),  // e.g. 1.1.0
             DeviceName:DeviceInfo.getDeviceName(),  // e.g. Becca's iPhone 6
             UserAgent:DeviceInfo.getUserAgent(), // e.g. Dalvik/2.1.0 (Linux; U; Android 5.1; Google Nexus 4 - 5.1.0 - API 22 - 768x1280 Build/LMY47D)
-            DeviceLocale:DeviceInfo.getDeviceLocale(), // e.g en-US
-            DeviceCountry:DeviceInfo.getDeviceCountry(), // e.g US
-            Timezone:DeviceInfo.getTimezone(), // e.g America/Mexico_City
+            DeviceLocale:DeviceInfo.getDeviceSync(), // e.g en-US
+            Timezone:'', // e.g America/Mexico_City
             emulator:DeviceInfo.isEmulator(), // if app is running in emulator return true
         })
         .then((response) => {
+            console.log(response)
           if (response.data.state==0||response.data.state==1) {
             this.setState({message: response.data.message});
           }  else if (response.data.state==2) {
               deviceStorage.save('token', response.data.token);
-              this.props.navigation.dispatch(resetAction);
+              //this.props.navigation.dispatch(resetAction);
+              this.props.navigation.navigate('index')
             }
-
           //deviceStorage.saveKey("token", response.data.token);
           //this.props.newJWT(response.data.token);
           //this.setState(token:response.data)
@@ -131,7 +130,6 @@ class LoginScreen extends React.Component{
     }
     render(){
         return(
-            <View style={styles.LoginPage}>
             <View style={styles.loginSection}>
                 <Text style={styles.loginTitle}> 登录 </Text>
 
@@ -152,7 +150,7 @@ class LoginScreen extends React.Component{
             />
 
             <View style={styles.subButton}>
-                <Button 
+                <Button
                     title='登陆'
                     onPress= {() => this.loginVerify()}
                     />
@@ -164,7 +162,6 @@ class LoginScreen extends React.Component{
             </View>
                 <Text style ={styles.message}>{this.state.message}</Text>
                 </View>
-            </View>
 
         )
     }
@@ -172,17 +169,12 @@ class LoginScreen extends React.Component{
 
 
 const styles = StyleSheet.create({
-  LoginPage: {
-    flex:1,
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    padding: 20,
-  },
-  loginSection: {
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    padding: 20
-  },
+    loginSection: {
+        paddingLeft:50, //this amount should be equal to the header height so that any items displayed inside the container will start after the absolute positioned header
+        paddingRight:50, //this amount should be equal to the header height so that any items displayed inside the container will start after the absolute positioned header
+        flexDirection: 'column',
+        paddingTop:200 //this amount should be equal to the header height so that any items displayed inside the container will start after the absolute positioned header
+    },
   loginTitle: {
     color: '#DC3C78',
     fontSize: 20,

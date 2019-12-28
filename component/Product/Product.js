@@ -1,18 +1,17 @@
 import React from "react";
-import {StyleSheet,Dimensions,Text, View, ScrollView, Button,Image,ActivityIndicator,TouchableOpacity,Alert} from "react-native";
+import {StyleSheet,Dimensions,Text, View, ScrollView,Image,ActivityIndicator,TouchableOpacity,Alert} from "react-native";
+import {Button} from '@ant-design/react-native';
+
 const window = Dimensions.get('window');
 const imageWidth = (window.width/3)+30;
 const imageHeight = window.height;
 var CommonCell = require('./CommonCell');
 var serverUrl = require("../websettings")
-const productUrl = serverUrl+'/m/product';
-const OrderUrl = serverUrl+'/m/genratetask';
 const axios = require('axios');
 import deviceStorage from "../Login/jwt/services/deviceStorage";
 var ScreenWidth = Dimensions.get('window').width;
 var boxWidth = Dimensions.get('window').height/2;
 var MoneyAlgorithm = require("../MoneyAlgorithm")
-let token = ''
 // 如果你想读取子项，
 
 class ProductScreen extends React.Component{
@@ -25,32 +24,22 @@ class ProductScreen extends React.Component{
             ImageMain:[],
             ImageDetails:[],
             loading: false,
-            taskId:this.props.navigation.getParam('taskId','NO-ID'),
             GenrateTasking:false,
         }
         this.genrateTask = this.genrateTask.bind(this)
     }
     componentWillMount(){
-        this.fetchData(this.state.taskId); //启动的时候载入数据
+        this.fetchData(this.props.route.params.taskId); //启动的时候载入数据
         // this.startTimer();
     }
-    //取消定时器
-    // componentWillUnmount(){
-    //     clearInterval(this.timer);
-    // }
-
-    fetchData(posttaskid){
-        console.log(posttaskid)
-        deviceStorage.get('token').then((GetToken) => {
-            token = GetToken
-            console.log(this.props.navigation.getParam('taskId','NO-ID'))
-            axios.get(productUrl, { headers: { Authorization: token, sort:0,version:'1.0',taskId:posttaskid}})
+    fetchData(){
+        deviceStorage.get('token').then((token) => {
+            axios.get(serverUrl+'/m/product', { headers: { Authorization: token, sort:0,taskId:this.props.route.params.taskId}})
                 .then(response => {
                     this.setState({productDetail:response.data})
-                    this.setState({ImageMain:JSON.parse(this.state.productDetail['Details'])['mainImage']})
-                    this.setState({ImageDetails:JSON.parse(this.state.productDetail['Details'])['DetailsImage']})
+                    this.setState({ImageMain:JSON.parse(this.state.productDetail['product_main_image'])})
+                    this.setState({ImageDetails:JSON.parse(this.state.productDetail['product_details_image'])})
                     this.setState({loading:true})
-                    console.log(response.data)
                 })
                 .catch((error) => {
                     console.log('error 3 ' + error);
@@ -78,61 +67,33 @@ class ProductScreen extends React.Component{
     //购物按钮
     genrateTask(){
         this.setState({loading:false})
-        deviceStorage.get('token').then((GetToken) => {
-            token = GetToken
-            console.log(this.state.taskId)
-            axios.post(OrderUrl, { headers: { Authorization: token, version:'1.0',orderid:this.state.taskId}})
+        deviceStorage.get('token').then((token) => {
+            axios.post(serverUrl+'/m/genratetask', { headers: { Authorization: token,orderid:this.props.route.params.taskId}})
                 .then(response => {
-                    console.log('data')
+                    console.log(response)
                     this.setState({productDetail:response.data})
-                    this.setState({loading:true})
-
-                    if(this.state.productDetail.status === 0){
+                    if(this.state.productDetail=== 0){
                         this.props.navigation.navigate('Login')
-                    }else if(this.state.productDetail.status === 1){
+                    }else if(response.data['status']==1){
+                        console.log(response.data['informations'])
+                        this.props.navigation.navigate('TaskDetails',{taskId:response.data['informations']})
+                    }else{
                         Alert.alert(
-                              '请绑定账号',
-                            this.state.productDetail.message,
-                            [
-                                {text: '先不绑定', onPress: () => console.log('Cancel Pressed!')},
-                                {text: '马上淘宝绑定', onPress: () => this.props.navigation.navigate('addTbAccount')},
-                                {text: '马上京东绑定', onPress: () => this.props.navigation.navigate('addJdAccount')},
-                            ],
-                            { cancelable: false }
-                            )
-                    }else if(this.state.productDetail.status === 2){
-                        Alert.alert(
-                              'Alert Title',
-                              'My Alert Msg',
-                            [
-                                {text: '返回首页', onPress: () => this.props.navigation.navigate('index')}
-                            ],
-                            { cancelable: false }
-                            )
-                    }else if(this.state.productDetail.status === 3){
-                        console.log('this.state.productDetail.taskId:'+this.state.productDetail.taskId)
-                        this.props.navigation.navigate('TaskDetails',{taskId:this.state.productDetail.taskId})
-                    }else if(this.state.productDetail.status === 4){
-                        Alert.alert(
-                            this.state.productDetail.message,
-                            [
-                                {text: '返回首页', onPress: () => this.props.navigation.navigate('index')}
-                            ],
-                            { cancelable: false }
-                            )
-                    }
-                })
-                .catch((error) => {
-                    console.log('error 3 ' + error);
+                            '提醒',
+                            response.data['informations'],
+                            [{text: '返回首页', onPress: () => this.props.navigation.navigate('index')},
+                                {text: '确认', onPress: () => console.log("x")}],
+                            { cancelable: false })}
+                    })
+                .catch((error) => {console.log('error 3 ' + error);});
                 });
-                });     
-        }
+        this.setState({loading:true})
+    }
     //关键词
 
     render(){
         let productView;
-        let taskId = this.props.navigation.getParam('taskid','NO-ID')
-        let data = this.state.productDetail 
+        let data = this.state.productDetail
         let addmoney = data['AddChat']+data['AddCommandsLike']+data['AddCoupons']+data['AddOpenOtherProduct']+data['AddOpenProduct']+data['AddSaveShop']+data['AddShoppingCar']
         let money_algorithm_value = MoneyAlgorithm(data['event'],(data['buyNum'] * data['buyPrice']),addmoney,data['huabeiId'])
         let buy_money= money_algorithm_value[1]
@@ -178,19 +139,17 @@ class ProductScreen extends React.Component{
                     <View style={styles.shopcart}>
                         <View style={[styles.bottomItem,{width:window.width*0.3}]}></View>
                         <View style={[styles.bottomItem,{width:window.width*0.7,backgroundColor: 'red',color:'white'} ]}>
-                        <Text
-                        style={{color:'white'}}
-                        onPress={() => Alert.alert(
-                                        '马上开始试用？',
-                                        '开始试用吗？请在40分钟内完成噢',
-                                [ 
-                                    {text: '马上试用', onPress: () => this.genrateTask()},
-                                    {text: '先不开始', onPress: () => console.log('close')},
-                                ],
-                                { cancelable: false }
-                                )
-                                }
-                        >下单试用</Text></View>
+                        <Text onPress={() => Alert.alert(
+                            '马上开始吗？60分钟内下单',
+                            '',
+                            [
+                                {text: '确定', onPress: () => this.genrateTask()},
+                                {text: '取消', onPress: () => console.log('close')},
+                            ],
+                            { cancelable: false }
+                        )
+                        }>下单试用</Text>
+                        </View>
                         </View>
                     </View>
                 )
@@ -236,20 +195,18 @@ class ProductScreen extends React.Component{
 
                     <View style={styles.shopcart}>
                         <View style={[styles.bottomItem,{width:window.width*0.3}]}></View>
-                        <View style={[styles.bottomItem,{width:window.width*0.7,backgroundColor: 'red',color:'white'} ]}>
-                        <Text
-                        style={{color:'white'}}
-                        onPress={() => Alert.alert(
-                                        '马上开始试用？',
-                                        '开始试用吗？请在40分钟内完成噢',
-                                [ 
-                                    {text: '马上试用', onPress: () => this.genrateTask()},
-                                    {text: '先不开始', onPress: () => console.log('close')},
+                        <View style={[styles.bottomItem,{width:window.width*0.7,backgroundColor: 'red',color:'white'}]}>
+                            <Text onPress={() => Alert.alert(
+                                '马上开始吗？60分钟内下单',
+                                '',
+                                [
+                                    {text: '确定', onPress: () => this.genrateTask()},
+                                    {text: '取消', onPress: () => console.log('close')},
                                 ],
                                 { cancelable: false }
-                                )
-                                }
-                        >下单试用</Text></View>
+                            )
+                            }>下单试用</Text>
+                        </View>
                         </View>
                     </View>
                 )
@@ -257,12 +214,11 @@ class ProductScreen extends React.Component{
 
         }else{
             productView=(
-            <View><Text>this.state.taskId</Text></View>
+            <View><Text></Text></View>
             )
         }
         return(
             <View style={{flex:1}}>{productView}</View>
-
         )
     }
 }

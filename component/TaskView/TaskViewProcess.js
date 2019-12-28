@@ -1,149 +1,123 @@
 import React from 'react';
 import {
     Text,
-    ListView,
+    FlatList,
     StyleSheet,
     RefreshControl,
     View,
     ActivityIndicator,
-    Image,
+    Dimensions,
     TouchableOpacity,
 } from 'react-native';
-import Dimensions from 'Dimensions';
 const {width, height} = Dimensions.get('window');
-const dataUrl = 'https://api.douban.com/v2/movie/top250?count=350';
 var serverUrl = require("../websettings")
-const GetBuyTaskUrl = serverUrl+'/m/getbuytask';
 
 const axios = require('axios');
 import deviceStorage from "../Login/jwt/services/deviceStorage";
-import { withNavigationFocus } from 'react-navigation';
-
-
-
 let token = ''
-//
 
 
 export default class MyComponent extends React.Component {
     constructor(props){
         super(props);
-        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
-            dataSource : ds,
+            data : [],
             isLoading:false, //载入数据判断
-            refreshing:false, //
-            isMoreloading:true,
-            token:'',
+            page:1,
+            sort:0,
+            isEnd:false,
         }
     }
     componentDidMount(){
-        // 加载图片
-        this.setState({
-            isLoading:true,
-        })
+        if(this.props.route.name=="进行"){
+            this.setState({sort:2})
+        }else if(this.props.route.name=="全部"){
+            this.setState({sort:''})
+        }else if(this.props.route.name=="完成"){
+            this.setState({sort:1})
+        }else if(this.props.route.name=="关闭"){
+            this.setState({sort:0})
+        }
+        console.log(this.props.route.name)
         this.fetchData(); //启动的时候载入数据
     }
 
-    fetchData(refresh){
-        if(refresh){
-            this.setState({
-                refreshing:true
-            });
-        }
-        deviceStorage.get('token').then((GetToken) => {
-            token = GetToken
-            this.setState({token:GetToken})
-            axios.get(GetBuyTaskUrl, { headers: { Authorization: token, sort:0}})
+    fetchData(){
+        this.setState({isLoading:true});
+        deviceStorage.get('token').then((token) => {
+            axios.get(serverUrl+'/m/getbuytask', { headers: { Authorization: token},params:{sort:this.state.sort,page:this.state.page}})
                 .then(response => {
-                    console.log('response.data')
-                    console.log(response.data)
-                    this.setState({
-                        dataSource: this.state.dataSource.cloneWithRows(response.data),
-                        isLoading:false,
-                        refreshing:false,
-                    })
+                    if(response.data=="0"){
+                        this.props.navigation.navigate('Login')
+                    }else{
+                        this.setState({
+                            data: this.state.data.concat(response.data),
+                            page: this.state.page+1,
+                        })
+                    }
                 })
                 .catch((error) => {
                     console.log('error 3 ' + error);
                 });
         });
+        this.setState({isLoading:false});
 
     }
     //listview数据加工成页面
     _renderRow(data){
         return (
             <TouchableOpacity onPress={()=> {
-                this.props.navigation.navigate('TaskDetails',{taskId:data['BuyTaskId']})}}>
+                this.props.navigation.navigate('TaskDetails',{taskId:data['item']['BuyTaskId']})}}>
             <View style={styles.cellBoxStyle}>
-                <Text>{'试用分类:'+data['event']+'订单状态：'+data['BuyTaskState']}</Text>
-                <Text>{'关键词:'+data['KeyWord']+'平台订单号：'+data['PlatFormOrderId']}</Text>
+                <Text>{'试用分类:'+data['item']['event']+'订单状态：'+data['item']['BuyTaskState']}</Text>
+                <Text>{'关键词:'+data['item']['KeyWord']+'平台订单号：'+data['item']['PlatFormOrderId']}</Text>
             </View>
             </TouchableOpacity>
         )
     }
     // 刷新操作
     reloadNewData(){
-        this.fetchData(true)
+        this.setState({data:[],page:1})
+        this.fetchData()
     }
 
     // 上拉加载更多
     renderFooter(){
-        if(this.state.isMoreloading){
+        if(this.state.isLoading){
             return(
                 // <View style={{marginVertical: 10}}>
                 //     <ActivityIndicator color="red"/>
                 // </View>
                 <View style={{marginVertical: 10,justifyContent:'center',alignItems:'center'}}>
-                <Text>end下拉刷新</Text>
+                <Text>加载中</Text>
                 </View>
             )
         }else{
             return(
                 <View style={{marginVertical: 10,justifyContent:'center',alignItems:'center'}}>
-                <Text>end下拉刷新</Text>
+                <Text>下拉加载</Text>
                 </View>
             )
         }
     }
     // 滑动到做底下的时候
     _toEnd(){
-        setTimeout(() => {
-            this.setState({
-                isMoreloading:true
-            })
-        },2000)
+        this.fetchData()
     }
     render() {
-        let viewList;
-        if(this.state.isLoading){
-            viewList = (
-                <View>
-                <ActivityIndicator color="#0000ff" style={{marginTop:100}}/>
-                </View>
-                
-            )
-        }else{
-            viewList = (
-                <View>
-                <ListView
-                    dataSource={this.state.dataSource}
-                    renderRow={(data) => this._renderRow(data)}
-                    enableEmptySections={true}
-                    pageSize = {5}
-                    initialListSize={5}
+        let viewList = (
+                <FlatList
+                    data={this.state.data}
+                    renderItem={(data) => this._renderRow(data)}
                     refreshControl={
                         <RefreshControl
-                            refreshing={this.state.refreshing}
+                            refreshing={this.state.isLoading}
                             onRefresh={this.reloadNewData.bind(this)}
                             colors={['red','orange']}
                         />}
-                    renderFooter={()=>this.renderFooter()}
-                    onEndReached={ ()=>this._toEnd() }
-                /></View>
-            )
-        }
-
+                    ListFooterComponent={()=>this.renderFooter()}
+                    onEndReached={()=>this._toEnd()}
+                />)
         return (
             <View style={styles.container}>
                 {/*练习下拉刷新，上拉加载组件，此处渲染视图*/}

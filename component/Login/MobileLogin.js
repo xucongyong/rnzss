@@ -4,16 +4,15 @@ import {NavigationActions,StackActions} from 'react-navigation';
 import DeviceInfo from 'react-native-device-info';
 import axios from 'axios';
 import deviceStorage from "./jwt/services/deviceStorage";
-import CountDownButton from 'react-native-smscode-count-down'
-import AsyncStorage from './AsyncStorage'
-var serverUrl = require("../websettings")
-var mobileLoginUrl = serverUrl+'/mobilelogin'
+import CountDownButton from 'react-native-smscode-count-down';
+import AsyncStorage from './AsyncStorage';
+var serverUrl = require("../websettings");
+var mobileLoginUrl = serverUrl+'/mobilelogin';
 
 const resetAction = StackActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'index' })],
     });
-const querystring = require('querystring');
 
 class RegScreen extends React.Component{
     constructor(props){
@@ -29,7 +28,7 @@ class RegScreen extends React.Component{
         }
         this.loginUserNode = this.loginUserNode.bind(this);
         this.SendSms=this.SendSms.bind(this)
-        DeviceInfo.getIPAddress()
+        DeviceInfo.getIpAddress()
          .then(ip => {
                  this.setState({ip:ip})
                  console.log(this.state.ip)
@@ -76,24 +75,25 @@ class RegScreen extends React.Component{
                     AppVersion:DeviceInfo.getVersion(),  // e.g. 1.1.0
                     DeviceName:DeviceInfo.getDeviceName(),  // e.g. Becca's iPhone 6
                     UserAgent:DeviceInfo.getUserAgent(), // e.g. Dalvik/2.1.0 (Linux; U; Android 5.1; Google Nexus 4 - 5.1.0 - API 22 - 768x1280 Build/LMY47D)
-                    DeviceLocale:DeviceInfo.getDeviceLocale(), // e.g en-US
-                    DeviceCountry:DeviceInfo.getDeviceCountry(), // e.g US
-                    Timezone:DeviceInfo.getTimezone(), // e.g America/Mexico_City
+                    DeviceLocale:'', // e.g en-US
+                    DeviceCountry:'', // e.g US
+                    Timezone:'', // e.g America/Mexico_City
                     emulator:DeviceInfo.isEmulator(), // if app is running in emulator return true
                    }
         console.log(LoginData)
         console.log(mobileLoginUrl)
         //axios.post(mobileLoginUrl, LoginData)
-        axios({ method: 'POST', 
-          url: mobileLoginUrl, 
+        axios({ method: 'POST',
+          url: mobileLoginUrl,
           data: LoginData})
             .then((response) => {
               if (response.data.state==0||response.data.state==1) {
                 this.setState({message: response.data.message});
               }else if(response.data.state==2) {
                   deviceStorage.save('token', response.data.token);
-                  this.props.navigation.dispatch(resetAction);
-                }
+                  //this.props.navigation.dispatch(resetAction);
+                  this.props.navigation.navigate('index');
+              }
 
           //AsyncStorage.saveKey("token", response.data.token);
           //this.props.newJWT(response.data.token);
@@ -104,7 +104,7 @@ class RegScreen extends React.Component{
           this.onLoginFail();
         });
     }
-    //send sms  
+    //send sms
     SendSms() {
 
         if (/^1\d{10}$/.test(this.state.username) === false) {
@@ -112,9 +112,9 @@ class RegScreen extends React.Component{
                 return
           }
         console.log('this.state.username:'+this.state.username)
-        axios({ method: 'POST', 
-          url: serverUrl+'/sms', 
-          data: { 
+        axios({ method: 'POST',
+          url: serverUrl+'/sms',
+          data: {
             username: this.state.username,
             password: this.state.password
            }})
@@ -138,10 +138,8 @@ class RegScreen extends React.Component{
 
     render(){
         return(
-            <View style={styles.LoginPage}>
             <View style={styles.loginSection}>
                 <Text style={styles.loginTitle}> 手机登录 </Text>
-
               <TextInput style={styles.textinput}
                 label='username'
                 keyboardType={'numeric'}
@@ -209,7 +207,6 @@ class RegScreen extends React.Component{
             </View>
             <Text style ={styles.message}>{this.state.message}</Text>
                 </View>
-            </View>
            //this.setState{(sms:1)},
 
         )
@@ -218,17 +215,12 @@ class RegScreen extends React.Component{
 
 
 const styles = StyleSheet.create({
-  LoginPage: {
-    flex:1,
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    padding: 20,
-  },
-  loginSection: {
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    padding: 20
-  },
+    loginSection: {
+        paddingLeft:50, //this amount should be equal to the header height so that any items displayed inside the container will start after the absolute positioned header
+        paddingRight:50, //this amount should be equal to the header height so that any items displayed inside the container will start after the absolute positioned header
+        flexDirection: 'column',
+        paddingTop:200 //this amount should be equal to the header height so that any items displayed inside the container will start after the absolute positioned header
+    },
   loginTitle: {
     color: '#DC3C78',
     fontSize: 20,

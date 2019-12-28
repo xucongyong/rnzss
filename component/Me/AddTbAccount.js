@@ -39,24 +39,21 @@ class tbScreen extends React.Component{
             console.log(this.state.text)
             axios.post(addTbAccountUrl,{headers:{Authorization:this.state.token,version:'1.0',account:this.state.text,platform:'tb'}})
                 .then(response => {
-                	console.log(response.data)
-                    this.setState({tbdata:response.data})
-                    //this.setState({ImageMain:JSON.parse(this.state.productDetail['Details'])['mainImage']})
-                    //this.setState({ImageDetails:JSON.parse(this.state.productDetail['Details'])['DetailsImage']})
-                    console.log(this.state.tbdata)
-                    if(this.state.tbdata.status === 2){
+                    if(response.data == ''){
 				        Alert.alert(
 				            '绑定成功',
-				            'alertMessage',
+				            '',
 				            [
 				                {text: '返回首页', onPress: () => this.props.navigation.navigate('index')}
 				            ],
 				            { cancelable: false }
 				            )
-				        }else{
+                    }else if(response.data === 0){
+                        this.props.navigation.navigate('Login')
+                    }else{
 				        Alert.alert(
-				            '账号还没入库，请从新扫描二维码',
-				            'alertMessage',
+				            '提醒',
+                            response.data,
 				            [
                                     {text: '确定', onPress: () => console.log('Cancel Pressed!')},
 				            ],
@@ -67,7 +64,6 @@ class tbScreen extends React.Component{
                     console.log('error 3 ' + error);
                 });
         });
-
     }
     render(){
         return(

@@ -1,26 +1,13 @@
 import React from 'react';
-import {createMaterialTopTabNavigator} from 'react-navigation';
-
-
 let me = require('./Me');
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 
-const TopTabNav = createMaterialTopTabNavigator(
-    {
-        Me: { screen: me },
-    },
-    {
-        initialRouteName:'Me',
-        tabBarPosition: 'top',
-        lazyLoad: true,
-        tabBarOptions:{
-            activeTintColor:'#dc3232',
-            inactiveTintColor:'#dc3232',
-            style:{
-              backgroundColor: '#ffffff'
-            },
-        }
-    }
-);
-
-
-module.exports= TopTabNav;
+const Tab = createMaterialTopTabNavigator();
+function App() {
+    return (
+        <Tab.Navigator>
+            <Tab.Screen name="me" component={me}/>
+        </Tab.Navigator>
+    );
+}
+module.exports= me;

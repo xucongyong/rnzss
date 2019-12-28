@@ -1,19 +1,11 @@
 import React from 'react';
-import {StyleSheet, View, Button, TextInput,Text,ActivityIndicator } from 'react-native';
-import {NavigationActions,StackActions} from 'react-navigation';
+import {StyleSheet, View, TextInput,Text,ActivityIndicator } from 'react-native';
+import {Button, WhiteSpace, WingBlank } from '@ant-design/react-native';
 import axios from 'axios';
 import deviceStorage from "../Login/jwt/services/deviceStorage";
-import CountDownButton from 'react-native-smscode-count-down'
-import AsyncStorage from '../Login/AsyncStorage'
-let serverUrl = require("../websettings")
-let mobileLoginUrl = serverUrl+'/verifycard'
-let usernameUrl = serverUrl+'/m/username'
-
-const resetAction = StackActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({ routeName: 'index' })],
-    });
-const querystring = require('querystring');
+import CountDownButton from 'react-native-smscode-count-down';
+import AsyncStorage from '../Login/AsyncStorage';
+let serverUrl = require("../websettings");
 
 class verifyscreen extends React.Component{
     constructor(props){
@@ -28,6 +20,7 @@ class verifyscreen extends React.Component{
             VerifyCode:'',
             isLoading:false,
             isVerify:false,
+            isVerify_number:'已发送',
         }
         this.loginUserNode = this.loginUserNode.bind(this);
         this.SendSms=this.SendSms.bind(this)
@@ -37,27 +30,24 @@ class verifyscreen extends React.Component{
         this.fetchData();
     }
     fetchData(){
-        deviceStorage.get('token').then((GetToken) => {
-            token = GetToken
-            this.setState({token:GetToken})
-            axios.get(usernameUrl,{headers:{authorization:token}})
+        this.setState({isLoading:true})
+        deviceStorage.get('token').then((Token) => {
+            axios.get(serverUrl+'/m/username',{headers:{authorization:Token}})
                 .then(response=>{
-                    console.log(response.data)
                     console.log(response.data)
                     if(response.data.identity_number){
                         this.setState({identitynumber:response.data.identity_number})
                         this.setState({name:response.data.Name})
-                        this.setState({isVerify:true})
                     }
-                    this.setState({isLoading:true})
                 })
                 .catch((error) => {
                   console.log('error:'+error)})
         })
+        this.setState({isLoading:false})
     }
     //NodeJS API
     loginUserNode() {
-        console.log('loginUserNode')
+        this.setState({loading:true})
         if(/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/.test(this.state.identitynumber)==false) {
                 this.setState({message:'身份证号不正确'});
                 return;
@@ -70,221 +60,127 @@ class verifyscreen extends React.Component{
                 this.setState({message:'请输入正确的手机号。'})
                 return
           }
-        deviceStorage.get('token').then((GetToken) => {
-            token = GetToken
-            this.setState({token:GetToken})
-            var LoginData =  {
-                        mobile: this.state.mobile,
-                        identitynumber: this.state.identitynumber,
-                        VerifyCode: this.state.VerifyCode,
-                        card: this.state.card,
-                        name: this.state.name,
-                        authorization:this.state.token,
-                       }
-            console.log(LoginData)
-            axios.post(mobileLoginUrl, LoginData)
+        deviceStorage.get('token').then((token) => {
+            var LoginData =  {headers:{Authorization:token},
+                data:{mobile: this.state.mobile,
+                identitynumber: this.state.identitynumber,
+                VerifyCode: this.state.VerifyCode,
+                card: this.state.card,
+                name: this.state.name}
+            }
+            axios.post(serverUrl+'/verifycard', LoginData)
                   .then(response=>{
                       console.log(response.data)
-                      console.log(response.data)
-                      if (response.data.state==0||response.data.state==1) {
-                      this.setState({message: response.data.message});
-                    }  else if (response.data.state==2) {
-                      this.props.navigation.navigate('index')
+                      if(response.data==="0"){
+                          this.props.navigation.navigate('Login')
+                      }else if(response.data=="") {
+                          this.props.navigation.navigate('ResultView')
+                      }else{
+                          this.setState({message:response.data});
                       }
-                    })
-            .catch((error) => {
-              console.log('error:'+error)
-              this.setState({message: '网络问题，重新提交'});
-              this.onLoginFail();
-            });
+                  })
+                .catch((error) => {
+                  this.setState({message: '网络问题，重新提交'});
+                });
           })
+        this.setState({loading:false})
     }
-      
-    //send sms  
-    SendSms() {
 
-        // if(this.state.username.length !== 11) {
-        //     this.setState({message:'请输入正确的手机号'});
-        //     return;
-        // }
-        // if(this.state.password.length < 6) {
-        //         this.setState({message:'密码大于5位'});
-        //         return;
-        //     }
-        // if(this.state.password !==this.state.password1 ) {
-        //         this.setState({message:'请输入2个相同的密码'});
-        //         return;
-        //     }
+    //send sms
+    SendSms() {
         if (/^1\d{10}$/.test(this.state.mobile) === false) {
-                this.setState({message:'请输入正确的手机号。'})
-                return
-          }
-        console.log('this.state.mobile:'+this.state.mobile)
-        axios({ method: 'POST', 
-          url: serverUrl+'/sms', 
-          data: { 
+            return this.setState({message:'请输入正确的手机号。'})
+        }
+        this.setState({isVerify:true})
+        axios({ method: 'POST',
+          url: serverUrl+'/sms',
+          data: {
             username: this.state.mobile
            }})
- 
         .then((response) => {
-          console.log(response)
           if (response.data.message==='no') {
             this.setState({message: '重试一次'});
           }  else if (response.data.message==='yes') {
             this.setState({message: '验证码发送'});
-              //this.props.navigation.dispatch(resetAction);
             }
-
-          //AsyncStorage.saveKey("token", response.data.token);
-          //this.props.newJWT(response.data.token);
-          //this.setState(token:response.data)
         })
         .catch((error) => {
           this.setState({message: '网络问题，重新提交'});
-          this.onLoginFail();
         });
     }
 
     render(){
         let ViewCode
-        if(this.state.isLoading==true){
-            if(this.state.isVerify==false){
-                ViewCode = (
-                       <View style={styles.LoginPage}>
-                        <View style={styles.loginSection}>
-                            <Text style={styles.loginTitle}> 实名验证 </Text>
-                            <Text style={styles.loginSubTitle}>账号、银行卡、身份必须一致。</Text>
+        let sms_button
+        if(!this.state.isVerify){
+            sms_button=(<Button
+                type="ghost"
+                size={'large'}
+                onPress={()=>{this.SendSms()}}>验证码</Button>)
+        }else{
+            sms_button=(<Button
+                type="ghost"
+                size={'large'}
+                disabled
+                >{this.state.isVerify_number}</Button>)
+        }
+
+        if(this.state.isLoading==false){
+            ViewCode = (
+                <View style={styles.LoginPage}>
+                    <View style={styles.loginSection}>
+                        <Text style={styles.loginTitle}> 实名验证 </Text>
+                        <Text style={styles.loginSubTitle}>为确保提现安全，需验证账号、银行卡、身份必须一致。</Text>
+                        <Text style={styles.loginSubTitle}></Text>
                         <TextInput style={styles.textinput}
-                          placeholder="姓名"
-                          label='name'
-                          value={this.state.name}
-                          onChangeText={name => this.setState({ name })}
+                                   placeholder="姓名"
+                                   label='name'
+                                   value={this.state.name}
+                                   onChangeText={name => this.setState({ name })}
                         />
                         <TextInput style={styles.textinput}
-                          placeholder="身份证号"
-                          label='identitynumber'
-                          value={this.state.identitynumber}
-                          onChangeText={identitynumber => this.setState({ identitynumber })}
+                                   placeholder="身份证号"
+                                   label='identitynumber'
+                                   value={this.state.identitynumber}
+                                   onChangeText={identitynumber => this.setState({ identitynumber })}
                         />
                         <TextInput style={styles.textinput}
-                          placeholder="银行卡号"
-                          label='card'
-                          value={this.state.card}
-                          onChangeText={card => this.setState({ card })}
+                                   placeholder="银行卡号"
+                                   label='card'
+                                   value={this.state.card}
+                                   onChangeText={card => this.setState({ card })}
                         />
                         <TextInput style={styles.textinput}
-                            label='username'
-                            keyboardType={'numeric'}
-                            placeholder="请输入银行绑定手机号"
-                            maxLength={11}
-                            value={this.state.mobile}
-                            onChangeText={mobile => this.setState({ mobile })}
-                          />
+                                   label='username'
+                                   keyboardType={'numeric'}
+                                   placeholder="请输入银行绑定手机号"
+                                   maxLength={11}
+                                   value={this.state.mobile}
+                                   onChangeText={mobile => this.setState({ mobile })}
+                        />
                         <View style={styles.subButton}>
-                        <TextInput style={{padding:20}}
-                          placeholder="请输入验证码"
-                          keyboardType={'numeric'}
-                          maxLength={6}
-                          label='VerifyCode'
-                          value={this.state.VerifyCode}
-                          onChangeText={VerifyCode => this.setState({ VerifyCode })}
-                        />
-                          <CountDownButton
-                              style={{width: 120,marginRight: 8}}
-                              textStyle={{color: '#DC3C78'}}
-                              timerCount={60}
-                              timerTitle={'获取验证码'}
-                              //enable={this.loginVerifyx()}
-                              enable={/^1\d{10}$/.test(this.state.mobile)}
-                              //enable={this.loginVerify()}
-                              onClick={(shouldStartCountting)=>{
-                                //随机模拟发送验证码成功或失败
-                                const requestSucc = Math.random() > 0.5;
-                                  shouldStartCountting(requestSucc);
-                                  this.SendSms()
-                              }}
-                              timerEnd={()=>{
-                                this.setState({
-                                  state: '倒计时结束'
-                                })
-                              }}/>
+                            <TextInput style={{padding:20}}
+                                       placeholder="请输入验证码"
+                                       keyboardType={'numeric'}
+                                       maxLength={6}
+                                       label='VerifyCode'
+                                       value={this.state.VerifyCode}
+                                       onChangeText={VerifyCode => this.setState({ VerifyCode })}
+                            />
+                            {sms_button}
                         </View>
                         <View style={styles.subButton}>
-                          <Button
-                            title='验证添加'
-                            onPress={
-                              this.loginUserNode
-                            }
-                            />
+                            <Button
+                                type="primary"
+                                onPress={
+                                    this.loginUserNode
+                                }
+                            >验证添加</Button>
                         </View>
                         <Text style ={styles.message}>{this.state.message}</Text>
-                            </View>
-                        </View>
-                )
-            }else if(this.state.isVerify==true){
-                ViewCode = (
-                       <View style={styles.LoginPage}>
-                        <View style={styles.loginSection}>
-                            <Text style={styles.loginTitle}> 绑定银行卡 </Text>
-                            <Text style={styles.loginSubTitle}>账号、银行卡、身份必须一致。</Text>
-                        <Text>姓名：{this.state.name}</Text>
-                        <Text>证件：{this.state.identitynumber}</Text>
-                        <TextInput style={styles.textinput}
-                          placeholder="银行卡号"
-                          label='card'
-                          value={this.state.card}
-                          onChangeText={card => this.setState({ card })}
-                        />
-                        <TextInput style={styles.textinput}
-                            label='mobile'
-                            keyboardType={'numeric'}
-                            placeholder="请输入银行绑定手机号"
-                            maxLength={11}
-                            value={this.state.mobile}
-                            onChangeText={mobile => this.setState({ mobile })}
-                          />
-                        <View style={styles.subButton}>
-                        <TextInput style={{padding:20}}
-                          placeholder="请输入验证码"
-                          keyboardType={'numeric'}
-                          maxLength={6}
-                          label='VerifyCode'
-                          value={this.state.VerifyCode}
-                          onChangeText={VerifyCode => this.setState({ VerifyCode })}
-                        />
-                          <CountDownButton
-                              style={{width: 120,marginRight: 8}}
-                              textStyle={{color: '#DC3C78'}}
-                              timerCount={60}
-                              timerTitle={'获取验证码'}
-                              //enable={this.loginVerifyx()}
-                              enable={/^1\d{10}$/.test(this.state.mobile)}
-                              //enable={this.loginVerify()}
-                              onClick={(shouldStartCountting)=>{
-                                //随机模拟发送验证码成功或失败
-                                const requestSucc = Math.random() > 0.5;
-                                  shouldStartCountting(requestSucc);
-                                  this.SendSms()
-                              }}
-                              timerEnd={()=>{
-                                this.setState({
-                                  state: '倒计时结束'
-                                })
-                              }}/>
-                        </View>
-                        <View style={styles.subButton}>
-                          <Button
-                            title='验证添加'
-                            onPress={
-                              this.loginUserNode
-                            }
-                            />
-                        </View>
-                        <Text style ={styles.message}>{this.state.message}</Text>
-                            </View>
-                        </View>
-                )
-            }
+                    </View>
+                </View>
+            )
         }else{
             ViewCode = (
                 <ActivityIndicator color="#DC3C78" style={{marginTop:100}}/>

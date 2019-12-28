@@ -1,20 +1,12 @@
 import React from 'react';
-import {Picker,StyleSheet, View, Button, TextInput,Text,ActivityIndicator } from 'react-native';
-import {NavigationActions,StackActions} from 'react-navigation';
+import {Picker,StyleSheet, View,TextInput,Text,ActivityIndicator } from 'react-native';
 import axios from 'axios';
+import {Button, WhiteSpace, WingBlank } from '@ant-design/react-native';
+
 import deviceStorage from "../Login/jwt/services/deviceStorage";
 import CountDownButton from 'react-native-smscode-count-down'
 import AsyncStorage from '../Login/AsyncStorage'
 let serverUrl = require("../websettings")
-let getmoneyUrl = serverUrl+'/m/getmoney'
-let cardUrl = serverUrl+'/card'
-let withdrawUrl = serverUrl+'/m/withdraw'
-
-
-const resetAction = StackActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({ routeName: '我的' })],
-    });
 
 class verifyscreen extends React.Component{
     constructor(props){
@@ -43,78 +35,85 @@ class verifyscreen extends React.Component{
         this.fetchData();
     }
     fetchData(){
-        deviceStorage.get('token').then((GetToken) => {
-            token = GetToken
-            this.setState({token:GetToken})
-            axios.get(getmoneyUrl,{headers:{authorization:token}})
+        this.setState({isLoading:true})
+        deviceStorage.get('token').then((Token) => {
+            axios.get(serverUrl+'/m/getmoney',{headers:{authorization:Token}})
                 .then(response=>{
-                    this.setState({Balance:response.data.Balance})
-                    this.setState({PerformMoney:response.data.PerformMoney})
+                    console.log(response.data)
+                    if(response.data=="0"){
+                        this.props.navigation.navigate('Login')
+                    }else{
+                        this.setState({Balance:response.data.Balance})
+                        this.setState({PerformMoney:response.data.PerformMoney})
+                    }
                 })
                 .catch((error) => {
                   console.log('error:'+error)})
             //获取银行卡
-            axios.get(cardUrl,{headers:{authorization:token}})
+            axios.get(serverUrl+'/card',{headers:{authorization:Token}})
                 .then(response=>{
-                  let card_dict = {}
-                  let array_list_number = 0
-                  while(response.data.length>array_list_number){
-                      if(array_list_number==0){
-                          this.setState({select_value:response.data[array_list_number.toString()]['UserBankCardId']})
-                      }
-                      //Object.assign(card_dict,{response.data[array_list_number.toString()]['UserBankCardId'],response.data[array_list_number.toString()]['UserBankCard']})
-                      card_dict[response.data[array_list_number.toString()]['UserBankCardId']]=response.data[array_list_number.toString()]['UserBankCard']
-                      array_list_number+=1
+                    if(response.data=="0"){
+                        this.props.navigation.navigate('Login')
+                    }else{
+                        let card_dict = {}
+                        let array_list_number = 0
+                        while(response.data.length>array_list_number){
+                            if(array_list_number==0){
+                                this.setState({select_value:response.data[array_list_number.toString()]['UserBankCardId']})
+                            }
+                            //Object.assign(card_dict,{response.data[array_list_number.toString()]['UserBankCardId'],response.data[array_list_number.toString()]['UserBankCard']})
+                            card_dict[response.data[array_list_number.toString()]['UserBankCardId']]=response.data[array_list_number.toString()]['UserBankCard']
+                            array_list_number+=1
+                        }
+                        this.setState({cardIdoptions:card_dict})
                     }
-                    this.setState({cardIdoptions:card_dict})
-                    this.setState({isLoading:true})
+
                 })
                 .catch((error) => {
                   console.log('error:'+error)})
 
         })
+        this.setState({isLoading:false})
     }
 
     //NodeJS API
     loginUserNode() {
-        console.log('loginUserNode')
         let rePayMoney = /^([1-5]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/
         if(rePayMoney.test(this.state.Money)==false) {
-                this.setState({message:'请输入正确的金额'});
-                return;
+            return this.setState({message:'请输入正确的金额'});
             }
         if (this.state.Money>this.state.Balance) {
-                this.setState({message:'提现不可大于可用资金'})
-                return
+            return this.setState({message:'提现不可大于可用资金'})
           }
-        deviceStorage.get('token').then((GetToken) => {
-            token = GetToken
+        this.setState({isLoading:true})
+        deviceStorage.get('token').then((token) => {
             console.log(this.state.select_value)
             console.log(this.state.Money)
-            this.setState({token:GetToken})
             var LoginData =  {
                         Money: this.state.Money,
                         UserBankCardId: this.state.select_value,
                         authorization:token,
                        }
-            console.log(LoginData)
-            axios.post(withdrawUrl, LoginData)
+            axios.post(serverUrl+'/m/withdraw', LoginData)
                   .then(response=>{
                       console.log(response.data)
-                      if (response.data.state==0||response.data.state==1) {
-                      this.setState({message: response.data.message});
-                    }  else if (response.data.state==2) {
-                          this.props.navigation.navigate('index')
+                      if(response.data=="0"){
+                          this.props.navigation.navigate('Login')
+                      }else if(response.data==""){
+                          this.props.navigation.navigate('ResultView');
+                      }else{
+                          this.setState({message: response.data});
                       }
                     })
             .catch((error) => {
               console.log('error:'+error)
               this.setState({message: '网络问题，重新提交'});
-              this.onLoginFail();
+                this.setState({isLoading:false})
             });
-          })
+            }
+          )
     }
-      
+
     clearMoney(xx){
         var re = /^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/
         if(re.test(xx)===false){
@@ -133,12 +132,13 @@ class verifyscreen extends React.Component{
     render(){
         let ViewCode
 
-        if(this.state.isLoading==true){
+        if(!this.state.isLoading){
           if(Object.keys(this.state.cardIdoptions).length>0){
                 ViewCode = (
                        <View style={styles.LoginPage}>
                         <View style={styles.loginSection}>
-                            <Text style={styles.loginTitle}> 提现小金库 </Text>
+                            <Text style={styles.loginTitle}> 提现</Text>
+                            <Text style={styles.loginSubTitle}>时间：1-3工作日</Text>
                             <Text> 可用￥{this.state.Balance},进行中：￥{this.state.PerformMoney}</Text>
                             <View style={{flexDirection: 'row'}}>
                             <Text style={styles.loginSubTitle}>￥</Text>
@@ -148,13 +148,6 @@ class verifyscreen extends React.Component{
                                     onChangeText={(xx)=>this.clearMoney(xx)}
                                     />
                             </View>
-                            <Button 
-                                style={{width: 150, height: 100, backgroundColor: 'red'}}
-                                onPress={() => this.props.navigation.navigate('verify')}
-                                title="增加银行卡"
-                                color="blue"
-                                accessibilityLabel="Learn more about this purple button"
-                              />
                             <Picker
                               selectedValue={this.state.select_value}
                               style={{width: 250 }}
@@ -164,13 +157,11 @@ class verifyscreen extends React.Component{
                                       return (<Picker.Item label={this.state.cardIdoptions[key]} value={key} key={key}/>) //if you have a bunch of keys value pair
                                   })}
                             </Picker>
-                              <Button 
-                                style={{width: 150, height: 100, backgroundColor: 'red'}}
-                                onPress={() => this.loginUserNode()}
-                                title="提现"
-                                color="blue"
-                                accessibilityLabel="Learn more about this purple button"
-                              />
+                            <Button type="primary" onPress={() => this.loginUserNode()}>提现</Button>
+                            <Text></Text>
+
+                            <Button type="primary" onPress={() => this.props.navigation.navigate('verify')}>增加银行卡</Button>
+
                             <Text>{this.state.message}</Text>
                             </View>
                         </View>)
@@ -179,13 +170,9 @@ class verifyscreen extends React.Component{
                       <View style={styles.loginSection}>
                             <Text style={styles.loginTitle}> 提现小金库 </Text>
                             <Text> 可用￥{this.state.Balance},进行中：￥{this.state.PerformMoney}</Text>
-                            <Button 
-                                style={{width: 150, height: 100, backgroundColor: 'red'}}
-                                onPress={() => this.props.navigation.navigate('verify')}
-                                title="增加银行卡"
-                                color="blue"
-                                accessibilityLabel="Learn more about this purple button"
-                              />
+
+                          <Button type="primary" onPress={() => this.props.navigation.navigate('verify')}>增加银行卡</Button>
+
                           <Text>{this.state.message}</Text>
                       </View>
                       )
@@ -256,7 +243,7 @@ const styles = StyleSheet.create({
       marginTop: 8,
       fontSize: 13,
       padding: 15,
-      borderColor: 'gray', 
+      borderColor: 'gray',
    },
     message:{
     marginTop: 16,

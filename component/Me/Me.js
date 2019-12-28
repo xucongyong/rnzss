@@ -6,8 +6,6 @@ import weburl from "../websettings";
 import HttpGetPost from '../HttpGetPost';
 //import ImagePicker from 'react-native-image-picker';
 var ImagePicker = require("react-native-image-picker")
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import codePush from 'react-native-code-push'
 
 // More info on all the options is below in the API Reference... just some common use cases shown here
 const options = {
@@ -19,10 +17,6 @@ const options = {
   },
 };
 
-/**
- * The first arg is the options object for customization (it can also be null or omitted for default options),
- * The second arg is the callback which sends object: response (more info in the API Reference)
- */
 
 
 
@@ -81,43 +75,24 @@ class MeScreen extends React.Component{
                             <TouchableHighlight onPress={() => this.props.navigation.navigate('money')}>
                             <View style={styles.container}>
                                 <Text style={styles.LeftText}>小金库</Text>
-                                <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/>
                             </View>
                             </TouchableHighlight>
                             <TouchableHighlight onPress={() => this.props.navigation.navigate('card')}>
                             <View style={styles.container}>
                                 <Text style={styles.LeftText}>银行卡</Text>
-                                <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/>
                             </View>
                             </TouchableHighlight>
                             <TouchableHighlight onPress={() => this.props.navigation.navigate('addTbAccount')}>
                             <View style={styles.container}>
-                                <Text style={styles.LeftText}
-                                >淘宝账号</Text>
-                                <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/>
+                                <Text style={styles.LeftText}>淘宝账号</Text>
                             </View>
                             </TouchableHighlight>
                             <TouchableHighlight onPress={() => this.props.navigation.navigate('addJdAccount')}>
                             <View style={styles.container}>
                                 <Text style={styles.LeftText}>京东账号</Text>
-                                <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/>
                             </View>
                             </TouchableHighlight>
-                            <TouchableHighlight 
-                                onPress={() => this.update()}>
-                            <View style={styles.container}>
-                                <Text style={styles.LeftText}>更新系统</Text>
-                                <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/>
-                            </View>
-                            </TouchableHighlight>
-                            <TouchableHighlight 
-                                onPress={() => deviceStorage.delete('token').then((GetToken) => {
-                                                console.log(GetToken)})}>
-                            <View style={styles.container}>
-                                <Text style={styles.LeftText}>注销账户</Text>
-                                <MaterialIcons name="keyboard-arrow-right" size={18} color="#4F8EF7"/>
-                            </View>
-                            </TouchableHighlight>
+
                         </View>
                 </View>
         )

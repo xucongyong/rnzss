@@ -1,12 +1,11 @@
 import React from 'react';
-import {StyleSheet, View, Button, TextInput,Text,ActivityIndicator,ListView} from 'react-native';
+import {StyleSheet, View, Button, TextInput,Text,ActivityIndicator,FlatList} from 'react-native';
 import {NavigationActions,StackActions} from 'react-navigation';
 import axios from 'axios';
 import deviceStorage from "../Login/jwt/services/deviceStorage";
 import CountDownButton from 'react-native-smscode-count-down'
 import AsyncStorage from '../Login/AsyncStorage'
 let serverUrl = require("../websettings")
-let get_card_url = serverUrl+'/card'
 
 const resetAction = StackActions.reset({
         index: 0,
@@ -16,9 +15,8 @@ const resetAction = StackActions.reset({
 class verifyscreen extends React.Component{
     constructor(props){
         super(props);
-        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
-            dataSource: ds,
+            dataSource: [],
             name: '',
             mobile: '',
             identitynumber: '',
@@ -37,21 +35,21 @@ class verifyscreen extends React.Component{
         this.fetchData();
       }
     fetchData(){
-      deviceStorage.get('token').then((GetToken) => {
-          token = GetToken
-          this.setState({token:GetToken})
-          axios.get(get_card_url,{headers:{authorization:token}})
+      deviceStorage.get('token').then((token) => {
+          axios.get(serverUrl+'/card',{headers:{authorization:token}})
               .then(response=>{
-                  console.log(response.data)
-                  let arrayList = []
-                  let array_list_number = 0
-                  while(response.data.length>array_list_number){
-                    arrayList.push(response.data[array_list_number.toString()])
-                    array_list_number+=1
+                  if(response.data=="0"){
+                      this.props.navigation.navigate('Login')
+                  }else{
+                      let arrayList = []
+                      let array_list_number = 0
+                      while(response.data.length>array_list_number){
+                          arrayList.push(response.data[array_list_number.toString()])
+                          array_list_number+=1
+                      }
+                      this.setState({dataSource:arrayList})
+                      this.setState({isLoading:true})
                   }
-                  this.setState({dataSource:this.state.dataSource.cloneWithRows(arrayList)})
-                  console.log(this.state.dataSource)
-                  this.setState({isLoading:true})
               })
               .catch((error) => {
                 console.log('error:'+error)})
@@ -67,11 +65,11 @@ class verifyscreen extends React.Component{
                 ViewCode = (
                        <View style={styles.LoginPage}>
                         <View style={styles.loginSection}>
-                            <Text 
+                            <Text
                                 style={styles.loginTitle}
                                 onPress={() => this.props.navigation.navigate('verify')}
                                  >银行卡管理 </Text>
-                            <Button 
+                            <Button
                                 style={{width: 150, height: 100, backgroundColor: 'red'}}
                                 onPress={() => this.props.navigation.navigate('verify')}
                                 title="增加银行卡"
@@ -80,7 +78,7 @@ class verifyscreen extends React.Component{
                               />
                             </View>
                             <View>
-                            <ListView
+                            <FlatList
                                 dataSource={this.state.dataSource}
                                 renderRow={(data) => this.ReadData(data)}
                                 />

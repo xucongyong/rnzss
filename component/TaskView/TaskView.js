@@ -1,77 +1,21 @@
 import React, { Component } from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import { createStackNavigator,createTabNavigator,createMaterialTopTabNavigator } from 'react-navigation';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 
 let TaskViewProcess = require('./TaskViewProcess');
-let TaskViewClose = require('./TaskViewClose');
-let TaskViewDone = require('./TaskViewDone');
+const Tab = createMaterialTopTabNavigator();
+function App() {
+    return (
+        <Tab.Navigator
+            initialRouteName={"进行"}
+            lazy={true}
+            >
+            <Tab.Screen name="进行" component={TaskViewProcess}/>
+            <Tab.Screen name="全部" component={TaskViewProcess}/>
+            <Tab.Screen name="完成" component={TaskViewProcess}/>
+            <Tab.Screen name="关闭" component={TaskViewProcess}/>
+        </Tab.Navigator>
+    );
+}
+module.exports= App;
 
-
-const Screen = createMaterialTopTabNavigator(
-    {
-        进行中: {
-            screen: TaskViewProcess
-        },
-        完成: {
-            screen: TaskViewDone
-        },
-        关闭: {
-            screen: TaskViewClose
-        }
-
-    },
-    {
-        initialRouteName: '进行中',
-        tabBarPosition:'top',
-        lazy:true,
-        swipeEnabled:true,
-        tabBarOptions: {
-          labelStyle: {
-            fontSize: 12,
-          },
-          activeTintColor:'#000000',
-          inactiveTintColor:'#000000',
-          style: {
-            backgroundColor: '#FFFFFF',
-          },
-        }
-    },
-)
-
-
-
-const styles = StyleSheet.create({
-    container: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#DC3C78',
-    },
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 10,
-    },
-    instructions: {
-        textAlign: 'center',
-        color: '#DC3C78',
-        marginBottom: 5,
-    },
-    HeaderTitle: {
-        width: 250,
-        height: 30,
-        //backgroundColor:'white',
-        justifyContent:'center',
-        borderRadius: 18,
-        alignItems: 'center',
-        paddingLeft: 8,
-    },
-    HeaderLeft: {
-
-    },
-    HeaderRight: {
-
-    },
-});
-
-// output class
-module.exports = Screen;
