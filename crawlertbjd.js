@@ -1,4 +1,4 @@
-const puppeteer = require('puppeteer');
+var puppeteer = require('puppeteer');
 var sleep = require('sleep');
 var UA = require('./chrome.json');
 var request = require("request")
